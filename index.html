@@ -17,17 +17,16 @@
     
     <h1>Login</h1>
 
-    <form onsubmit="handleLogin(event)">
-      <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      <button type="submit" id="submitlogin">Login</button>
+    <form id="login-form">
+      <label for="username">Username:</label>
+      <input type="text" id="username" required>
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+      <br>
+      <button type="submit">Login</button>
     </form>
+    
     <p id="login-result"></p>
 
     <img id="screenshot-image" width="100%" /><br />

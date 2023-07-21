@@ -1,7 +1,7 @@
 const { app, BrowserWindow, desktopCapturer, screen, ipcMain, nativeImage  } = require('electron')
 const fs = require('fs')
 const path = require('path')
-const sharp = require('sharp');
+const axios = require('axios');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -164,6 +164,28 @@ ipcMain.on('login', async (event) => {
   console.log('login herer');
   event.sender.send('login-success', { success: false, error: 'Failed to save screenshot' });
 })
+
+
+ipcMain.on('login-attempt', async (event, loginData) => {
+
+  console.log('loginData', loginData);
+
+  try {
+    // Send the login request to the API
+    const response = await axios.post('https://app.idevelopment.site/api/login', loginData);
+
+    // Save the response data to data.json
+    userData.apiResponse = response.data;
+    fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
+
+    // Redirect to the dashboard.
+    mainWindow.loadFile(path.join(__dirname, 'dashboard.html'));
+    mainWindow.webContents.send('show-dashboard', loginData);
+  } catch (error) {
+    console.error('Login failed:', error);
+    event.sender.send('login-failed', error.message);
+  }
+});
 
 
   ipcMain.on('capture-screenshot', async (event) => {
