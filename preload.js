@@ -1,5 +1,19 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
+// const contextBridge = require('electron').contextBridge;
+// const ipcRenderer = require('electron').ipcRenderer;
+// Exposed protected methods in the render process
+contextBridge.exposeInMainWorld(
+  // Allowed 'ipcRenderer' methods
+  'bridge', {
+      // From main to render
+      sendSettings: (message) => {
+          ipcRenderer.on('sendSettings', message);
+      }
+  }
+);
+
+
 contextBridge.exposeInMainWorld('screenshot', {
   captureScreenShot: () => ipcRenderer.send('capture-screenshot'),
   screenShotCaptured: (callback) => {

@@ -1,3 +1,45 @@
+document.addEventListener('DOMContentLoaded', () => {
+  // Only run this code if the user is on the dashboard page
+  if (window.location.href.includes('dashboard.html')) {
+
+    ipcRenderer.on('show-dashboard', (event, userData) => {
+      console.log('ddddd kkjkjkdjfjdf ', userData, event)
+      // console.log(userData.apiResponse); // Check the content of userData.apiResponse
+      const firstNameElement = document.getElementById('first-name');
+      const lastNameElement = document.getElementById('last-name');
+
+      // Assuming userData.apiResponse.user contains the user's information
+      firstNameElement.innerText = `First Name`;
+      // firstNameElement.innerText = `First Name: ${userData.apiResponse.user.first_name}`;
+      lastNameElement.innerText = `Last Name: ${userData.apiResponse.user.last_name}`;
+    });
+  }
+
+  // Add the event listener for the screenshot button only if it exists
+  const screenshotButton = document.getElementById('screenshot-button');
+  if (screenshotButton) {
+    screenshotButton.addEventListener('click', takeScreenshot);
+  }
+
+
+  const loginForm = document.getElementById('login-form');
+  if(loginForm){
+    document.getElementById('login-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Trigger the login attempt
+      ipcRenderer.send('login-attempt', { email, password });
+    });
+  }
+
+
+
+});
+
+
 async function takeScreenshot() {
   await window.screenshot.captureScreenShot()
   window.screenshot.screenShotCaptured((event, dataURL) => {
@@ -5,6 +47,7 @@ async function takeScreenshot() {
     document.getElementById('screenshot-image').src = dataURL;
   });
 }
+
 
 // async function takelogin() {
 //   // await window.screenshot.login()
@@ -14,20 +57,13 @@ async function takeScreenshot() {
 //   });
 // }
 
-document.getElementById('screenshot-button').addEventListener('click', takeScreenshot);
+// document.getElementById('screenshot-button').addEventListener('click', takeScreenshot);
 
 // document.getElementById('submitlogin').addEventListener('click', takelogin);
 
-document.getElementById('login-form').addEventListener('submit', (event) => {
-  event.preventDefault();
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  // Trigger the login attempt
-  ipcRenderer.send('login-attempt', { username, password });
-});
 
 ipcRenderer.on('login-failed', (event, errorMessage) => {
   alert('Login failed. Error: ' + errorMessage);
 });
+

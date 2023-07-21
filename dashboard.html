@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Welcome to the Dashboard</h1>
+  <div id="user-info">
+    <p id="first-name"></p>
+    <p id="last-name"></p>
+  </div>
+  <button id="screenshot-button">Take Screenshot</button>
+  <img id="screenshot-image" src="" alt="Screenshot">
+  <script src="renderer.js"></script>
+  <script>
+    const firstNameElement = document.getElementById('first-name');
+    const lastNameElement = document.getElementById('last-name');
+
+
+    window.bridge.sendSettings((event, settings) => {
+        console.log(settings);
+      firstNameElement.innerText = `First Name: ${settings.user.first_name}`;
+      lastNameElement.innerText = `Last Name: ${settings.user.last_name}`;
+    });
+</script>
+</body>
+</html>

@@ -30,7 +30,7 @@ const createWindow = () => {
     if (userData.apiResponse) {
       win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
       win.loadFile(path.join(__dirname, 'dashboard.html'))
-      .then(() => { win.webContents.send('sendSettings', userData.apiResponse); })
+      .then(() => { win.webContents.send('sendSettings', settings.renderer); })
         .then(() => { win.show(); });
 
       return win;
