@@ -6,4 +6,14 @@ async function takeScreenshot() {
   });
 }
 
+async function takelogin() {
+  // await window.screenshot.login()
+  window.screenshot.login((event, dataURL) => {
+    console.log('takelogin', dataURL);
+    document.getElementById('screenshot-image').src = dataURL;
+  });
+}
+
 document.getElementById('screenshot-button').addEventListener('click', takeScreenshot);
+
+document.getElementById('submitlogin').addEventListener('click', takelogin);

@@ -8,17 +8,20 @@ const createWindow = () => {
     width: 1800,
     height: 600,
     webPreferences: {
+      nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
 
   win.loadFile('index.html')
+
+  // open dev tools
+  win.webContents.openDevTools()
+
 }
 
 app.whenReady().then(() => {
   createWindow()
-
-  captureScreen('2779098405');
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -155,7 +158,16 @@ async function captureScreen(screenId) {
 }
 
 
-ipcMain.on('capture-screenshot', async (event) => {
+
+
+ipcMain.on('login', async (event) => {
+  console.log('login herer');
+  event.sender.send('login-success', { success: false, error: 'Failed to save screenshot' });
+})
+
+
+  ipcMain.on('capture-screenshot', async (event) => {
+    // console.log('login herer capture-screenshot');
   const displays = screen.getAllDisplays();
   const screenshots = await Promise.all(
     displays.map(async (display) => {
@@ -183,11 +195,6 @@ ipcMain.on('capture-screenshot', async (event) => {
       // Get the image
       const image = primarySource.thumbnail;
       
-      // Return image data
-      // return image
-
-
-      // const screenShotInfo = await captureScreen();
       const dataURL = image.toDataURL();
 
       // Generate a unique filename for the image
@@ -219,27 +226,5 @@ ipcMain.on('capture-screenshot', async (event) => {
     })
   );
 
-  // const imagePaths = [];
-
-  // // Generate a unique filename for each screenshot
-  // for (let i = 0; i < screenshots.length; i++) {
-  //   const filename = `screenshot_${Date.now()}_${i}.png`;
-  //   const imagesFolderPath = path.join(__dirname, 'images');
-  //   if (!fs.existsSync(imagesFolderPath)) {
-  //     fs.mkdirSync(imagesFolderPath);
-  //   }
-  //   const filePath = path.join(imagesFolderPath, filename);
-
-
-  //   console.log('filePathfilePath', filePath);
-
-  //   const nativeImg = nativeImage.createFromDataURL(screenshots[i].toDataURL());
-
-  //   fs.writeFileSync(filePath, nativeImg.toPNG());
-  //   imagePaths.push(filePath);
-
-  // }
-
-  // event.sender.send('screenshot-captured', { success: true, imagePaths: imagePaths });
 });
 
