@@ -4,6 +4,7 @@ const path = require('path')
 const axios = require('axios');
 const { Readable } = require('stream');
 const { Blob } = require('buffer');
+const settings = require('electron-settings');
 
 
 // Settings object
@@ -441,7 +442,7 @@ app.on('activate', () => {
   }
 });
 
-function checkScreenSharingPermission() {
+function checkScreenSharingPermission_old() {
   desktopCapturer.getSources({ types: ['screen'] })
     .then(sources => {
       if (sources.length > 0) {
@@ -459,6 +460,20 @@ function checkScreenSharingPermission() {
 }
 
 
+function checkScreenSharingPermission() {
+  const permissionGranted = settings.get('screenSharingPermission');
+
+  if (permissionGranted) {
+    console.log('Screen sharing permission is granted.');
+    // You can perform further actions if the permission is granted
+  } else {
+    console.log('Screen sharing permission is not granted.');
+    // Show a dialog to request the user's permission
+    showPermissionDialog();
+  }
+}
+
+
 function showPermissionDialog() {
   dialog.showMessageBox(mainWindow, {
     type: 'question',
@@ -470,12 +485,14 @@ function showPermissionDialog() {
   }).then(result => {
     if (result.response === 0) {
       // The user clicked 'Grant Permission'
+      settings.set('screenSharingPermission', true);
       // You can request the screen sharing permission again or open a new window to start screen capturing
       // For example:
       // mainWindow.webContents.send('request-screen-sharing-permission');
     } else {
       // The user clicked 'Cancel' or closed the dialog
       // You can handle the scenario where the user denies the permission
+      settings.set('screenSharingPermission', false);
     }
   }).catch(error => {
     console.error('Error showing permission dialog:', error);
