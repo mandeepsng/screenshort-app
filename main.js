@@ -119,11 +119,11 @@ function myMainProcessFunction() {
 }
 
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// app.on('window-all-closed', () => {
+//   if (process.platform !== 'darwin') {
+//     app.quit()
+//   }
+// })
 
 
 // Function to capture the screenshot of a specific screen
@@ -408,6 +408,9 @@ async function clearDataFile(filePath) {
     } else {
       console.log('Data.json file cleared successfully.');
       closeAllWindows();
+      if (process.platform === 'darwin') {
+        app.quit();
+      }
       
       // createWindow();
     }
@@ -422,3 +425,17 @@ function closeAllWindows() {
     window.close();
   });
 }
+
+
+app.on('window-all-closed', () => {
+  // On macOS, quit the app when all windows are closed
+  if (process.platform === 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
