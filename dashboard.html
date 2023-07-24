@@ -127,10 +127,14 @@
 
 
     window.bridge.sendSettings((event, settings) => {
-        console.log(settings);
+        console.log('user', settings);
       //firstNameElement.innerText = `First Name: ${settings.user.first_name}`;
       //lastNameElement.innerText = `Last Name: ${settings.user.last_name}`;
       fullNameElement.innerText = `${settings.user.first_name} ${settings.user.last_name}`;
+
+      
+
+
     });
 
 </script>

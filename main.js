@@ -2,7 +2,8 @@ const { app, BrowserWindow, desktopCapturer, screen, ipcMain, nativeImage  } = r
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
-
+const { Readable } = require('stream');
+const { Blob } = require('buffer');
 
 
 // Settings object
@@ -12,21 +13,6 @@ let settings = {
       'key2': 'value2'
   }
 }
-
-const reloadWindwo = () => {
-  const newwin = new BrowserWindow({
-    width: 1800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
-
-  newwin.close();
-  createWindow();
-}
-
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -150,6 +136,41 @@ function readUserData() {
   try {
     const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
     userData = JSON.parse(rawData);
+
+    // Access the 'user' property using optional chaining
+    const user = userData?.apiResponse?.user;
+
+    if( typeof user === 'undefined'){
+      console.log(' use is null')
+    }else{
+      console.log(' use exit ', user)
+
+      const delay =  5000; // 5 seconds
+      const intervalId = setInterval(() =>{
+        console.log('callscreenshort started  delay....', delay);
+        ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
+      }, delay);
+
+    }
+
+    // if(rawData.apiResponse.user.length > 0){
+      
+    //   console.log('userData: ' + rawData)
+    // }else{
+      
+    //   console.log('userData: empty data.json file')
+    // }
+
+
+    // const delay = 15 * 60 * 1000; // 15 minutes
+    
+
+
+    
+
+
+
+
   } catch (error) {
     console.error('Error reading data.json:', error);
   }
@@ -158,12 +179,16 @@ function readUserData() {
 readUserData();
 
 
+ipcMain.on('event2', (event, arg) => {
+  console.log('Received event2 with argument:', arg);
+});
+
 // console.log('userData = ', userData )
 
 
 ipcMain.on('login-attempt', async (event, loginData) => {
 
-  console.log('loginData', loginData);
+  // console.log('loginData', loginData);
 
   try {
     // Send the login request to the API
@@ -191,7 +216,6 @@ ipcMain.on('login-attempt', async (event, loginData) => {
   } catch (error) {
     console.error('Login failed:', 'Wrong email password');
     event.sender.send('login-failed', 'Wrong email password');
-    // win.webContents.reloadIgnoringCache()
   }
 });
 
@@ -249,10 +273,15 @@ ipcMain.on('login-attempt', async (event, loginData) => {
       fs.writeFile(filePath, image.toPNG(), (error) => {
         if (error) {
           console.error('Error saving the screenshot:', error);
-          event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
+          // event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
         } else {
           console.log('Screenshot saved:', filePath);
-          event.sender.send('screenshot-captured', { success: true, filePath: filePath });
+          const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
+          uploadImage(filePath, uploadUrl);
+
+          console.log('logged user :', userData);
+          // event.sender.send('screenshot-captured', { success: true, filePath: filePath });
+
         }
       });
 
@@ -263,6 +292,62 @@ ipcMain.on('login-attempt', async (event, loginData) => {
   );
 
 });
+
+
+// Function to convert a Buffer to a Blob
+function bufferToBlob(buffer) {
+  const readable = new Readable();
+  readable._read = () => {};
+  readable.push(buffer);
+  readable.push(null);
+
+  return new Blob([readable.read()]);
+}
+
+
+// Function to upload an image using Axios
+async function uploadImage(imagePath, uploadUrl, user) {
+  try {
+    const imageBuffer = fs.readFileSync(imagePath);
+    const imageBlob = bufferToBlob(imageBuffer);
+
+    const formData = new FormData();
+    formData.append('image', imageBlob, imagePath);
+    formData.append('id', userData.apiResponse.user.id);
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: headers,
+    });
+
+    deleteImage(imagePath);
+    console.log('Image uploaded successfully:', response.data.message);
+    // console.log('logged_user : ', logged_user);
+
+
+  } catch (error) {
+    console.error('Error while uploading image:', error.message);
+  }
+}
+
+
+function deleteImage(filePath)
+{
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error deleting image file:', err);
+      // res.status(500).send('Error deleting image file');
+    } else {
+      console.log('Image file deleted successfully.');
+      // res.send('Image file deleted');
+    }
+  });
+
+}
+
 
 // Function to clear the data.json file
 async function clearDataFile(filePath) {
