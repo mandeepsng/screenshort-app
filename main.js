@@ -92,6 +92,7 @@ app.whenReady().then(() => {
   tray.setContextMenu(menu)
 
   createWindow()
+  checkScreenSharingPermission();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -439,3 +440,44 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+function checkScreenSharingPermission() {
+  desktopCapturer.getSources({ types: ['screen'] })
+    .then(sources => {
+      if (sources.length > 0) {
+        console.log('Screen sharing permission is granted.');
+        // You can perform further actions if the permission is granted
+      } else {
+        console.log('Screen sharing permission is not granted.');
+        // You can handle the scenario where the permission is not granted
+        showPermissionDialog()
+      }
+    })
+    .catch(error => {
+      console.error('Error checking screen sharing permission:', error);
+    });
+}
+
+
+function showPermissionDialog() {
+  dialog.showMessageBox(mainWindow, {
+    type: 'question',
+    title: 'Screen Sharing Permission',
+    message: 'This application needs screen sharing permission to capture your screen. Do you want to grant the permission?',
+    buttons: ['Grant Permission', 'Cancel'],
+    defaultId: 0,
+    cancelId: 1
+  }).then(result => {
+    if (result.response === 0) {
+      // The user clicked 'Grant Permission'
+      // You can request the screen sharing permission again or open a new window to start screen capturing
+      // For example:
+      // mainWindow.webContents.send('request-screen-sharing-permission');
+    } else {
+      // The user clicked 'Cancel' or closed the dialog
+      // You can handle the scenario where the user denies the permission
+    }
+  }).catch(error => {
+    console.error('Error showing permission dialog:', error);
+  });
+}
