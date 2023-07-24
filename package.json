@@ -32,7 +32,11 @@
       "target": [
         "dmg"
       ],
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "category": "your.app.category",
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist"
     },
     "win": {
       "target": [
