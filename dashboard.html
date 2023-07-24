@@ -1,27 +1,139 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Dashboard</title>
-</head>
-<body>
-  <h1>Welcome to the Dashboard</h1>
-  <div id="user-info">
-    <p id="first-name"></p>
-    <p id="last-name"></p>
-  </div>
-  <button id="screenshot-button">Take Screenshot</button>
-  <img id="screenshot-image" src="" alt="Screenshot">
-  <script src="renderer.js"></script>
-  <script>
-    const firstNameElement = document.getElementById('first-name');
-    const lastNameElement = document.getElementById('last-name');
+  <head>
+    <title>RVS (ERP)</title>
+
+    <style>
+      body {
+        background: hsla(260, 95%, 35%, 1);
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-image: radial-gradient(top, circle cover, hsla(260, 95%, 25%, 1)20%, hsla(260, 95%, 15%, 1) 80%);
+        cursor: move;
+        font-family: 'Poiret One', cursive;
+      }
+
+      canvas#canv{
+          width: 100%;
+          height: 100vh;
+          object-fit: cover;
+      }
+      .logout {
+          position: absolute;
+          right: 0;
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          align-items: center;
+      }
+      .logout p {
+          flex: 0 40%;
+          margin: 10px 20px;
+          color: #fff;
+      }
+      .logout button {
+          width: 100%;
+          flex: 0 13%;
+          margin: 10px 20px;
+          padding: 10px;
+          background: hsla(342,83%,53%,1);
+          border: 0;
+          color: #fff;
+          font-weight: 600;
+          cursor: pointer;    
+          border-radius: 5px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="logout">
+      <p id="full-name"></p>
+      <p id="first-name"></p>
+      <p id="last-name"></p>
+        <button id="logout">Logout</button>
+        <!-- <button id="test">Call Main Process Function</button> -->
+
+    </div>
+    <canvas id='canv'></canvas>
+    <script>
+      var c = document.getElementById('canv');
+      var $ = c.getContext('2d');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      var midX = c.width / 2;
+      var midY = c.height / 2;
+      var arr = [];
+      var cols = [
+        'hsla(206,79%, 41%, 1)',
+        'hsla(175,100%,32%,1)',
+        'hsla(91,53%,51%,1)',
+        'hsla(41,91%,57%,1)',
+        'hsla(13,84%,57%,1)',
+        'hsla(342,83%,53%,1)',
+        'hsla(272,51%,37%,1)'
+      ];
+      var midX, midY;
+
+      var hc = function(x, y, rad, col, ang) {
+        $.beginPath();
+        $.shadowColor = 'hsla(0,0%,0%,.4)';
+        $.shadowBlur = 30;
+        $.fillStyle = col;
+        $.arc(x, y, rad, ang, ang + Math.PI, true);
+        $.fill();
+        $.closePath();
+      };
+
+      var draw = function(rad, col, sp) {
+        var obj = {};
+        obj.rad = rad;
+        obj.col = col;
+        obj.sp = sp;
+        obj.dir = 0;
+        obj.ang = Math.PI / 180;
+        obj.draw = function() {
+          hc(midX, midY, obj.rad, obj.col, obj.ang);
+          obj.dir += Math.PI / 180;
+          obj.ang += Math.PI / 180 * Math.sin(obj.dir) * obj.sp;
+
+        };
+        return obj;
+      };
+
+      var set = function() {
+        for (var i in cols) {
+          arr.push(draw(10 + i * 25, cols[i], 5 + Math.random() * 7));
+        }
+      };
+
+      var go = function() {
+        $.clearRect(0, 0, c.width, c.height);
+        for (var i in arr) {
+          arr[i].draw();
+        }
+        window.requestAnimationFrame(go);
+      };
+      set();
+      go();
+    </script>
+    <script>
+    //const firstNameElement = document.getElementById('first-name');
+    //const lastNameElement = document.getElementById('last-name');
+    const fullNameElement = document.getElementById('full-name');
 
 
     window.bridge.sendSettings((event, settings) => {
         console.log(settings);
-      firstNameElement.innerText = `First Name: ${settings.user.first_name}`;
-      lastNameElement.innerText = `Last Name: ${settings.user.last_name}`;
+      //firstNameElement.innerText = `First Name: ${settings.user.first_name}`;
+      //lastNameElement.innerText = `Last Name: ${settings.user.last_name}`;
+      fullNameElement.innerText = `${settings.user.first_name} ${settings.user.last_name}`;
     });
+
 </script>
-</body>
+<script src="renderer.js"></script>
+  </body>
 </html>

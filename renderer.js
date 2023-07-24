@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   // Only run this code if the user is on the dashboard page
   if (window.location.href.includes('dashboard.html')) {
@@ -35,7 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const logout = document.getElementById('logout');
+  if(logout){
+      logout.addEventListener('click', (event) => {
+      event.preventDefault();
+      console.log('logout clicked');
 
+      // remove all data from data.json file
+      ipcRenderer.send('logout');
+      
+    })
+  }
 
 });
 
@@ -64,6 +75,6 @@ async function takeScreenshot() {
 
 
 ipcRenderer.on('login-failed', (event, errorMessage) => {
-  alert('Login failed. Error: ' + errorMessage);
+  alert('Login failed. Error: Wrong email password'  );
+  console.log(errorMessage);
 });
-

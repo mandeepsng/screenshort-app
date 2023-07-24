@@ -13,6 +13,20 @@ let settings = {
   }
 }
 
+const reloadWindwo = () => {
+  const newwin = new BrowserWindow({
+    width: 1800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  })
+
+  newwin.close();
+  createWindow();
+}
+
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -23,7 +37,9 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-
+  
+    // open dev tools
+    win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -43,8 +59,7 @@ const createWindow = () => {
 
   // win.loadFile('index.html')
 
-  // open dev tools
-  win.webContents.openDevTools()
+
 
 }
 
@@ -56,7 +71,26 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
+
+
+
+  // Listen for the message from the renderer process
+  ipcMain.on('logout', async() => {
+    // Call the function in the main process
+    const filePath = path.join(__dirname, 'data.json');
+    await clearDataFile(filePath);
+    createWindow();
+  });
+
+
 })
+
+function myMainProcessFunction() {
+  console.log('Main process function was called!');
+  // Your main process logic here
+}
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -64,91 +98,6 @@ app.on('window-all-closed', () => {
   }
 })
 
-// ipcMain.on('capture-screenshot', async (event) => {
-//   const screenShotInfo = await captureScreen();
-//   const dataURL = screenShotInfo.toDataURL();
-
-//   console.log('sdfkjsdf', dataURL);
-//   event.sender.send('screenshot-captured', dataURL);
-// });
-
-// ipcMain.on('capture-screenshot', async (event) => {
-//   const display = screen.getAllDisplays();
-
-//   console.log('display', display)
-//   const screenShotInfo = await captureScreen();
-//   const dataURL = screenShotInfo.toDataURL();
-
-//   // Generate a unique filename for the image
-//   const filename = `screenshot_${Date.now()}.png`;
-
-//   // Create the "images" folder if it doesn't exist
-//   // const imagesFolderPath = path.join(app.getPath('downloads'), 'images');
-//   const imagesFolderPath = path.join(__dirname, 'images');
-//   if (!fs.existsSync(imagesFolderPath)) {
-//     fs.mkdirSync(imagesFolderPath);
-//   }
-
-//   // Save the image file to the "images" folder
-//   const filePath = path.join(imagesFolderPath, filename);
-
-
-//   fs.writeFile(filePath, screenShotInfo.toPNG(), (error) => {
-//     if (error) {
-//       console.error('Error saving the screenshot:', error);
-//       event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
-//     } else {
-//       console.log('Screenshot saved:', filePath);
-//       event.sender.send('screenshot-captured', { success: true, filePath: filePath });
-//     }
-//   });
-
-//   // sharp(screenShotInfo.toPNG())
-//   //   .resize(800) // Resize the image to a maximum width of 800 pixels (adjust this as needed)
-//   //   .toFile(filePath, (error, info) => {
-//   //     if (error) {
-//   //       console.error('Error saving the screenshot:', error);
-//   //       event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
-//   //     } else {
-//   //       console.log('Screenshot saved:', filePath);
-//   //       event.sender.send('screenshot-captured', { success: true, filePath: filePath });
-//   //     }
-//   //   });
-
-
-//   event.sender.send('screenshot-captured', { success: true, dataURL: dataURL });
-// });
-
-
-
-
-
-// for only one screen
-// async function captureScreen() {
-//   // Get the primary display
-//   const primaryDisplay = screen.getPrimaryDisplay();
-
-//   // Get its size
-//   const { width, height } = primaryDisplay.size;
-
-//   // Set up the options for the desktopCapturer
-//   const options = {
-//     types: ['screen'],
-//     thumbnailSize: { width, height },
-//   };
-
-//   // Get the sources
-//   const sources = await desktopCapturer.getSources(options);
-
-//   // Find the primary display's source
-//   const primarySource = sources.find(({display_id}) => display_id == primaryDisplay.id)
-  
-//   // Get the image
-//   const image = primarySource.thumbnail;
-
-//   // Return image data
-//   return image
-// }
 
 // Function to capture the screenshot of a specific screen
 async function captureScreen(screenId) {
@@ -222,18 +171,35 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 
     // Save the response data to data.json
     userData.apiResponse = response.data;
-    fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
 
-    // Redirect to the dashboard.
-    win.loadFile(path.join(__dirname, 'dashboard.html'));
-    console.log(userData);
-    // win.webContents.send('show-dashboard', loginData);
-    win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
+    if(userData.apiResponse.auth ==='done'){
+
+      
+      fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
+      // win.reload();
+      // Redirect to the dashboard.
+      closeAllWindows();
+      createWindow();
+      // win.loadFile(path.join(__dirname, 'dashboard.html'));
+      console.log(userData);
+      // win.webContents.send('show-dashboard', loginData);
+      //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
+    }else{
+      console.log('error');
+      event.sender.send('login-failed', 'Wrong email password');
+    }
   } catch (error) {
-    console.error('Login failed:', error);
-    event.sender.send('login-failed', error.message);
+    console.error('Login failed:', 'Wrong email password');
+    event.sender.send('login-failed', 'Wrong email password');
+    // win.webContents.reloadIgnoringCache()
   }
 });
+
+
+
+
+
+
 
 
   ipcMain.on('capture-screenshot', async (event) => {
@@ -298,3 +264,32 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 
 });
 
+// Function to clear the data.json file
+async function clearDataFile(filePath) {
+  // Create an empty JSON object
+  const emptyData = {};
+
+  // Convert the empty object to JSON format
+  const emptyJsonData = JSON.stringify(emptyData);
+
+  // Write the empty JSON data to the file
+  fs.writeFile(filePath, emptyJsonData, (err) => {
+    if (err) {
+      console.error('Error clearing JSON file:', err);
+    } else {
+      console.log('Data.json file cleared successfully.');
+      closeAllWindows();
+      
+      // createWindow();
+    }
+  });
+}
+
+
+// Function to close all windows
+function closeAllWindows() {
+  const windows = BrowserWindow.getAllWindows();
+  windows.forEach((window) => {
+    window.close();
+  });
+}

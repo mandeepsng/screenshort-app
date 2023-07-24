@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('screenshot', {
     ipcRenderer.on('screenshot-captured', (event, screenshotURL) => callback(event, screenshotURL));
   },
   login: () => ipcRenderer.send('login'),
+  logincheck: () => ipcRenderer.send('logincheck')
 })
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
