@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, nativeImage  } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray  } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
@@ -14,10 +14,38 @@ let settings = {
   }
 }
 
+let tray = null
+
+const menuTemplate = [  
+  // {
+  //   label: 'Home',
+  //   click: () => {
+  //     // mainWindow.loadURL('http://localhost:3007');
+  //     win.loadFile(path.join(__dirname, 'index.html'));
+  //   }
+  // },
+  
+  // {
+  //   label: 'About',
+  //   click: () => {
+  //     // Create a new window when "About" is clicked
+  //     // createAboutWindow()
+  //     mainWindow.webContents.loadFile('about.html');
+  //   }
+  // },
+  {
+       role: 'quit' 
+  }
+]
+
+const menu = Menu.buildFromTemplate(menuTemplate)
+Menu.setApplicationMenu(menu)
+
+
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1800,
-    height: 600,
+    width: 700,
+    height: 450,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
@@ -25,7 +53,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -50,6 +78,19 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+
+  const iconPath = path.join(__dirname, 'assets/icon.png');
+
+  tray = new Tray(iconPath)
+
+  tray.on('click', () =>{
+    mainWindow.isVisible()?mainWindow.hide():mainWindow.show()
+  })
+
+  tray.setToolTip('Rvs Tracker')
+
+  tray.setContextMenu(menu)
+
   createWindow()
 
   app.on('activate', () => {
@@ -145,7 +186,9 @@ function readUserData() {
     }else{
       console.log(' use exit ', user)
 
-      const delay =  5000; // 5 seconds
+      const delay = 15 * 60 * 1000; // 15 minutes
+
+      // const delay =  5000; // 5 seconds
       const intervalId = setInterval(() =>{
         console.log('callscreenshort started  delay....', delay);
         ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
@@ -206,7 +249,8 @@ ipcMain.on('login-attempt', async (event, loginData) => {
       closeAllWindows();
       createWindow();
       // win.loadFile(path.join(__dirname, 'dashboard.html'));
-      console.log(userData);
+      console.log('userData');
+      readUserData()
       // win.webContents.send('show-dashboard', loginData);
       //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
     }else{
