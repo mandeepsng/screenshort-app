@@ -59,7 +59,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -263,7 +263,7 @@ function readUserData() {
     }else{
       console.log(' use exit ', user)
 
-      const delay = 1 * 60 * 1000; // 15 minutes
+      const delay = 15 * 60 * 1000; // 15 minutes
 
       // const delay =  5000; // 5 seconds
       const intervalId = setInterval(() =>{
