@@ -23,6 +23,13 @@ contextBridge.exposeInMainWorld('screenshot', {
   logincheck: () => ipcRenderer.send('logincheck')
 })
 
+
+contextBridge.exposeInMainWorld('checking', {
+  test: () => ipcRenderer.send('test')
+})
+
+
+
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) =>  ipcRenderer.send(channel, data),
   on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args) ) ,

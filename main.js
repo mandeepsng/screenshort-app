@@ -1,14 +1,13 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray  } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
 const { Readable } = require('stream');
 const { Blob } = require('buffer');
-const settings = require('electron-settings');
 
 
 // Settings object
-let settings = {
+let setting = {
   'renderer': {
       'key1': 'value1',
       'key2': 'value2'
@@ -16,6 +15,11 @@ let settings = {
 }
 
 let tray = null
+
+let userInactiveTimeout;
+let inactiveTimer;
+let screenshotIntervals = []
+
 
 const menuTemplate = [  
   // {
@@ -45,8 +49,9 @@ Menu.setApplicationMenu(menu)
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 700,
+    width: 600,
     height: 450,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
@@ -54,7 +59,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -80,12 +85,68 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
 
+
+
+   // Function to check for system inactivity
+   function checkSystemInactivity() {
+    console.log('Checking system inactivity...');
+    // Perform actions for system inactivity here
+  }
+
+  // Set the event listeners for system lock and unlock
+  powerMonitor.on('lock-screen', () => {
+    console.log('System is locked.');
+    stopAllScreenshotProcesses();
+    
+    // If there was a previous inactiveTimer, clear it
+    if (inactiveTimer) {
+      clearTimeout(inactiveTimer);
+    }
+  });
+
+  powerMonitor.on('unlock-screen', () => {
+    console.log('System is unlocked.');
+    readUserData();
+    // Set a new timer for 2 minutes (120,000 milliseconds)
+    inactiveTimer = setTimeout(checkSystemInactivity, 120000);
+  });
+
+
+
+
+  function userInactive() {
+    console.log('User has been inactive for 3 minutes.');
+    // win.webContents.send('show-console-message', 'User has been inactive for 3 minutes.');
+  }
+    // Event listener for when the window gains focus (becomes active)
+    app.on('browser-window-focus', () => {
+      console.log('Window is now active.');
+      // If there was a previous userInactiveTimeout, clear it
+      if (userInactiveTimeout) {
+        clearTimeout(userInactiveTimeout);
+      }
+    });
+  
+    // Event listener for when the window loses focus (becomes inactive)
+    app.on('browser-window-blur', () => {
+      console.log('Window is now inactive.');
+      // Set a new userInactiveTimeout for 3 minutes
+      userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
+    });
+
+// Set a custom user data folder path
+// const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
+// app.setPath('downloads', customUserDataPath);
+// Function to perform actions when the user becomes inactive
+
+
+
   const iconPath = path.join(__dirname, 'assets/icon.png');
 
   tray = new Tray(iconPath)
 
   tray.on('click', () =>{
-    mainWindow.isVisible()?mainWindow.hide():mainWindow.show()
+    win.isVisible()?win.hide():win.show()
   })
 
   tray.setToolTip('Rvs Tracker')
@@ -93,7 +154,7 @@ app.whenReady().then(() => {
   tray.setContextMenu(menu)
 
   createWindow()
-  checkScreenSharingPermission();
+  // checkScreenSharingPermission();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -111,6 +172,9 @@ app.whenReady().then(() => {
     await clearDataFile(filePath);
     createWindow();
   });
+
+
+ 
 
 
 })
@@ -175,6 +239,17 @@ ipcMain.on('login', async (event) => {
 // Read the data from data.json
 let userData = {};
 
+
+// Function to stop all screenshot processes
+function stopAllScreenshotProcesses() {
+  if (screenshotIntervals && screenshotIntervals.length > 0) {
+    screenshotIntervals.forEach((intervalId) => {
+      clearInterval(intervalId);
+    });
+    screenshotIntervals = []; // Clear the array
+  }
+}
+
 function readUserData() {
   try {
     const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
@@ -188,13 +263,15 @@ function readUserData() {
     }else{
       console.log(' use exit ', user)
 
-      const delay = 15 * 60 * 1000; // 15 minutes
+      const delay = 1 * 60 * 1000; // 15 minutes
 
       // const delay =  5000; // 5 seconds
       const intervalId = setInterval(() =>{
         console.log('callscreenshort started  delay....', delay);
         ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
       }, delay);
+
+      screenshotIntervals.push(intervalId)
 
     }
 
@@ -228,7 +305,27 @@ ipcMain.on('event2', (event, arg) => {
   console.log('Received event2 with argument:', arg);
 });
 
+
+ // Listen for the message from the renderer process
+ ipcMain.on('test', async() => {
+  // Call the function in the main process
+
+  var demo = Notification.isSupported()
+  console.log('test....', demo)
+  showNotification('Notification', 'Hello from Electron.js!')
+});
+
 // console.log('userData = ', userData )
+
+// Function to show a notification
+function showNotification(title, body) {
+  const notification = new Notification({
+    title: title,
+    body: body,
+  });
+
+  notification.show();
+}
 
 
 ipcMain.on('login-attempt', async (event, loginData) => {
@@ -322,7 +419,8 @@ ipcMain.on('login-attempt', async (event, loginData) => {
           // event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
         } else {
           console.log('Screenshot saved:', filePath);
-          const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
+          // const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
+          const uploadUrl = 'http://erp.test/api/save_screenshort';
           uploadImage(filePath, uploadUrl);
 
           console.log('logged user :', userData);
@@ -431,9 +529,9 @@ function closeAllWindows() {
 
 app.on('window-all-closed', () => {
   // On macOS, quit the app when all windows are closed
-  if (process.platform === 'darwin') {
+  // if (process.platform === 'darwin') {
     app.quit();
-  }
+  // }
 });
 
 app.on('activate', () => {
@@ -460,18 +558,18 @@ function checkScreenSharingPermission_old() {
 }
 
 
-function checkScreenSharingPermission() {
-  const permissionGranted = settings.get('screenSharingPermission');
+// function checkScreenSharingPermission() {
+//   const permissionGranted = settings.get('screenSharingPermission');
 
-  if (permissionGranted) {
-    console.log('Screen sharing permission is granted.');
-    // You can perform further actions if the permission is granted
-  } else {
-    console.log('Screen sharing permission is not granted.');
-    // Show a dialog to request the user's permission
-    showPermissionDialog();
-  }
-}
+//   if (permissionGranted) {
+//     console.log('Screen sharing permission is granted.');
+//     // You can perform further actions if the permission is granted
+//   } else {
+//     console.log('Screen sharing permission is not granted.');
+//     // Show a dialog to request the user's permission
+//     showPermissionDialog();
+//   }
+// }
 
 
 function showPermissionDialog() {
@@ -485,16 +583,18 @@ function showPermissionDialog() {
   }).then(result => {
     if (result.response === 0) {
       // The user clicked 'Grant Permission'
-      settings.set('screenSharingPermission', true);
+      // settings.set('screenSharingPermission', true);
       // You can request the screen sharing permission again or open a new window to start screen capturing
       // For example:
       // mainWindow.webContents.send('request-screen-sharing-permission');
     } else {
       // The user clicked 'Cancel' or closed the dialog
       // You can handle the scenario where the user denies the permission
-      settings.set('screenSharingPermission', false);
+      // settings.set('screenSharingPermission', false);
     }
   }).catch(error => {
     console.error('Error showing permission dialog:', error);
   });
 }
+
+

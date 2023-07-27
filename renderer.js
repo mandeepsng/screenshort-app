@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   // Only run this code if the user is on the dashboard page
   if (window.location.href.includes('dashboard.html')) {
@@ -60,6 +59,21 @@ async function takeScreenshot() {
 }
 
 
+// Add the event listener for the screenshot button only if it exists
+const testing = document.getElementById('testing');
+if (testing) {
+  testing.addEventListener('click', test);
+}
+
+
+async function test() {
+  await window.checking.test()
+  // window.screenshot.screenShotCaptured((event, dataURL) => {
+  //   console.log('screenshot-button', dataURL);
+  //   document.getElementById('screenshot-image').src = dataURL;
+  // });
+}
+
 // async function takelogin() {
 //   // await window.screenshot.login()
 //   window.screenshot.login((event, dataURL) => {
@@ -77,4 +91,9 @@ async function takeScreenshot() {
 ipcRenderer.on('login-failed', (event, errorMessage) => {
   alert('Login failed. Error: Wrong email password'  );
   console.log(errorMessage);
+});
+
+// Listen for the show-console-message event from the main process
+ipcRenderer.on('show-console-message', (event, message) => {
+  console.log(message);
 });
