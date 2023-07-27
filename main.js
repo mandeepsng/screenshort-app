@@ -14,6 +14,7 @@ let setting = {
   }
 }
 
+let win;
 let tray = null
 
 let userInactiveTimeout;
@@ -48,10 +49,11 @@ Menu.setApplicationMenu(menu)
 
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 600,
     height: 450,
     resizable: false,
+    skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
@@ -117,7 +119,7 @@ app.whenReady().then(() => {
   function userInactive() {
     console.log('User has been inactive for 3 minutes.');
     // win.webContents.send('show-console-message', 'User has been inactive for 3 minutes.');
-  }
+    }
     // Event listener for when the window gains focus (becomes active)
     app.on('browser-window-focus', () => {
       console.log('Window is now active.');
@@ -146,7 +148,10 @@ app.whenReady().then(() => {
   tray = new Tray(iconPath)
 
   tray.on('click', () =>{
-    win.isVisible()?win.hide():win.show()
+    // win.isVisible()?win.hide():win.show()
+    // win.focus()
+    createWindow()
+    // console.log('hererer  fff')
   })
 
   tray.setToolTip('Rvs Tracker')
@@ -163,6 +168,20 @@ app.whenReady().then(() => {
   })
 
 
+
+  app.on('window-all-closed', () => {
+    console.log('close')
+    // win.minimize()
+    // On macOS, quit the app when all windows are closed
+    // if (process.platform === 'darwin') {
+      // app.quit();
+    // }
+  });
+
+
+  // ipcMain.on('open-window', () => {
+  //   win.restore();
+  // });
 
 
   // Listen for the message from the renderer process
@@ -183,14 +202,6 @@ function myMainProcessFunction() {
   console.log('Main process function was called!');
   // Your main process logic here
 }
-
-
-// app.on('window-all-closed', () => {
-//   if (process.platform !== 'darwin') {
-//     app.quit()
-//   }
-// })
-
 
 // Function to capture the screenshot of a specific screen
 async function captureScreen(screenId) {
@@ -309,6 +320,10 @@ ipcMain.on('event2', (event, arg) => {
  // Listen for the message from the renderer process
  ipcMain.on('test', async() => {
   // Call the function in the main process
+  
+  win.minimize()
+  
+  console.log(' jdsfksdj new')
 
   var demo = Notification.isSupported()
   console.log('test....', demo)
@@ -319,10 +334,43 @@ ipcMain.on('event2', (event, arg) => {
 
 // Function to show a notification
 function showNotification(title, body) {
-  const notification = new Notification({
-    title: title,
-    body: body,
-  });
+  // const notification = new Notification({
+  //   title: title,
+  //   body: body,
+  // });
+  const notification = new Notification(
+    {
+      title: 'Custom Notification',
+      subtitle: 'Subtitle of the Notification',
+      body: 'Body of Custom Notification',
+      silent: false,
+      icon: path.join(__dirname, 'assets/icon.png'),
+      hasReply: true,  
+      // timeoutType: 'never', 
+      replyPlaceholder: 'Reply Here',
+      urgency: 'critical' 
+    }
+  );
+
+  notification.show();
+}
+
+
+function LoginNotification(title, body) {
+  
+  const notification = new Notification(
+    {
+      title: title,
+      subtitle: 'Subtitle of the Notification',
+      body: body,
+      silent: false,
+      icon: path.join(__dirname, 'assets/icon.png'),
+      hasReply: true,  
+      // timeoutType: 'never', 
+      replyPlaceholder: 'Reply Here',
+      urgency: 'critical' 
+    }
+  );
 
   notification.show();
 }
@@ -341,7 +389,7 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 
     if(userData.apiResponse.auth ==='done'){
 
-      
+      let name = `${userData.apiResponse.user.first_name} ${userData.apiResponse.user.last_name}`
       fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
       // win.reload();
       // Redirect to the dashboard.
@@ -350,14 +398,20 @@ ipcMain.on('login-attempt', async (event, loginData) => {
       // win.loadFile(path.join(__dirname, 'dashboard.html'));
       console.log('userData');
       readUserData()
+      LoginNotification('Login Successfully!', name );
+      win.minimize();
       // win.webContents.send('show-dashboard', loginData);
       //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
     }else{
       console.log('error');
+      // win.minimize();
       event.sender.send('login-failed', 'Wrong email password');
+      LoginNotification('Login Failed!', 'Wrong email password' );
     }
   } catch (error) {
+    win.reload();
     console.error('Login failed:', 'Wrong email password');
+    LoginNotification('Login Failed!', 'Wrong email password' );
     event.sender.send('login-failed', 'Wrong email password');
   }
 });
@@ -419,8 +473,8 @@ ipcMain.on('login-attempt', async (event, loginData) => {
           // event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
         } else {
           console.log('Screenshot saved:', filePath);
-          // const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
-          const uploadUrl = 'http://erp.test/api/save_screenshort';
+          const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
+          // const uploadUrl = 'http://erp.test/api/save_screenshort';
           uploadImage(filePath, uploadUrl);
 
           console.log('logged user :', userData);
@@ -527,12 +581,7 @@ function closeAllWindows() {
 }
 
 
-app.on('window-all-closed', () => {
-  // On macOS, quit the app when all windows are closed
-  // if (process.platform === 'darwin') {
-    app.quit();
-  // }
-});
+
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -588,7 +637,7 @@ function showPermissionDialog() {
       // For example:
       // mainWindow.webContents.send('request-screen-sharing-permission');
     } else {
-      // The user clicked 'Cancel' or closed the dialog
+      // The user clicked 'Cancel' or closed the dialogl
       // You can handle the scenario where the user denies the permission
       // settings.set('screenSharingPermission', false);
     }
@@ -597,4 +646,7 @@ function showPermissionDialog() {
   });
 }
 
-
+if (process.platform === 'win32')
+{
+    app.setAppUserModelId('Rvs DeskTime')
+}

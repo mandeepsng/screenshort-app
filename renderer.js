@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
   // Only run this code if the user is on the dashboard page
   if (window.location.href.includes('dashboard.html')) {
 
