@@ -28,7 +28,10 @@ contextBridge.exposeInMainWorld('checking', {
   test: () => ipcRenderer.send('test')
 })
 
-
+// Expose navigator to the renderer process
+contextBridge.exposeInMainWorld('myAPI', {
+  navigator: navigator,
+});
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) =>  ipcRenderer.send(channel, data),

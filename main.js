@@ -1,9 +1,17 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut  } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
 const { Readable } = require('stream');
 const { Blob } = require('buffer');
+const { log } = require('console');
+const { spawn } = require('child_process');
+const { loadPyodide } = require('pyodide')
+
+const ActivityTracker = require("./ActivityTracker");
+const activityTracker = new ActivityTracker("tracking.json", 2000);
+activityTracker.init();
+
 
 
 // Settings object
@@ -20,6 +28,8 @@ let tray = null
 let userInactiveTimeout;
 let inactiveTimer;
 let screenshotIntervals = []
+let activityTimer;
+let chartData;
 
 
 const menuTemplate = [  
@@ -43,6 +53,40 @@ const menuTemplate = [
        role: 'quit' 
   }
 ]
+
+
+const accelerators = [
+  // Alphabets
+  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+  'U', 'V', 'W', 'X', 'Y', 'Z',
+
+  // Numbers
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+
+  // Function keys
+  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10',
+  'F11', 'F12',
+
+  // Special keys
+  'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'Pause',
+  'CapsLock', 'Escape', 'Space', 'PageUp', 'PageDown', 'End', 'Home',
+  'Insert', 'Delete',
+
+  // Arrow keys
+  'Left', 'Up', 'Right', 'Down',
+
+  // Command or Control key (platform-specific)
+  'CmdOrCtrl',
+
+  // Command or Control key with other keys
+  'CmdOrCtrl+A', 'CmdOrCtrl+C', 'CmdOrCtrl+V', 'CmdOrCtrl+X',
+  'CmdOrCtrl+Z', 'CmdOrCtrl+Shift+Z', 'CmdOrCtrl+Y', 'CmdOrCtrl+Shift+Y',
+  
+  // Add more key combinations as needed
+];
+
+
 
 const menu = Menu.buildFromTemplate(menuTemplate)
 Menu.setApplicationMenu(menu)
@@ -179,6 +223,11 @@ app.whenReady().then(() => {
   });
 
 
+  // Start the Python script
+  // startPythonScript();
+
+
+
   // ipcMain.on('open-window', () => {
   //   win.restore();
   // });
@@ -189,14 +238,76 @@ app.whenReady().then(() => {
     // Call the function in the main process
     const filePath = path.join(__dirname, 'data.json');
     await clearDataFile(filePath);
-    createWindow();
+    // createWindow();
+    app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+    app.exit(0)
   });
 
 
+  // Register multiple global hotkeys using a loop
+  // for (const acc of accelerators) {
+  //   globalShortcut.register(acc, () => {
+  //     console.log(`Keyboard activity detected for accelerator: ${acc}`);
+  //   });
+  // }
  
-
+// Start capturing screen data for mouse and keyboard tracking
+// startActivityTracking();
 
 })
+
+// end ready 
+
+// function startActivityTracking() {
+//   // Start capturing screenshots every 5 minutes (adjust the interval as needed)
+//   activityTimer = setInterval(captureScreenshot, 20000);
+// }
+
+
+
+function captureScreenshot() {
+  desktopCapturer.getSources({ types: ['screen'] })
+    .then(async (sources) => {
+      // Use the first screen source to capture the screen
+      if (sources.length > 0) {
+        const screenSource = sources[0];
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              mandatory: {
+                chromeMediaSource: 'desktop',
+                chromeMediaSourceId: screenSource.id,
+                minWidth: 1280,
+                maxWidth: 1280,
+                minHeight: 720,
+                maxHeight: 720,
+              },
+            },
+          });
+
+          // Process the screen data to detect mouse and keyboard activity
+          processScreenData(stream);
+        } catch (err) {
+          console.error('Error accessing screen:', err);
+        }
+      }
+    })
+    .catch((err) => {
+      console.error('Error getting screen sources:', err);
+    });
+}
+
+function processScreenData(stream) {
+  // You can use the stream data to analyze mouse and keyboard activity
+  // For example, you can use robotjs to check for mouse and keyboard events
+
+  // For demonstration purposes, we'll log a message when the stream is active
+  stream.oninactive = () => {
+    console.log('Screen stream stopped. Activity tracking terminated.');
+  };
+}
 
 function myMainProcessFunction() {
   console.log('Main process function was called!');
@@ -262,6 +373,9 @@ function stopAllScreenshotProcesses() {
 }
 
 function readUserData() {
+
+  
+
   try {
     const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
     userData = JSON.parse(rawData);
@@ -282,7 +396,28 @@ function readUserData() {
         ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
       }, delay);
 
+      // const delay =  2000; // 2 seconds
+      setInterval(async () => {
+        const new_chartData = await activityTracker.getChartData();
+        var data = JSON.stringify(new_chartData);
+        // const timelineApiurl = 'http://erp.test/api/timieline_store';
+        const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
+
+        uploadTimeline(data, timelineApiurl)
+       console.log('============================');
+      //  console.log(JSON.stringify(new_chartData, null, 2));
+
+       console.log('============================');
+        chartData = new_chartData;
+      }, 60000);
+
       screenshotIntervals.push(intervalId)
+
+
+      // activity track
+      const pythonTime = 10000;
+      // setInterval(runPythonScriptGetIdleDuration, pythonTime);
+      setInterval(getIdleTime, pythonTime);
 
     }
 
@@ -404,12 +539,16 @@ ipcMain.on('login-attempt', async (event, loginData) => {
       //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
     }else{
       console.log('error');
+      app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+      app.exit(0)
       // win.minimize();
       event.sender.send('login-failed', 'Wrong email password');
       LoginNotification('Login Failed!', 'Wrong email password' );
     }
   } catch (error) {
-    win.reload();
+    // win.reload();
+    app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+    app.exit(0)
     console.error('Login failed:', 'Wrong email password');
     LoginNotification('Login Failed!', 'Wrong email password' );
     event.sender.send('login-failed', 'Wrong email password');
@@ -572,6 +711,55 @@ async function clearDataFile(filePath) {
 }
 
 
+// Function to upload an json using Axios
+async function uploadTimeline(data, uploadUrl) {
+  try {
+    // const imageBuffer = fs.readFileSync(imagePath);
+
+    const formData = new FormData();
+    formData.append('value', data);
+    formData.append('id', userData.apiResponse.user.id);
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: headers,
+    });
+
+    console.log('update timeline successfully:', response.data.message);
+
+  } catch (error) {
+    console.error('Error while updating timeline:', error.message);
+  }
+}
+
+
+// Function to upload an json using Axios
+async function updateNotification(minutes, uploadUrl) {
+  try {
+
+    const formData = new FormData();
+    formData.append('idleTime', minutes);
+    formData.append('id', userData.apiResponse.user.id);
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: headers,
+    });
+
+    console.log('Inactive notification:', response.data);
+
+  } catch (error) {
+    console.error('Error while sending inactive notification:', error.message);
+  }
+}
+
+
 // Function to close all windows
 function closeAllWindows() {
   const windows = BrowserWindow.getAllWindows();
@@ -649,4 +837,228 @@ function showPermissionDialog() {
 if (process.platform === 'win32')
 {
     app.setAppUserModelId('Rvs DeskTime')
+}
+
+
+function startPythonScript(){
+  const pythonProcess = spawn('python', [path.join(__dirname, 'activity.py')] )
+
+  pythonProcess.stdout.on('data', (data) =>{
+    console.log('stdout = ', data.toString());
+  })
+
+  pythonProcess.stderr.on('data', (data) =>{
+    console.error('stderr = ',data.toString());
+  })
+
+  // Handle the Python script exit event
+  pythonProcess.on('exit', (code) => {
+    console.log(`Python script exited with code ${code}`);
+  });
+
+  // Handle errors related to the Python script process
+  pythonProcess.on('error', (err) => {
+    console.error('Error occurred in Python process:', err);
+  });
+
+}
+
+
+
+// run python file
+
+function getIdleDurationFromPython(){
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn('python', [path.join(__dirname, 'activity.py')] )
+
+    let result = '';
+     pythonProcess.stdout.on('data', (data) => {
+      result += data.toString();
+     })
+
+     pythonProcess.stderr.on('data', (data) => {
+      reject(data.toString());
+     });
+
+     pythonProcess.on('close', (code) => {
+      if(code === 0){
+        resolve(parseFloat(result));
+      }else{
+        reject(`Python script exited with non-zero code ${code}`);
+      }
+     })
+
+
+  })
+}
+
+
+async function runPythonScriptGetIdleDuration(){
+  try{
+    const idleDuration = await getIdleDurationFromPython();
+    // console.log(`Idle duration (seconds): ${idleDuration}`);
+    // console.log(idleDuration);
+    win.webContents.send('idleTime', idleDuration)
+  }catch(error){
+    console.error(`Error occured: ${error}`)
+  }
+}
+
+
+async function runActivityPy(){
+  try{
+    // Load pyodide using 'loadPyodide' function.
+    const pyodide = await loadPyodide();
+
+    // Read the content of 'activity.py'.
+    const activityPath = path.join(__dirname, 'activity.py');
+    const activityCode = fs.readFileSync(activityPath, 'utf8');
+
+    // Run the Python code from 'activity.py'.
+    const result = await pyodide.runPythonAsync(activityCode);
+    console.log('Python Output:', result);
+  }catch(error){
+    console.error('Error executing Python code:', error);
+  }
+}
+
+// helper functions
+
+(() => {
+  const formatName = (value, row) =>
+    row.url ? `<a target="_blank" href="${row.url}">${value}</a>` : value;
+  const formatTime = (value) => secondsToHms(value);
+  const secondsToHms = (d) => {
+    d = Number(d);
+    const h = Math.floor(d / 3600);
+    const m = Math.floor((d % 3600) / 60);
+    const s = Math.floor((d % 3600) % 60);
+
+    const hDisplay = h > 0 ? h + (h === 1 ? " hour, " : " hours, ") : "";
+    const mDisplay = m > 0 ? m + (m === 1 ? " minute, " : " minutes, ") : "";
+    const sDisplay = s > 0 ? s + (s === 1 ? " second " : " seconds") : "";
+
+    return hDisplay + mDisplay + sDisplay;
+  };
+
+  const dynamicColors = () => {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+
+    return `rgba(${r},${g},${b},0.5)`;
+  };
+
+  const poolColors = (size) => {
+    const pool = [];
+
+    for (let i = 0; i < size; i++) {
+      pool.push(dynamicColors());
+    }
+    return pool;
+  };
+
+  const columns = [
+    {
+      field: "name",
+      title: "name",
+      formatter: formatName,
+      sortable: true,
+    },
+    {
+      field: "time",
+      title: "time",
+      formatter: formatTime,
+      sortable: true,
+    },
+  ];
+
+  // const chartData = JSON.parse(chartData);
+  // const ctx = document.getElementById("chart").getContext("2d");
+
+  // const renderTableData = (chart, columns) => {
+  //   const table = $("#table");
+
+  //   $("#table-title").text(`${chart.title} (${secondsToHms(chart.total)})`);
+
+  //   if (table.children().length) {
+  //     return table.bootstrapTable("load", chart.data);
+  //   }
+
+  //   table.bootstrapTable({
+  //     columns,
+  //     data: chart.data,
+  //   });
+  // };
+
+  // const graphClickEvent = (event, array) => {
+  //   if (!array.length) {
+  //     return;
+  //   }
+  //   renderTableData(chartData[array[0]._index], columns);
+  // };
+
+  // new Chart(ctx, {
+  //   type: "doughnut",
+  //   data: {
+  //     datasets: [
+  //       {
+  //         data: chartData.map((data) => data.total),
+  //         backgroundColor: poolColors(chartData.length),
+  //       },
+  //     ],
+  //     labels: chartData.map((chart) => chart.title),
+  //   },
+  //   options: {
+  //     onClick: graphClickEvent,
+  //   },
+  // });
+})();
+
+
+const mainexe = path.join(__dirname, 'main.exe');
+// function
+function getIdleDurationFromExe() {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn(mainexe);
+
+    let output = '';
+
+    childProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    childProcess.stderr.on('data', (data) => {
+      console.error(`Error: ${data}`);
+      reject(new Error(data.toString()));
+    });
+
+    childProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(parseFloat(output));
+      } else {
+        reject(new Error(`Error: Non-zero exit code ${code}`));
+      }
+    });
+  });
+}
+
+
+async function getIdleTime(){
+  getIdleDurationFromExe()
+  .then((idleDuration) => {
+
+    let minutes = (idleDuration / 60).toFixed(2);
+    // console.log('Idle Duration (seconds):', idleDuration);
+    win.webContents.send('idleTime', idleDuration)
+    if(minutes > 15){
+      win.webContents.send('idleTime', 'Inactive')
+      let notificationUrl = 'http://erp.test/api/notification_inactive';
+      updateNotification(minutes, notificationUrl)
+    }
+    // console.log(idleDuration);
+  })
+  .catch((error) => {
+    console.error('Error:', error.message);
+  });
 }

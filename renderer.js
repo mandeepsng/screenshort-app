@@ -14,6 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
       // firstNameElement.innerText = `First Name: ${userData.apiResponse.user.first_name}`;
       lastNameElement.innerText = `Last Name: ${userData.apiResponse.user.last_name}`;
     });
+
+
+
+    ipcRenderer.on('idleTime', (event, userData) => {
+
+      const idleTime = document.getElementById('idleTime');
+
+      idleTime.innerText = `Idle Time: ${event} Sec`;
+
+      // Update your dashboard with the new data.
+      console.log('tetstindf...', event);
+      // userData contains the data you sent from the main process.
+      // For example, you can display it on the dashboard or update your UI elements accordingly.
+      // ...
+    });
   }
 
   // Add the event listener for the screenshot button only if it exists
