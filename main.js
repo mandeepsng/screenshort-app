@@ -412,10 +412,10 @@ function readUserData() {
       }, 60000);
 
       screenshotIntervals.push(intervalId)
-
+        
 
       // activity track
-      const pythonTime = 10000;
+      const pythonTime = 900000;
       // setInterval(runPythonScriptGetIdleDuration, pythonTime);
       setInterval(getIdleTime, pythonTime);
 
@@ -1051,7 +1051,7 @@ async function getIdleTime(){
     let minutes = (idleDuration / 60).toFixed(2);
     // console.log('Idle Duration (seconds):', idleDuration);
     win.webContents.send('idleTime', idleDuration)
-    if(minutes > 15){
+    if(minutes > 0.30){
       win.webContents.send('idleTime', 'Inactive')
       let notificationUrl = 'https://app.idevelopment.site/api/notification_inactive';
       // let notificationUrl = 'http://erp.test/api/notification_inactive';
