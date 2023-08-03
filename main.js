@@ -1053,7 +1053,8 @@ async function getIdleTime(){
     win.webContents.send('idleTime', idleDuration)
     if(minutes > 15){
       win.webContents.send('idleTime', 'Inactive')
-      let notificationUrl = 'http://erp.test/api/notification_inactive';
+      let notificationUrl = 'https://app.idevelopment.site/api/notification_inactive';
+      // let notificationUrl = 'http://erp.test/api/notification_inactive';
       updateNotification(minutes, notificationUrl)
     }
     // console.log(idleDuration);

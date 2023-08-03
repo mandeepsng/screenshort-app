@@ -1,7 +1,7 @@
 {
   "name": "rvsdesktime",
-  "version": "1.2.3",
-  "description": "",
+  "version": "1.2.4",
+  "description": "time tracking software",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
