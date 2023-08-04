@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut  } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell   } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
@@ -194,6 +194,7 @@ app.whenReady().then(() => {
   tray.on('click', () =>{
     // win.isVisible()?win.hide():win.show()
     // win.focus()
+    shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
     createWindow()
     // console.log('hererer  fff')
   })
@@ -456,13 +457,19 @@ ipcMain.on('event2', (event, arg) => {
  ipcMain.on('test', async() => {
   // Call the function in the main process
   
-  win.minimize()
+  // win.minimize()
+
+  shell.openExternal(`http://erp.test/token/${apiResponse.secret}`);
   
   console.log(' jdsfksdj new')
 
   var demo = Notification.isSupported()
   console.log('test....', demo)
-  showNotification('Notification', 'Hello from Electron.js!')
+  showNotification('Notification', 'Hello from Electron.js!');
+
+
+
+
 });
 
 // console.log('userData = ', userData )
@@ -515,9 +522,13 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 
   // console.log('loginData', loginData);
 
+  var apiLoginUrl = 'https://app.idevelopment.site/api/login';
+  // var apiLoginUrl = 'http://erp.test/api/login';
+
+
   try {
     // Send the login request to the API
-    const response = await axios.post('https://app.idevelopment.site/api/login', loginData);
+    const response = await axios.post(apiLoginUrl, loginData);
 
     // Save the response data to data.json
     userData.apiResponse = response.data;
@@ -1051,7 +1062,7 @@ async function getIdleTime(){
     let minutes = (idleDuration / 60).toFixed(2);
     // console.log('Idle Duration (seconds):', idleDuration);
     win.webContents.send('idleTime', idleDuration)
-    if(minutes > 0.30){
+    if(minutes > 15){
       win.webContents.send('idleTime', 'Inactive')
       let notificationUrl = 'https://app.idevelopment.site/api/notification_inactive';
       // let notificationUrl = 'http://erp.test/api/notification_inactive';
