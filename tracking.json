@@ -1,599 +1,635 @@
 {
   "Electron": {
     "RVS (ERP)": {
-      "time": 1094.3440000000003
+      "time": 3071.6740000000004
+    }
+  },
+  "Google Chrome": {
+    "Dashboard - Google Chrome": {
+      "time": 1747.6590000000003
     },
-    "rvsdesktime": {
-      "time": 2.002
+    "phpmyadmin.test / localhost / erp / notifications | phpMyAdmin 5.1.3 - Google Chrome": {
+      "time": 116.52000000000001
+    },
+    "javascript - Electron tray Icon duplication issue (Windows 10) - Stack Overflow - Google Chrome": {
+      "time": 2.014
+    },
+    "across-tabs - npm - Google Chrome": {
+      "time": 148.57299999999998
+    },
+    "Electron Controller Creation - Google Chrome": {
+      "time": 1014.8910000000001
+    },
+    "New Tab - Google Chrome": {
+      "time": 237.07999999999998
+    },
+    "Alivio del estrés y la ansiedad - Emociones negativas de desintoxicación, curativa para dormir - YouTube - Google Chrome": {
+      "time": 4.044
+    },
+    "YouTube - Google Chrome": {
+      "time": 10.051
+    },
+    "Convert an Object's Values or Keys to an Array in JavaScript | bobbyhadz - Google Chrome": {
+      "time": 12.067
+    },
+    "get-browser-tabs npm - Google Search - Google Chrome": {
+      "time": 8.052
+    },
+    "get browser tabs npm - Google Search - Google Chrome": {
+      "time": 10.039
+    },
+    "browser tabs - npm search - Google Chrome": {
+      "time": 4.022
+    },
+    "browser-tabs-lock - npm - Google Chrome": {
+      "time": 40.139
+    },
+    "Calendly - Rishabh Poddar - Google Chrome": {
+      "time": 10.053
+    },
+    "Untitled - Google Chrome": {
+      "time": 6.058999999999999
+    },
+    "getbootstrap.com/docs/4.0/components/tooltips/ - Google Chrome": {
+      "time": 2.004
+    },
+    "Tooltips · Bootstrap - Google Chrome": {
+      "time": 16.08
+    },
+    "My DeskTime - August 8, 2023 | DeskTime - Google Chrome": {
+      "time": 80.44800000000001
+    },
+    "tooltip bootstrap - Google Search - Google Chrome": {
+      "time": 2.007
+    },
+    "tooltip bootstrap codepen - Google Search - Google Chrome": {
+      "time": 18.05
+    },
+    "Bootstrap tooltip CSS-only - Google Chrome": {
+      "time": 26.073
+    },
+    "Bootstrap html tooltips - Google Chrome": {
+      "time": 12.067
+    },
+    "show li on tooltip bootstrap codepen - Google Search - Google Chrome": {
+      "time": 2.01
+    },
+    "Tooltip using Bootstrap - Google Chrome": {
+      "time": 148.619
+    },
+    "(978) On Top (Full Video) Karan Aujla | Yeah Proof | New Punjabi Songs 2022 - YouTube - Google Chrome": {
+      "time": 2.023
+    },
+    "(978) YouTube - Google Chrome": {
+      "time": 58.473
+    },
+    "view-source:erp.test/employee/activity# - Google Chrome": {
+      "time": 18.071
+    },
+    "erp.test/assets_admin/libs/bootstrap/css/bootstrap.min.css - Google Chrome": {
+      "time": 10.035
+    },
+    "cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css - Google Chrome": {
+      "time": 10.04
+    },
+    "cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js - Google Chrome": {
+      "time": 8.038
+    },
+    "erp.test/assets_admin/libs/bootstrap/js/bootstrap.bundle.min.js - Google Chrome": {
+      "time": 2
+    },
+    "(979) YouTube - Google Chrome": {
+      "time": 38.233000000000004
+    },
+    "(979) Adorable Baby Boy Cuddles on Nurse - YouTube - Google Chrome": {
+      "time": 20.081
+    },
+    "(979) How I Use AI + No Code to Validate any SaaS Idea - YouTube - Google Chrome": {
+      "time": 591.7570000000001
+    },
+    "helloclinic/database at master · mandeepsng/helloclinic - Google Chrome": {
+      "time": 2.017
+    },
+    "autoUpdater | Electron - Google Chrome": {
+      "time": 2.021
+    },
+    "screenshort-app/tracking.json at master · mandeepsng/screenshort-app - Google Chrome": {
+      "time": 6.035
+    },
+    "Nifty - Google Chrome": {
+      "time": 2.016
+    },
+    "tinkiwi - Google Search - Google Chrome": {
+      "time": 6.055
+    },
+    "tinykiwi - Google Search - Google Chrome": {
+      "time": 8.071
+    },
+    "tinykiwi.co - Google Chrome": {
+      "time": 2.014
+    },
+    "TinyKiwi - Image editor, tailor-made for creative entrepreneurs - Google Chrome": {
+      "time": 36.18900000000001
+    },
+    "ChatGPT - Google Chrome": {
+      "time": 893.4649999999999
+    },
+    "Electron MySQL App - Google Chrome": {
+      "time": 102.472
+    },
+    "(990) Mastaney Film ਦੀ ਕਹਾਣੀ | Tarsem Jassar | Sikh History | Movie Trailer - YouTube - Google Chrome": {
+      "time": 7.411
+    },
+    "(990) YouTube - Google Chrome": {
+      "time": 18.1
+    },
+    "(990) Elante Mall ਚ’ ਨਿਹੰਗ ਸਿੰਘ ਨੇ ਗਰਜਕੇ ਦਿੱਤੀ Tarsem Jassar ਨੂੰ ਥਾਪੀ। Mastane Movie upcoming. - YouTube - Google Chrome": {
+      "time": 64.434
+    },
+    "app.idevelopment.site | 522: Connection timed out - Google Chrome": {
+      "time": 1298.058
+    },
+    "lofi.life - Google Chrome": {
+      "time": 4.013
+    },
+    "(991) How To Create Milllion Dollar SaaS Ideas (Step-By-Step Strategy) - YouTube - Google Chrome": {
+      "time": 8.029
+    },
+    "(991) YouTube - Google Chrome": {
+      "time": 64.34899999999999
+    },
+    "How Google Measures Developer Productivity - by Abi Noda - Google Chrome": {
+      "time": 101.90899999999999
+    },
+    "": {
+      "time": 134.764
+    },
+    "erp.test/admin/dashboard - Google Chrome": {
+      "time": 2.015
+    },
+    "Attempt to read property \"phone\" on null - Google Chrome": {
+      "time": 28.153000000000002
+    },
+    "syntax error, unexpected token \"<\" - Google Chrome": {
+      "time": 10.07
+    },
+    "Attempt to read property \"dob\" on null - Google Chrome": {
+      "time": 24.157
+    },
+    "(991) R NAIT : Navigation (Official Video) | Josan Bros | Latest Punjabi Song 2023 | New Punjabi Song 2023 - YouTube - Google Chrome": {
+      "time": 4.02
+    },
+    "(991) No Code SaaS - Is It Real or All Hype? - YouTube - Google Chrome": {
+      "time": 36.222
+    },
+    "(992) No Code SaaS - Is It Real or All Hype? - YouTube - Google Chrome": {
+      "time": 1185.312
+    },
+    "apps without code - Google Search - Google Chrome": {
+      "time": 24.125
+    },
+    "Apps Without Code - Google Chrome": {
+      "time": 253.168
+    },
+    "Choose your package - Google Chrome": {
+      "time": 56.228
+    },
+    "Attempt to read property \"department_id\" on null - Google Chrome": {
+      "time": 64.262
+    },
+    "Attempt to read property \"account_holder_name\" on null - Google Chrome": {
+      "time": 28.115000000000002
+    },
+    "Attempt to read property \"gender\" on null - Google Chrome": {
+      "time": 76.339
+    },
+    "The best way to build web apps without code | Bubble - Google Chrome": {
+      "time": 48.213
+    },
+    "bubble framework - Google Search - Google Chrome": {
+      "time": 110.355
+    },
+    "Node.js Activity Tracking - Google Chrome": {
+      "time": 2.015
+    },
+    "Bubble.io | Bubble App Builder| No-code Platform - Google Chrome": {
+      "time": 12.041
+    },
+    "How to disable a Link in React | bobbyhadz - Google Chrome": {
+      "time": 20.121000000000002
+    },
+    "Blog | bobbyhadz - Google Chrome": {
+      "time": 20.069
+    },
+    "How to sort a Set in JavaScript | bobbyhadz - Google Chrome": {
+      "time": 1046.4219999999998
+    },
+    "drip - Google Search - Google Chrome": {
+      "time": 4.014
+    },
+    "Customer-Centric Marketing Automation Platform | Drip - Google Chrome": {
+      "time": 36.136
+    },
+    "Drip Ecommerce Marketing Software Pricing | Get Started with Drip - Google Chrome": {
+      "time": 176.844
+    },
+    "Learn How to Grow Your Ecommerce Business | Drip Blog - Google Chrome": {
+      "time": 36.173
+    },
+    "RVSMEDIA/erp: erp software - Google Chrome": {
+      "time": 8.023
+    },
+    "RVSMEDIA/erp at mandeep - Google Chrome": {
+      "time": 4.029999999999999
+    },
+    "Comparing master...mandeep · RVSMEDIA/erp - Google Chrome": {
+      "time": 16.099
+    },
+    "new changes by mandeepsng · Pull Request #114 · RVSMEDIA/erp - Google Chrome": {
+      "time": 20.076
+    },
+    "app.idevelopment.site/admin/employee/list - Google Chrome": {
+      "time": 2.013
+    },
+    "betterlegal - Google Search - Google Chrome": {
+      "time": 8.028
+    },
+    "Set Up Your Business with BetterLegal - Google Chrome": {
+      "time": 120.527
+    },
+    "(992) YouTube - Google Chrome": {
+      "time": 24.107
+    },
+    "(992) saas marketing strategy - YouTube - Google Chrome": {
+      "time": 16.101
+    },
+    "(992) 4 Marketing Strategies That Grew My SaaS To 7 Figures - YouTube - Google Chrome": {
+      "time": 58.269
+    },
+    "Build Bubble.io-like App - Google Chrome": {
+      "time": 357.80400000000003
+    },
+    "laravel honeypot - Google Search - Google Chrome": {
+      "time": 20.069000000000003
+    },
+    "How to Create Honeypot for Battling Form Spam in Laravel - Artisans Web - Google Chrome": {
+      "time": 210.834
+    },
+    "String to JSON Online to convert JSON Text to JSON Tree. - Google Chrome": {
+      "time": 18.077
+    },
+    "Base64 Decode and Encode - Online - Google Chrome": {
+      "time": 24.096
+    },
+    "Json Parser Online - Google Chrome": {
+      "time": 76.33500000000001
+    },
+    "Base64 Encode and Decode - Online - Google Chrome": {
+      "time": 34.149
+    },
+    "Login - Google Chrome": {
+      "time": 36.129
+    },
+    "json stringify - Google Search - Google Chrome": {
+      "time": 2.006
+    },
+    "JSON.stringify() - Google Chrome": {
+      "time": 4.011
+    },
+    "json stringify online - Google Search - Google Chrome": {
+      "time": 2.006
+    },
+    "JSON Stringify Online using JSON.Stringify() - Google Chrome": {
+      "time": 40.179
+    },
+    "Cannot access offset of type string on string - Google Chrome": {
+      "time": 6.007
+    },
+    "60*1000*5 - Google Search - Google Chrome": {
+      "time": 6.021
+    },
+    "Tell It Once VH Spec.docx - Google Chrome": {
+      "time": 12.064
+    },
+    "phpMyAdmin - Google Chrome": {
+      "time": 18.094
+    },
+    "104.248.172.183 / localhost | phpMyAdmin 5.2.0 - Google Chrome": {
+      "time": 10.049
+    },
+    "desktime - OneDrive - Google Chrome": {
+      "time": 2.139
+    },
+    "HR Portal (ERP Software) Roadmap | Nifty - Google Chrome": {
+      "time": 44.194
+    },
+    "(993) 4 Marketing Strategies That Grew My SaaS To 7 Figures - YouTube - Google Chrome": {
+      "time": 14.071
+    },
+    "buildwith.co - Google Chrome": {
+      "time": 2.007
+    },
+    "buildwith - Google Search - Google Chrome": {
+      "time": 2.011
+    },
+    "BuiltWith Technology Lookup - Google Chrome": {
+      "time": 10.054
+    },
+    "Plans & Pricing - Google Chrome": {
+      "time": 34.13
+    },
+    "apollo - Google Search - Google Chrome": {
+      "time": 6.025
+    },
+    "Sales Intelligence and Engagement Platform | Apollo - Google Chrome": {
+      "time": 24.111
+    },
+    "Pricing | Apollo - Google Chrome": {
+      "time": 70.277
+    },
+    "Sign in - Google Accounts - Google Chrome": {
+      "time": 14.044
+    },
+    "Apollo - Google Chrome": {
+      "time": 60.22
+    },
+    "How to merge Objects in TypeScript | bobbyhadz - Google Chrome": {
+      "time": 34.245
+    },
+    "104.248.172.183 / localhost / erp | phpMyAdmin 5.2.0 - Google Chrome": {
+      "time": 6.021
+    },
+    "104.248.172.183 / localhost / erp / notifications | phpMyAdmin 5.2.0 - Google Chrome": {
+      "time": 18.086
+    },
+    "104.248.172.183 / localhost / erp / bell_read_users | phpMyAdmin 5.2.0 - Google Chrome": {
+      "time": 30.117
+    },
+    "phpmyadmin.test / localhost / erp | phpMyAdmin 5.1.3 - Google Chrome": {
+      "time": 46.205
+    },
+    "phpmyadmin.test / localhost / erp / bell_read_users | phpMyAdmin 5.1.3 - Google Chrome": {
+      "time": 26.107999999999997
+    },
+    "notification functionality database design - Google Search - Google Chrome": {
+      "time": 20.072000000000003
+    },
+    "Database Schema For Notification System Similar to Facebooks - Stack Overflow - Google Chrome": {
+      "time": 10.038
+    },
+    "r5v0x.png (1411×1155) - Google Chrome": {
+      "time": 28.1
+    },
+    "notification functionality database design like microsoft teams - Google Search - Google Chrome": {
+      "time": 6.038
+    },
+    "Send activity feed notifications to users in Microsoft Teams - Microsoft Graph | Microsoft Learn - Google Chrome": {
+      "time": 12.05
+    },
+    "People - Apollo - Google Chrome": {
+      "time": 42.162
+    },
+    "Paratime - Social Time Tracker For VsCode | Product Hunt - Google Chrome": {
+      "time": 96.388
+    },
+    "Product Hunt – The best new products in tech. - Google Chrome": {
+      "time": 90.55799999999999
+    },
+    "Recast - Turn your read-later list into bite-size audio convos w/AI - Google Chrome": {
+      "time": 4.01
+    },
+    "Net | Node.js v20.5.1 Documentation - Google Chrome": {
+      "time": 12.073
+    },
+    "JSON Encoding for Two - Google Chrome": {
+      "time": 546.646
+    },
+    "Electron 14.0.0 | Electron - Google Chrome": {
+      "time": 2.014
+    },
+    "app | Electron - Google Chrome": {
+      "time": 28.106
+    },
+    "(1001) Sukh Tera Ditha Leheeai | New Soothing Shabad | 4K | Bhai Harinder Singh Ji | NKJ - YouTube - Google Chrome": {
+      "time": 6.029
+    },
+    "(1001) YouTube - Google Chrome": {
+      "time": 108.45
+    },
+    "(1001) 7 मिनिट में आपका जीवन बदल जाएगा | कर्मो की गति | The Power of present karma | Dharmarth - YouTube - Google Chrome": {
+      "time": 18.126
+    },
+    "(1001) Dharmarth - YouTube - Google Chrome": {
+      "time": 34.143
+    },
+    "Notification | Electron - Google Chrome": {
+      "time": 522.278
+    },
+    "(1001) Become A Lead Generation Machine (Easy Way To Get More Clients) Masterclass w/ Joana Galvao - YouTube - Google Chrome": {
+      "time": 4.019
+    },
+    "通知 | Electron - Google Chrome": {
+      "time": 14.079
+    },
+    "(1002) Adhi Tape | Garry Sandhu | #PunjabiSongs 2021 ( Album ) | Fresh Media Records - YouTube - Google Chrome": {
+      "time": 16.127
+    },
+    "My DeskTime - August 10, 2023 | DeskTime - Google Chrome": {
+      "time": 4.011
+    },
+    "(1003) Bhool Bhulaiyaa 2 (Title Track) Kartik A, Kiara A, Tabu |Pritam, Tanishk, Neeraj, Anees B, Bhushan K - YouTube - Google Chrome": {
+      "time": 10.06
+    },
+    "(1003) YouTube - Google Chrome": {
+      "time": 10.05
+    },
+    "(1003) We Built an App in 24 Hours [No Code] - YouTube - Google Chrome": {
+      "time": 154.709
+    },
+    "auto start electronjs app when window starts - Google Search - Google Chrome": {
+      "time": 28.124000000000002
+    },
+    "Auto launch to system tray on system startup - Electron + Ionic app · Issue #25081 · electron/electron - Google Chrome": {
+      "time": 30.155
+    },
+    "Reddit - Dive into anything - Google Chrome": {
+      "time": 2.013
+    },
+    "(4) How to make an electron app auto start on startup for windows ? : electronjs - Google Chrome": {
+      "time": 4.015
+    },
+    "Electron on start up without entry in autostart [Unwanted] - GNOME - Manjaro Linux Forum - Google Chrome": {
+      "time": 4.021
+    },
+    "Electron on start up without entry in autostart [Unwanted] - Support / GNOME - Manjaro Linux Forum - Google Chrome": {
+      "time": 38.151
     }
   },
   "Visual Studio Code": {
-    "ActivityTracker.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 12.146999999999998
-    },
     "tracking.json - electron-screenshot-example - Visual Studio Code": {
-      "time": 104.52199999999999
+      "time": 34.16
     },
-    "renderer.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 32.166
+    "ActivityTracker.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 62.402
     },
     "main.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 491.94
+      "time": 434.25199999999995
     },
-    "● main.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 38.153999999999996
+    "binding.gyp - electron-screenshot-example - Visual Studio Code": {
+      "time": 14.048
     },
-    "activity.py - electron-screenshot-example - Visual Studio Code": {
-      "time": 22.083999999999996
-    },
-    "● activity.py - electron-screenshot-example - Visual Studio Code": {
-      "time": 16.089
-    },
-    "dashboard.html - electron-screenshot-example - Visual Studio Code": {
-      "time": 14.114999999999998
-    },
-    "● renderer.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 22.084
-    },
-    "Visual Studio Code": {
-      "time": 6.033999999999999
-    },
-    "data.json - electron-screenshot-example - Visual Studio Code": {
-      "time": 156.48000000000002
-    },
-    "● create • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 4.013999999999999
-    },
-    "● create program in c • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.003
-    },
-    "● create program in c++ for • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.01
-    },
-    "● create program in c++ for check • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 16.067
-    },
-    "● create program in c++ for check o • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.013
-    },
-    "● create program in c++ for time t • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.001
-    },
-    "● create program in c++ for time tracker t • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
-      "time": 74.338
-    },
-    "main.cpp - cpp - Visual Studio Code": {
-      "time": 470.144
-    },
-    "deskt.cpp - cpp - Visual Studio Code": {
-      "time": 152.648
-    },
-    "first.exe - electron-screenshot-example - Visual Studio Code": {
-      "time": 108.51
+    "index.d.ts - electron-screenshot-example - Visual Studio Code": {
+      "time": 16.073
     },
     "index.js - electron-screenshot-example - Visual Studio Code": {
-      "time": 224.50800000000004
-    },
-    "main.exe - cpp - Visual Studio Code": {
-      "time": 20.102
-    },
-    "program.exe - cpp - Visual Studio Code": {
-      "time": 2.032
-    },
-    "main.cpp - electron-screenshot-example - Visual Studio Code": {
-      "time": 6.029999999999999
+      "time": 6.043
     },
     "package.json - electron-screenshot-example - Visual Studio Code": {
-      "time": 164.676
+      "time": 30.131
     },
-    "rvsdesktime Setup 1.2.3.exe - electron-screenshot-example - Visual Studio Code": {
-      "time": 12.081000000000001
+    "ActivityTracker_old.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 26.146
     },
-    "dashboard.blade.php - erp - Visual Studio Code": {
-      "time": 8.038
+    "Visual Studio Code": {
+      "time": 4.037
     },
     "activity.blade.php - erp - Visual Studio Code": {
-      "time": 4.02
+      "time": 237.224
     },
-    "nav_admin.blade.php - erp - Visual Studio Code": {
-      "time": 58.314
+    "● activity.blade.php - erp - Visual Studio Code": {
+      "time": 156.833
     },
-    "● nav_admin.blade.php - erp - Visual Studio Code": {
-      "time": 20.068
+    "edit.blade.php - erp - Visual Studio Code": {
+      "time": 132.637
     },
-    "screenshort.cpp - cpp - Visual Studio Code": {
-      "time": 409.6719999999999
+    "● edit.blade.php - erp - Visual Studio Code": {
+      "time": 172.80599999999998
     },
-    "Extension: Code Runner - cpp - Visual Studio Code": {
+    "data.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 20.086
+    },
+    "screenshot_1691583168063.png - electron-screenshot-example - Visual Studio Code": {
       "time": 2.016
     },
-    "first.cpp - cpp - Visual Studio Code": {
-      "time": 46.201
-    },
-    "screenshort.exe - cpp - Visual Studio Code": {
-      "time": 16.055
-    },
-    "screenshot.bmp - cpp - Visual Studio Code": {
-      "time": 20.096
-    },
-    "● screenshort.cpp - cpp - Visual Studio Code": {
-      "time": 22.076
-    },
-    "screenshot_20230802_134338.jpg - cpp - Visual Studio Code": {
-      "time": 18.071
-    },
-    "Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 42.167
-    },
-    "● Parent / Young Children • Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 122.566
-    },
-    "● Parent / Young Children () • Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.005
-    },
-    "● Parent / Young Children (D) • Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.011
-    },
-    "● Parent / Young Children ( • Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 2.011
-    },
-    "● Untitled-2 - electron-screenshot-example - Visual Studio Code": {
-      "time": 3367.07
-    },
-    "2023_07_31_160345_create_window_timelines_table.php - erp - Visual Studio Code": {
-      "time": 4.016
-    },
-    "WindowTimeline.php - erp - Visual Studio Code": {
-      "time": 8.023
-    },
-    "WindowTimelineController.php - erp - Visual Studio Code": {
-      "time": 34.127
-    },
-    "common-scripts.blade.php - erp - Visual Studio Code": {
-      "time": 14.068999999999999
+    "web.php - erp - Visual Studio Code": {
+      "time": 44.206
     },
     "api.php - erp - Visual Studio Code": {
-      "time": 453.8379999999999
-    },
-    "head_admin.blade.php - erp - Visual Studio Code": {
-      "time": 68.271
-    },
-    "EmployeeController.php - erp - Visual Studio Code": {
-      "time": 4.015000000000001
-    },
-    "● api.php - erp - Visual Studio Code": {
-      "time": 32.128
+      "time": 4.014
     },
     "NotificationController.php - erp - Visual Studio Code": {
-      "time": 30.141
+      "time": 76.318
     },
-    "● NotificationController.php - erp - Visual Studio Code": {
-      "time": 28.119
+    "common-scripts.blade.php - erp - Visual Studio Code": {
+      "time": 4.08
+    },
+    "UserController.php - erp - Visual Studio Code": {
+      "time": 2.007
+    },
+    "common.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 213.08299999999997
+    },
+    "● common.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 20.076
+    },
+    "time.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 50.260000000000005
+    },
+    "● main.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 26.119
+    },
+    "renderer.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 54.285000000000004
+    }
+  },
+  "Windows Shell Experience Host": {
+    "New notification": {
+      "time": 961.793
+    },
+    "Date and Time Information": {
+      "time": 8.055
+    }
+  },
+  "Electronjs": {
+    "Buy now...": {
+      "time": 20.455000000000002
+    },
+    "Build cross-platform desktop apps with JavaScript, HTML, and CSS | Electron": {
+      "time": 82.98
+    },
+    "Introduction | Electron": {
+      "time": 4.015
+    },
+    "Advanced Installation Instructions | Electron": {
+      "time": 2.005
+    },
+    "electronjs-nativefier-cc9cce": {
+      "time": 2.185
+    },
+    "Electronjs": {
+      "time": 15.168
     }
   },
   "Windows Explorer": {
     "": {
-      "time": 62.322999999999986
-    },
-    "electron-screenshot-example": {
-      "time": 54.211000000000006
-    },
-    "Compressed": {
-      "time": 10.041
-    },
-    "Folder Access Denied": {
-      "time": 2.011
-    },
-    "cpp": {
-      "time": 24.107000000000003
-    },
-    "dist": {
-      "time": 16.086
-    },
-    "Progress": {
-      "time": 4.016
-    },
-    "File Explorer": {
-      "time": 2.018
-    }
-  },
-  "Google Chrome": {
-    "Automatic Time Tracking using Node.js - Write JavaScript - Google Chrome": {
-      "time": 526.248
-    },
-    "active-win - npm - Google Chrome": {
-      "time": 62.436
-    },
-    "dannyda.com - Google Chrome": {
-      "time": 8.022
-    },
-    "node.js - It is possible to track what apps are in use and what file is opened with nodejs - Stack Overflow - Google Chrome": {
-      "time": 22.48
-    },
-    "Dashboard - Google Chrome": {
-      "time": 2780.8909999999996
-    },
-    "Firebase console - Google Chrome": {
-      "time": 6.046
-    },
-    "electronjs - Cloud Firestore - Firebase console - Google Chrome": {
-      "time": 48.177
-    },
-    "ways to build a desktop app with electron and python | by Adarsha Regmi | Medium - Google Chrome": {
-      "time": 2.032
-    },
-    "My DeskTime - July 31, 2023 | DeskTime - Google Chrome": {
-      "time": 124.606
-    },
-    "electronjs - Authentication - Firebase console - Google Chrome": {
-      "time": 8.035
-    },
-    "Power of your Subconscious MIND in Hindi | हिंदी | KUKUFM - Google Chrome": {
-      "time": 44.222
-    },
-    "selfspy/selfspy/activity_store.py at master · selfspy/selfspy - Google Chrome": {
-      "time": 2.019
-    },
-    "detect last activity on window using python - Google Search - Google Chrome": {
-      "time": 130.556
-    },
-    "(873) Hang Drum + Tabla + Flute Music | Mystical Yoga Music | Relaxing Music with Bird Sounds + Rain - YouTube - Google Chrome": {
-      "time": 2.01
-    },
-    "Track User Activity with Python - Google Chrome": {
-      "time": 2.02
-    },
-    "pretty-print JSON using JavaScript - Stack Overflow - Google Chrome": {
-      "time": 1.883
-    },
-    "phpmyadmin.test / localhost / erp / window_timelines | phpMyAdmin 5.1.3 - Google Chrome": {
-      "time": 18.042
-    },
-    "New Tab - Google Chrome": {
-      "time": 225.80399999999997
-    },
-    "How to Execute Python Scripts in Electron and NodeJS | Skcript - Google Chrome": {
-      "time": 55.835
-    },
-    "(882) You Can Learn Anything | Sandeep Maheshwari | Every Student Must Watch This Video | Hindi - YouTube - Google Chrome": {
-      "time": 6.02
-    },
-    "Using Pyodide — Version 0.23.4 - Google Chrome": {
-      "time": 8.096
-    },
-    "Loading packages — Version 0.23.4 - Google Chrome": {
-      "time": 49.669
-    },
-    "Create Python Executable. - Google Chrome": {
-      "time": 34.153
-    },
-    "My DeskTime - August 2, 2023 | DeskTime - Google Chrome": {
-      "time": 869.364
-    },
-    "phpMyAdmin - Google Chrome": {
-      "time": 919.1410000000001
-    },
-    "(896) YouTube - Google Chrome": {
-      "time": 50.205
-    },
-    "(896) The Truth about Artificial Intelligence and ChatGPT | Dhruv Rathee - YouTube - Google Chrome": {
-      "time": 301.419
-    },
-    "How to Run C++ Program in Visual Studio Code | vs code Setup For C++ on window #C++ #vscode - YouTube - Google Chrome": {
-      "time": 2.004
-    },
-    "desktime - OneDrive - Google Chrome": {
-      "time": 80.46100000000001
-    },
-    "ChatGPT - Google Chrome": {
-      "time": 263.956
-    },
-    "Time Tracker Program. - Google Chrome": {
-      "time": 2.011
-    },
-    "Main.exe Execution Error - Google Chrome": {
-      "time": 369.56
-    },
-    "Mandeep Singh Blog - Google Chrome": {
-      "time": 6.015
-    },
-    "hashnode.com/62009df8295d276006775882/dashboard - Google Chrome": {
-      "time": 2.005
-    },
-    "Editing Article - Google Chrome": {
-      "time": 16.055
-    },
-    "Editing \"Config Images in Next.js 13 in next.congif.js\" - Google Chrome": {
-      "time": 14.063
-    },
-    "Config Images in Next.js 13 in next.congif.js - Google Chrome": {
-      "time": 4.025
-    },
-    "Editing \"\"Building Portable C++ Executables: Creating Standalone .exe Files for All Systems\"\" - Google Chrome": {
-      "time": 2.016
-    },
-    "Editing \"Building Portable C++ Executables: Creating Standalone .exe Files for All Systems\" - Google Chrome": {
-      "time": 64.237
-    },
-    "Building Portable C++ Executables: Creating Standalone .exe Files for All Systems - Google Chrome": {
-      "time": 6.047
-    },
-    "(896) ai clone voice - YouTube - Google Chrome": {
-      "time": 14.07
-    },
-    "(896) Best AI Voice Changer 🔥- Best Websites ✅ | Change Your Voice to ANY CELEBRITY 🔥🔥 - YouTube - Google Chrome": {
-      "time": 198.958
-    },
-    "FakeYou. Deep Fake Text to Speech. - Google Chrome": {
-      "time": 118.517
-    },
-    "ai voice cloning in hindi - Google Search - Google Chrome": {
-      "time": 30.141
-    },
-    "Text to Speech Custom AI Voices in Hindi - Resemble AI - Google Chrome": {
-      "time": 14.056999999999999
-    },
-    "": {
-      "time": 14.055
-    },
-    "Schedule a Demo - Resemble AI - Google Chrome": {
-      "time": 2.002
-    },
-    "Pricing - Resemble AI - Google Chrome": {
-      "time": 16.083
-    },
-    "AI Virtual Assistant - Google Chrome": {
-      "time": 76.328
-    },
-    "OneDrive for Business - Google Chrome": {
-      "time": 2.015
-    },
-    "Custom Voice Cloning - Resemble AI - Google Chrome": {
-      "time": 8.125
-    },
-    "free voice cloning - Google Search - Google Chrome": {
-      "time": 6.054
-    },
-    "Voice Cloning: Instantly Clone Your Voice With AI, For Free! - Google Chrome": {
-      "time": 8.167
-    },
-    "Untitled - Google Chrome": {
-      "time": 2.013
-    },
-    "Sign in - Google Accounts - Google Chrome": {
-      "time": 4.042
-    },
-    "Speechify My Voice - Google Chrome": {
-      "time": 173.46
-    },
-    "(897) YouTube - Google Chrome": {
-      "time": 18.064
-    },
-    "(897) ADMIRIN' YOU - LYRICAL VIDEO | KARAN AUJLA | New Punjabi Songs 2023 - YouTube - Google Chrome": {
-      "time": 2.017
-    },
-    "how to write ebook and sell on amazon - Google Search - Google Chrome": {
-      "time": 26.066
-    },
-    "how to write ebook and sell on amazon using ai - Google Search - Google Chrome": {
-      "time": 8.03
-    },
-    "Using A.I To create A Book To Sell ($10,000 A month) - YouTube - Google Chrome": {
-      "time": 8.051
-    },
-    "(897) Using A.I To create A Book To Sell ($10,000 A month) - YouTube - Google Chrome": {
-      "time": 142.641
-    },
-    "RVSMEDIA/erp: erp software - Google Chrome": {
-      "time": 4.021
-    },
-    "Comparing master...mandeep · RVSMEDIA/erp - Google Chrome": {
-      "time": 2.007
-    },
-    "nav menu changes by mandeepsng · Pull Request #105 · RVSMEDIA/erp - Google Chrome": {
-      "time": 12.073
-    },
-    "Google Translate - Google Chrome": {
-      "time": 20.079
-    },
-    "C++ Window Screenshot - Google Chrome": {
-      "time": 570.082
-    },
-    "how to close running c++ project in visual studio code - Google Search - Google Chrome": {
-      "time": 4.027
-    },
-    "How to stop C++ console application from exiting immediately? - Stack Overflow - Google Chrome": {
-      "time": 951.615
-    },
-    "(897) Shawn Mendes - Treat You Better - YouTube - Google Chrome": {
-      "time": 6.02
-    },
-    "stb/stb_image_write.h at master · nothings/stb - Google Chrome": {
-      "time": 32.156
-    },
-    "HR Portal (ERP Software) Roadmap | Nifty - Google Chrome": {
-      "time": 30.102999999999998
-    },
-    "stackoverflow.com/questions/3291167/how-can-i-take-a-screenshot-in-a-windows-application - Google Chrome": {
-      "time": 2.004
-    },
-    "c++ - How can I take a screenshot in a windows application? - Stack Overflow - Google Chrome": {
-      "time": 14.06
-    },
-    "cpp tutorial - Google Search - Google Chrome": {
-      "time": 112.40599999999999
-    },
-    "[2:18 PM] Rajeev Nar https://rvsmediaindia.sharepoint.com/:w:/s/TorbayCouncil/Efous7lULyZOs7MYM2JwMCAB-KS3vpxxvO-0TazmPWSiTQ?e=n9QYiT - Google Search - Google Chrome": {
-      "time": 10.053
-    },
-    "Sign in to your account - Google Chrome": {
-      "time": 66.211
-    },
-    "account.activedirectory.windowsazure.com/passwordreset/register.aspx?client-request-id=7c7ccca0-d07b-2000-7b84-5442be714f15&sspr=1 - Google Chrome": {
-      "time": 2.012
-    },
-    "Working... - Google Chrome": {
-      "time": 2.001
-    },
-    "My Sign-Ins - Google Chrome": {
-      "time": 6.026
-    },
-    "My Sign-Ins | Register | Microsoft.com - Google Chrome": {
-      "time": 8.031
-    },
-    "Tell It Once VH Spec.docx - Google Chrome": {
-      "time": 1022.3380000000002
-    },
-    "Login - Google Chrome": {
-      "time": 16.079
-    },
-    "HR Portal (ERP Software) Tasks | Nifty - Google Chrome": {
-      "time": 156.643
-    },
-    "HR Partner - HR & Recruitment for Efficient Teams - Google Chrome": {
-      "time": 10.033000000000001
-    },
-    "app.idevelopment.site/admin/leaves/manage - Google Chrome": {
-      "time": 2.013
-    },
-    "HR Partner Employee Portal | Login - Google Chrome": {
-      "time": 8.027999999999999
-    },
-    "HR Partner | Employee Portal - Google Chrome": {
-      "time": 333.30899999999997
-    },
-    "YouTube - Google Chrome": {
-      "time": 2.016
-    },
-    "(899) Hasde Hi Rehne Aan (Official Video) Hustinder | Black Virus | Vintage Records | Latest Punjabi Songs - YouTube - Google Chrome": {
-      "time": 2.022
-    },
-    "(899) No Need (Full Video) Karan Aujla | Deep Jandu | Rupan Bal | Latest Punjabi song 2019 - YouTube - Google Chrome": {
-      "time": 10.027000000000001
-    },
-    "(899) YouTube - Google Chrome": {
-      "time": 12.133
-    },
-    "Time Reporting 2023 - Mandeep Singh .xlsx - Google Chrome": {
-      "time": 389.69100000000003
-    },
-    "(900) YouTube - Google Chrome": {
-      "time": 12.072
-    },
-    "(900) How to Get Remote Jobs - Guaranteed Results - YouTube - Google Chrome": {
-      "time": 24.141000000000002
-    },
-    "104.248.172.183 / localhost / erp / user_details | phpMyAdmin 5.2.0 - Google Chrome": {
-      "time": 16.067
-    },
-    "Chrome Debugger is easier to use than you might think - DEV Community - Google Chrome": {
-      "time": 92.42899999999999
-    },
-    "Argo Rollouts: Unleashing Advanced Deployment Strategies - DEV Community - Google Chrome": {
-      "time": 8.027999999999999
-    },
-    "DEV Community - Google Chrome": {
-      "time": 4.022
-    },
-    "(900) No Need (Full Video) Karan Aujla | Deep Jandu | Rupan Bal | Latest Punjabi song 2019 - YouTube - Google Chrome": {
-      "time": 32.18300000000001
+      "time": 40.629
     }
   },
   "Microsoft Teams": {
     "Mandeep Singh (You) | Microsoft Teams": {
-      "time": 6.015
-    },
-    "Lalit Dogra | Microsoft Teams": {
-      "time": 22.124000000000002
-    },
-    "Gurpreet Singh Gill | Microsoft Teams": {
-      "time": 76.292
-    },
-    "Jasjeet Khipal | Microsoft Teams": {
-      "time": 110.44699999999999
-    },
-    "Shubham Verma | Microsoft Teams": {
-      "time": 12.049
-    },
-    "Calendar | Microsoft Teams": {
-      "time": 30.127
-    },
-    "ERP Review Meeting with RVS Team | Microsoft Teams": {
-      "time": 1596.562
-    },
-    "Rajeev and Shubham | Microsoft Teams": {
-      "time": 574.256
-    },
-    "New Window | Microsoft Teams": {
-      "time": 4.021
-    },
-    "Rajeev Nar, Shubham Verma | Microsoft Teams": {
-      "time": 1785.1960000000001
+      "time": 16.108
     },
     "Kavita | Microsoft Teams": {
-      "time": 40.189
+      "time": 24.131
     },
-    "Chat | Microsoft Teams": {
-      "time": 4.026
+    "Kavita, Rajeev, and Sakshi | Microsoft Teams": {
+      "time": 12.052
     },
     "Rajeev Nar | Microsoft Teams": {
-      "time": 2.018
-    },
-    "General (Torbay Council) | Microsoft Teams": {
-      "time": 24.123
-    },
-    "Screen sharing toolbar": {
-      "time": 116.471
+      "time": 916.395
     },
     "Calls | Microsoft Teams": {
-      "time": 2.013
-    }
-  },
-  "Windows Command Processor": {
-    "C:\\Windows\\System32\\cmd.exe": {
-      "time": 46.19500000000001
+      "time": 4.032
     },
-    "C:\\Windows\\System32\\cmd.exe - code  .": {
-      "time": 2.004
+    "ERP Review Meeting with RVS Team | Microsoft Teams": {
+      "time": 8.046
+    },
+    "New Window | Microsoft Teams": {
+      "time": 2.012
+    },
+    "Daily Status Report (DSR) (RVS FAMILY - Team Discussions) | Microsoft Teams": {
+      "time": 58.288
     }
   },
   "Termius": {
+    "Termius": {
+      "time": 32.107
+    },
     "Termius - Hatton": {
-      "time": 8.033
+      "time": 24.096
     }
   },
-  "rvsdesktime Setup 1.2.3.exe": {
-    "rvsdesktime Setup ": {
-      "time": 30.216
+  "Application Frame Host": {
+    "Settings": {
+      "time": 16.126
     }
   },
-  "rvsdesktime": {
-    "RVS (ERP)": {
-      "time": 86.326
-    }
-  },
-  "Microsoft.Photos.exe": {
-    "screenshot_20230802_133101.jpg ‎- Photos": {
-      "time": 6.023
+  "Settings": {
+    "Settings": {
+      "time": 1900811.9309999999
     },
-    "screenshot_20230802_134225.jpg ‎- Photos": {
-      "time": 2.008
-    },
-    "screenshot_20230802_134338.jpg ‎- Photos": {
-      "time": 8.039
+    "Change date and time": {
+      "time": 12.103
     }
   },
-  "Search application": {
-    "Search": {
-      "time": 16.081
+  "Slack": {
+    "! hatton-portal - rvsmediapro - 1 new item - Slack": {
+      "time": 8.027
     }
   },
-  "LockApp.exe": {
-    "Windows Default Lock Screen": {
-      "time": 2271.739
-    }
-  }
-}
+  "Postman": {
+    "notification_inactive - My Workspace": {
+      "time": 22.096
     }
   }
 }
