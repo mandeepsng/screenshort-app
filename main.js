@@ -9,9 +9,14 @@ const { spawn } = require('child_process');
 const { loadPyodide } = require('pyodide')
 const common = require('./functions/common')
 
+const trackingPath = path.join(__dirname, 'data', 'tracking.json');
+const functionPath = path.join(__dirname, 'functions', 'timer');
+
+const timerFunc = require(functionPath)
 const ActivityTracker = require("./ActivityTracker");
 
-const activityTracker = new ActivityTracker(path.join('data', 'tracking.json'), 2000);
+const activityTracker = new ActivityTracker( trackingPath, 2000);
+
 activityTracker.init();
 
 const isWindows = process.platform === 'win32';
@@ -404,11 +409,17 @@ function readUserData() {
         const timelineApiurl = 'http://erp.test/api/timieline_store';
         // const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
-        
-        console.log('============================');
-        //  console.log(JSON.stringify(new_chartData, null, 2));
+        // uploadTimeline(data, timelineApiurl)
+       console.log('============================');
 
-        console.log('============================');
+      //  console.log('data', data)
+
+       const timer = await timerFunc.incrementTimer()
+      //  console.log(JSON.stringify(new_chartData, null, 2));
+      win.webContents.send('idleTime', 'Inactive')
+      win.webContents.send('timer', timer)
+       console.log('============================', timer);
+
         chartData = new_chartData;
         screenshotIntervals.push(timeLineInterval)
 
@@ -1032,3 +1043,5 @@ async function getIdleTime(){
     console.error('Error:', error.message);
   });
 }
+
+

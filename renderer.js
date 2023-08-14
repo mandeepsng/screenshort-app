@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // For example, you can display it on the dashboard or update your UI elements accordingly.
       // ...
     });
-    
+
     ipcRenderer.on('timer', (event, userData) => {
 
 
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // For example, you can display it on the dashboard or update your UI elements accordingly.
       // ...
     });
+
   }
 
   // Add the event listener for the screenshot button only if it exists
