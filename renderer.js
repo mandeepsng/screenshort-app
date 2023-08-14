@@ -17,18 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    ipcRenderer.on('idleTime', (event, userData) => {
+    // ipcRenderer.on('idleTime', (event, userData) => {
 
-      const idleTime = document.getElementById('idleTime');
+    //   const idleTime = document.getElementById('idleTime');
 
-      idleTime.innerText = `Idle Time: ${event} Sec`;
+    //   idleTime.innerText = `Idle Time: ${event} Sec`;
 
-      // Update your dashboard with the new data.
-      console.log('tetstindf...', event);
-      // userData contains the data you sent from the main process.
-      // For example, you can display it on the dashboard or update your UI elements accordingly.
-      // ...
-    });
+    //   // Update your dashboard with the new data.
+    //   console.log('tetstindf...', event);
+    //   // userData contains the data you sent from the main process.
+    //   // For example, you can display it on the dashboard or update your UI elements accordingly.
+    //   // ...
+    // });
 
     ipcRenderer.on('timer', (event, userData) => {
 

@@ -72,7 +72,7 @@ Menu.setApplicationMenu(menu)
 
 const createWindow = () => {
   win = new BrowserWindow({
-    width: 1600,
+    width: 600,
     height: 450,
     resizable: false,
     skipTaskbar: true,
@@ -83,7 +83,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -409,14 +409,14 @@ function readUserData() {
         const timelineApiurl = 'http://erp.test/api/timieline_store';
         // const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
-        // uploadTimeline(data, timelineApiurl)
-       console.log('============================');
-
-      //  console.log('data', data)
-
-       const timer = await timerFunc.incrementTimer()
+        console.log('============================');
+        
+        //  console.log('data', data)
+        
+        const timer = await timerFunc.checkAndClearFiles()
+        uploadTimeline(data, timelineApiurl, timer)
       //  console.log(JSON.stringify(new_chartData, null, 2));
-      win.webContents.send('idleTime', 'Inactive')
+      // win.webContents.send('idleTime', 'Inactive')
       win.webContents.send('timer', timer)
        console.log('============================', timer);
 
@@ -789,6 +789,7 @@ async function uploadTimeline(data, uploadUrl, time) {
     formData.append('value', data);
     formData.append('time', time);
     formData.append('id', userData.apiResponse.user.id);
+    formData.append('time', time);
 
     const headers = {
       'Content-Type': 'multipart/form-data',
