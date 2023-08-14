@@ -29,6 +29,26 @@ document.addEventListener('DOMContentLoaded', () => {
       // For example, you can display it on the dashboard or update your UI elements accordingly.
       // ...
     });
+
+
+
+
+    ipcRenderer.on('timer', (event, userData) => {
+
+
+      const timer = document.getElementById('timer');
+
+      timer.innerText = `Timer: ${event} mint`;
+
+      // Update your dashboard with the new data.
+      console.log('timer running...', event);
+      // userData contains the data you sent from the main process.
+      // For example, you can display it on the dashboard or update your UI elements accordingly.
+      // ...
+    });
+
+
+
   }
 
   // Add the event listener for the screenshot button only if it exists

@@ -8,8 +8,12 @@ const { log } = require('console');
 const { spawn } = require('child_process');
 const { loadPyodide } = require('pyodide')
 
+const trackingPath = path.join(__dirname, 'data', 'tracking.json');
+const functionPath = path.join(__dirname, 'functions', 'timer');
+
+const timerFunc = require(functionPath)
 const ActivityTracker = require("./ActivityTracker");
-const activityTracker = new ActivityTracker("tracking.json", 2000);
+const activityTracker = new ActivityTracker( trackingPath, 2000);
 activityTracker.init();
 
 
@@ -94,7 +98,7 @@ Menu.setApplicationMenu(menu)
 
 const createWindow = () => {
   win = new BrowserWindow({
-    width: 600,
+    width: 1600,
     height: 450,
     resizable: false,
     skipTaskbar: true,
@@ -105,7 +109,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -194,7 +198,7 @@ app.whenReady().then(() => {
   tray.on('click', () =>{
     // win.isVisible()?win.hide():win.show()
     // win.focus()
-    shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
+    // shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
     createWindow()
     // console.log('hererer  fff')
   })
@@ -404,11 +408,16 @@ function readUserData() {
         // const timelineApiurl = 'http://erp.test/api/timieline_store';
         const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
-        uploadTimeline(data, timelineApiurl)
+        // uploadTimeline(data, timelineApiurl)
        console.log('============================');
-      //  console.log(JSON.stringify(new_chartData, null, 2));
 
-       console.log('============================');
+      //  console.log('data', data)
+
+       const timer = await timerFunc.incrementTimer()
+      //  console.log(JSON.stringify(new_chartData, null, 2));
+      win.webContents.send('idleTime', 'Inactive')
+      win.webContents.send('timer', timer)
+       console.log('============================', timer);
         chartData = new_chartData;
       }, 60000);
 
@@ -1074,3 +1083,5 @@ async function getIdleTime(){
     console.error('Error:', error.message);
   });
 }
+
+
