@@ -38,6 +38,35 @@ class ActivityTracker {
     return formatedData;
   }
 
+  async storeData2 () {
+    const content = await fs.readJson(this.filePath);
+    const time = {
+      start: this.start,
+      end: new Date()
+    };
+    const { title } = this.app;
+    let url = '';
+
+    if (this.app.owner.name === 'Google Chrome') {
+      // For Chrome, attempt to get the URL from activeWin's `browserUrl` property
+      if (this.app.browserUrl) {
+        url = this.app.browserUrl;
+      }
+    } else if (this.app.owner.name === 'Microsoft Edge') {
+      // For Microsoft Edge, attempt to get the URL from activeWin's `browserUrl` property
+      if (this.app.browserUrl) {
+        url = this.app.browserUrl;
+      }
+    }
+    // Add more checks for other browsers as needed
+
+    _.defaultsDeep(content, { [this.app.owner.name]: { [title]: { time: 0, url } } });
+
+    content[this.app.owner.name][title].time += Math.abs(time.start - time.end) / 1000;
+
+    await fs.writeJson(this.filePath, content, { spaces: 2 });
+  }
+
   async storeData () {
     const content = await fs.readJson(this.filePath);
     const time = {
@@ -46,9 +75,10 @@ class ActivityTracker {
     };
     const { url, owner: { name }, title } = this.app;
 
-    _.defaultsDeep(content, { [name]: { [title]: { time: 0, url } } });
+    _.defaultsDeep(content, { [name]: { [title]: { time: 0, url: '' } } });
 
     content[name][title].time += Math.abs(time.start - time.end) / 1000;
+    content[name][title].url = url; // Add the captured URL here
 
     await fs.writeJson(this.filePath, content, { spaces: 2 });
   }
