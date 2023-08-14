@@ -1,1 +1,20 @@
-{}
+{
+  "apiResponse": {
+    "success": "Login Success !",
+    "auth": "done",
+    "user": {
+      "id": 1,
+      "sr": null,
+      "first_name": "Mandeep",
+      "last_name": "Dev",
+      "email": "1mandeep2021@gmail.com",
+      "employee_id": "001",
+      "email_verified_at": "2023-06-13T00:40:00.000000Z",
+      "visibility": 0,
+      "created_at": "2023-06-13T00:40:00.000000Z",
+      "updated_at": "2023-06-13T00:40:00.000000Z"
+    },
+    "token": "128|6jCfHX0JUzTyryN60knx9LEfKYdU0TEtByHs3brt",
+    "secret": "eyJpZCI6MSwic3IiOm51bGwsImZpcnN0X25hbWUiOiJNYW5kZWVwIiwibGFzdF9uYW1lIjoiRGV2IiwiZW1haWwiOiIxbWFuZGVlcDIwMjFAZ21haWwuY29tIiwiZW1wbG95ZWVfaWQiOiIwMDEiLCJlbWFpbF92ZXJpZmllZF9hdCI6IjIwMjMtMDYtMTNUMDA6NDA6MDAuMDAwMDAwWiIsInZpc2liaWxpdHkiOjAsImNyZWF0ZWRfYXQiOiIyMDIzLTA2LTEzVDAwOjQwOjAwLjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMy0wNi0xM1QwMDo0MDowMC4wMDAwMDBaIn0="
+  }
+}

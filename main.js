@@ -59,46 +59,13 @@ const menuTemplate = [
 ]
 
 
-const accelerators = [
-  // Alphabets
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-  'U', 'V', 'W', 'X', 'Y', 'Z',
-
-  // Numbers
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-
-  // Function keys
-  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10',
-  'F11', 'F12',
-
-  // Special keys
-  'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'Pause',
-  'CapsLock', 'Escape', 'Space', 'PageUp', 'PageDown', 'End', 'Home',
-  'Insert', 'Delete',
-
-  // Arrow keys
-  'Left', 'Up', 'Right', 'Down',
-
-  // Command or Control key (platform-specific)
-  'CmdOrCtrl',
-
-  // Command or Control key with other keys
-  'CmdOrCtrl+A', 'CmdOrCtrl+C', 'CmdOrCtrl+V', 'CmdOrCtrl+X',
-  'CmdOrCtrl+Z', 'CmdOrCtrl+Shift+Z', 'CmdOrCtrl+Y', 'CmdOrCtrl+Shift+Y',
-  
-  // Add more key combinations as needed
-];
-
-
-
 const menu = Menu.buildFromTemplate(menuTemplate)
 Menu.setApplicationMenu(menu)
 
 
 const createWindow = () => {
   win = new BrowserWindow({
-    width: 1600,
+    width: 600,
     height: 450,
     resizable: false,
     skipTaskbar: true,
@@ -109,7 +76,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -408,14 +375,14 @@ function readUserData() {
         // const timelineApiurl = 'http://erp.test/api/timieline_store';
         const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
-        // uploadTimeline(data, timelineApiurl)
-       console.log('============================');
-
-      //  console.log('data', data)
-
-       const timer = await timerFunc.incrementTimer()
+        console.log('============================');
+        
+        //  console.log('data', data)
+        
+        const timer = await timerFunc.checkAndClearFiles()
+        uploadTimeline(data, timelineApiurl, timer)
       //  console.log(JSON.stringify(new_chartData, null, 2));
-      win.webContents.send('idleTime', 'Inactive')
+      // win.webContents.send('idleTime', 'Inactive')
       win.webContents.send('timer', timer)
        console.log('============================', timer);
         chartData = new_chartData;
@@ -732,13 +699,14 @@ async function clearDataFile(filePath) {
 
 
 // Function to upload an json using Axios
-async function uploadTimeline(data, uploadUrl) {
+async function uploadTimeline(data, uploadUrl, time) {
   try {
     // const imageBuffer = fs.readFileSync(imagePath);
 
     const formData = new FormData();
     formData.append('value', data);
     formData.append('id', userData.apiResponse.user.id);
+    formData.append('time', time);
 
     const headers = {
       'Content-Type': 'multipart/form-data',

@@ -56,15 +56,16 @@ async function saveTimeToFile(time) {
   
       if(Object.keys(parsedTimeData).length === 0) {
         console.log('File exists but is empty. Skipping write operation.');
-        await incrementTimer();
+            return await incrementTimer();
       }else{
   
         if (parsedTimeData.date !== formattedCurrentDate) {
           clearDataFile(filePathTime);
           clearDataFile(filePathTrack);
+          return 0;
         } else {
           console.log('Dates match, no action needed.');
-          await incrementTimer();
+            return await incrementTimer();
         }
   
       }
@@ -108,4 +109,5 @@ async function saveTimeToFile(time) {
 
   module.exports = {
     incrementTimer,
+    checkAndClearFiles
 }
