@@ -30,9 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // ...
     });
 
-
-
-
     ipcRenderer.on('timer', (event, userData) => {
 
 
@@ -46,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // For example, you can display it on the dashboard or update your UI elements accordingly.
       // ...
     });
-
-
 
   }
 

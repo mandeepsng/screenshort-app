@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell   } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , autoUpdater  } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
@@ -7,15 +7,19 @@ const { Blob } = require('buffer');
 const { log } = require('console');
 const { spawn } = require('child_process');
 const { loadPyodide } = require('pyodide')
+const common = require('./functions/common')
 
 const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
 
 const timerFunc = require(functionPath)
 const ActivityTracker = require("./ActivityTracker");
+
 const activityTracker = new ActivityTracker( trackingPath, 2000);
+
 activityTracker.init();
 
+const isWindows = process.platform === 'win32';
 
 
 // Settings object
@@ -34,7 +38,10 @@ let inactiveTimer;
 let screenshotIntervals = []
 let activityTimer;
 let chartData;
+let timer;
 
+const filePath = path.join(__dirname,'dist', 'rvsdesktime Setup 1.2.4.exe');
+const exePath = path.join(__dirname, 'update.json');
 
 const menuTemplate = [  
   // {
@@ -57,39 +64,6 @@ const menuTemplate = [
        role: 'quit' 
   }
 ]
-
-
-const accelerators = [
-  // Alphabets
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-  'U', 'V', 'W', 'X', 'Y', 'Z',
-
-  // Numbers
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-
-  // Function keys
-  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10',
-  'F11', 'F12',
-
-  // Special keys
-  'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'Pause',
-  'CapsLock', 'Escape', 'Space', 'PageUp', 'PageDown', 'End', 'Home',
-  'Insert', 'Delete',
-
-  // Arrow keys
-  'Left', 'Up', 'Right', 'Down',
-
-  // Command or Control key (platform-specific)
-  'CmdOrCtrl',
-
-  // Command or Control key with other keys
-  'CmdOrCtrl+A', 'CmdOrCtrl+C', 'CmdOrCtrl+V', 'CmdOrCtrl+X',
-  'CmdOrCtrl+Z', 'CmdOrCtrl+Shift+Z', 'CmdOrCtrl+Y', 'CmdOrCtrl+Shift+Y',
-  
-  // Add more key combinations as needed
-];
-
 
 
 const menu = Menu.buildFromTemplate(menuTemplate)
@@ -134,6 +108,33 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+
+console.log('isWindows = ', isWindows )
+  // window start
+
+  if (isWindows) {
+    // Check for updates when the app is ready (only on Windows)
+    // autoUpdater.setFeedURL(exePath);
+    // autoUpdater.checkForUpdates();
+
+    // autoUpdater.on('update-available', () => {
+    //   console.log('Update available. Downloading...');
+    // });
+
+    // autoUpdater.on('update-downloaded', () => {
+    //   console.log('Update downloaded. Ready to install.');
+    //   // Perform any actions you want before installing the update
+    //   // For example, you can notify the user to save their work and then quit the app.
+    //   // After the app is restarted, the new version will be launched.
+    //   autoUpdater.quitAndInstall();
+    // });
+
+    // autoUpdater.on('error', (err) => {
+    //   console.error('Error checking for updates:', err);
+    // });
+  }
+
+  // window end
 
 
 
@@ -402,11 +403,11 @@ function readUserData() {
       }, delay);
 
       // const delay =  2000; // 2 seconds
-      setInterval(async () => {
+      const timeLineInterval = setInterval(async () => {
         const new_chartData = await activityTracker.getChartData();
         var data = JSON.stringify(new_chartData);
-        // const timelineApiurl = 'http://erp.test/api/timieline_store';
-        const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
+        const timelineApiurl = 'http://erp.test/api/timieline_store';
+        // const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
         // uploadTimeline(data, timelineApiurl)
        console.log('============================');
@@ -418,14 +419,30 @@ function readUserData() {
       win.webContents.send('idleTime', 'Inactive')
       win.webContents.send('timer', timer)
        console.log('============================', timer);
+
         chartData = new_chartData;
+        screenshotIntervals.push(timeLineInterval)
+
+       
+        // running timer
+        const respnose = common.checkAndClearFiles();
+
+        // read time from timer.json file
+        timer =  await common.loadTimeFromFile()
+
+        uploadTimeline(data, timelineApiurl, timer);
+
+
+        win.webContents.send('timer', timer)
+
       }, 60000);
 
       screenshotIntervals.push(intervalId)
         
 
       // activity track
-      const pythonTime = 900000;
+      // const pythonTime = 900000;
+      const pythonTime = 300000;
       // setInterval(runPythonScriptGetIdleDuration, pythonTime);
       setInterval(getIdleTime, pythonTime);
 
@@ -461,20 +478,52 @@ ipcMain.on('event2', (event, arg) => {
   console.log('Received event2 with argument:', arg);
 });
 
+// ipcMain.on()
+
 
  // Listen for the message from the renderer process
  ipcMain.on('test', async() => {
   // Call the function in the main process
   
   // win.minimize()
+  // filePath
+  // autoUpdater.setFeedURL(exePath); 
+  // autoUpdater.checkForUpdates(); 
 
-  shell.openExternal(`http://erp.test/token/${apiResponse.secret}`);
+  // autoUpdater.on('update-available', () => {
+  //   console.log('Update available. Downloading...');
+  // });
+
+  // autoUpdater.on('update-downloaded', () => {
+  //   console.log('Update downloaded. Ready to install.');
+  //   // Perform any actions you want before installing the update
+  //   // For example, you can notify the user to save their work and then quit the app.
+  //   // After the app is restarted, the new version will be launched.
+  //   autoUpdater.quitAndInstall();
+  // });
+
+  const new_chartData_test = await activityTracker.getChartData();
+  var data = JSON.stringify(new_chartData_test);
+
+  console.log('============================');
+  console.log(JSON.stringify(new_chartData_test, null, 2));
+
+  // autoUpdater.on('error', (err) => {
+  //   console.error('Error checking for updates:', err);
+  // });
+
+  // const updateDD =  autoUpdater.checkForUpdates();
+
+  // console.log(' filePath new = ', filePath)
+
+
+  // shell.openExternal(`http://erp.test/token/${user.apiResponse.secret}`);
   
-  console.log(' jdsfksdj new')
+  console.log('jdsfksdj new')
 
   var demo = Notification.isSupported()
   console.log('test....', demo)
-  showNotification('Notification', 'Hello from Electron.js!');
+  // LoginNotification('Inactive', 'Since 15 mint ago!')
 
 
 
@@ -484,7 +533,7 @@ ipcMain.on('event2', (event, arg) => {
 // console.log('userData = ', userData )
 
 // Function to show a notification
-function showNotification(title, body) {
+function showNotification(title, body,fix) {
   // const notification = new Notification({
   //   title: title,
   //   body: body,
@@ -497,7 +546,7 @@ function showNotification(title, body) {
       silent: false,
       icon: path.join(__dirname, 'assets/icon.png'),
       hasReply: true,  
-      // timeoutType: 'never', 
+      // timeoutType: fix ? 'never' : true , 
       replyPlaceholder: 'Reply Here',
       urgency: 'critical' 
     }
@@ -507,7 +556,7 @@ function showNotification(title, body) {
 }
 
 
-function LoginNotification(title, body) {
+function LoginNotification(title, body, fix) {
   
   const notification = new Notification(
     {
@@ -517,7 +566,7 @@ function LoginNotification(title, body) {
       silent: false,
       icon: path.join(__dirname, 'assets/icon.png'),
       hasReply: true,  
-      // timeoutType: 'never', 
+      timeoutType: fix ? 'never' : true ,
       replyPlaceholder: 'Reply Here',
       urgency: 'critical' 
     }
@@ -732,12 +781,13 @@ async function clearDataFile(filePath) {
 
 
 // Function to upload an json using Axios
-async function uploadTimeline(data, uploadUrl) {
+async function uploadTimeline(data, uploadUrl, time) {
   try {
     // const imageBuffer = fs.readFileSync(imagePath);
 
     const formData = new FormData();
     formData.append('value', data);
+    formData.append('time', time);
     formData.append('id', userData.apiResponse.user.id);
 
     const headers = {
@@ -944,97 +994,6 @@ async function runActivityPy(){
 
 // helper functions
 
-(() => {
-  const formatName = (value, row) =>
-    row.url ? `<a target="_blank" href="${row.url}">${value}</a>` : value;
-  const formatTime = (value) => secondsToHms(value);
-  const secondsToHms = (d) => {
-    d = Number(d);
-    const h = Math.floor(d / 3600);
-    const m = Math.floor((d % 3600) / 60);
-    const s = Math.floor((d % 3600) % 60);
-
-    const hDisplay = h > 0 ? h + (h === 1 ? " hour, " : " hours, ") : "";
-    const mDisplay = m > 0 ? m + (m === 1 ? " minute, " : " minutes, ") : "";
-    const sDisplay = s > 0 ? s + (s === 1 ? " second " : " seconds") : "";
-
-    return hDisplay + mDisplay + sDisplay;
-  };
-
-  const dynamicColors = () => {
-    const r = Math.floor(Math.random() * 255);
-    const g = Math.floor(Math.random() * 255);
-    const b = Math.floor(Math.random() * 255);
-
-    return `rgba(${r},${g},${b},0.5)`;
-  };
-
-  const poolColors = (size) => {
-    const pool = [];
-
-    for (let i = 0; i < size; i++) {
-      pool.push(dynamicColors());
-    }
-    return pool;
-  };
-
-  const columns = [
-    {
-      field: "name",
-      title: "name",
-      formatter: formatName,
-      sortable: true,
-    },
-    {
-      field: "time",
-      title: "time",
-      formatter: formatTime,
-      sortable: true,
-    },
-  ];
-
-  // const chartData = JSON.parse(chartData);
-  // const ctx = document.getElementById("chart").getContext("2d");
-
-  // const renderTableData = (chart, columns) => {
-  //   const table = $("#table");
-
-  //   $("#table-title").text(`${chart.title} (${secondsToHms(chart.total)})`);
-
-  //   if (table.children().length) {
-  //     return table.bootstrapTable("load", chart.data);
-  //   }
-
-  //   table.bootstrapTable({
-  //     columns,
-  //     data: chart.data,
-  //   });
-  // };
-
-  // const graphClickEvent = (event, array) => {
-  //   if (!array.length) {
-  //     return;
-  //   }
-  //   renderTableData(chartData[array[0]._index], columns);
-  // };
-
-  // new Chart(ctx, {
-  //   type: "doughnut",
-  //   data: {
-  //     datasets: [
-  //       {
-  //         data: chartData.map((data) => data.total),
-  //         backgroundColor: poolColors(chartData.length),
-  //       },
-  //     ],
-  //     labels: chartData.map((chart) => chart.title),
-  //   },
-  //   options: {
-  //     onClick: graphClickEvent,
-  //   },
-  // });
-})();
-
 
 const mainexe = path.join(__dirname, 'main.exe');
 // function
@@ -1071,11 +1030,12 @@ async function getIdleTime(){
     let minutes = (idleDuration / 60).toFixed(2);
     // console.log('Idle Duration (seconds):', idleDuration);
     win.webContents.send('idleTime', idleDuration)
-    if(minutes > 15){
-      win.webContents.send('idleTime', 'Inactive')
+    if(minutes > 5){
+      // win.webContents.send('idleTime', 'Inactive')
       let notificationUrl = 'https://app.idevelopment.site/api/notification_inactive';
       // let notificationUrl = 'http://erp.test/api/notification_inactive';
       updateNotification(minutes, notificationUrl)
+      LoginNotification('Inactive', 'Since 5 mint ago!', true)
     }
     // console.log(idleDuration);
   })
