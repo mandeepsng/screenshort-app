@@ -1,6 +1,8 @@
 const path = require('path')
 const axios = require('axios');
 const fs = require('fs')
+const { spawn } = require('child_process');
+
 
 function add(a, b) {
     return a + b;
@@ -66,8 +68,12 @@ async function saveTimeToFile(time) {
   const currentTime = new Date();
   const formattedTime = currentTime.toLocaleDateString();
 
+
+  const idleTime =  await getIdleTime();
+  console.log('Idle time: ' + idleTime)
+
   const filePath = path.join('data', 'time.json');
-  const data = JSON.stringify({ time : time, date : formattedTime });
+  const data = JSON.stringify({ time : time, date : formattedTime,  idle: 40, productive: 77 });
 
   try {
     await fs.promises.writeFile(filePath, data, 'utf-8');
@@ -89,6 +95,8 @@ async function loadTimeFromFile() {
     return null; // Return default value if file doesn't exist or parsing fails
   }
 }
+
+
 
 
 // Increment timer value in JSON file
@@ -158,6 +166,62 @@ async function clearDataFile(filePath) {
       console.log('Data.json file cleared successfully.');
     }
   });
+}
+
+
+const mainexe = path.join(__dirname, '..' ,'main.exe');
+// function
+function getIdleDurationFromExe() {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn(mainexe);
+
+    let output = '';
+
+    childProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    childProcess.stderr.on('data', (data) => {
+      console.error(`Error: ${data}`);
+      reject(new Error(data.toString()));
+    });
+
+    childProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(parseFloat(output));
+      } else {
+        reject(new Error(`Error: Non-zero exit code ${code}`));
+      }
+    });
+  });
+}
+
+
+// async function getIdleTime(){
+//   getIdleDurationFromExe()
+//   .then((idleDuration) => {
+
+//     let minutes = (idleDuration / 60).toFixed(2);
+//     console.log('Idle Duration (seconds)=', idleDuration);
+//     return idleDuration;
+//     // console.log(idleDuration);
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error.message);
+//   });
+// }
+
+async function getIdleTime() {
+  try{
+    const idleDuration = await getIdleDurationFromExe();
+    const minutes = (idleDuration / 60).toFixed(2);
+    console.log('Idle Duration (seconds) =', idleDuration);
+    return idleDuration;
+  }catch(error){
+    console.error('Error:', error.message);
+    throw error;
+  }
+
 }
 
 module.exports = {

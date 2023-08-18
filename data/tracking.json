@@ -1,1 +1,85 @@
-{}
+{
+  "Electron": {
+    "RVS (ERP)": {
+      "time": 233.923
+    }
+  },
+  "Microsoft Teams": {
+    "ERP Review Meeting with RVS Team | Microsoft Teams": {
+      "time": 4.023
+    }
+  },
+  "Visual Studio Code": {
+    "time.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 56.215
+    },
+    "tracking.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 8.027
+    },
+    "dashboard.html - electron-screenshot-example - Visual Studio Code": {
+      "time": 1.99
+    },
+    "● // save idletime • Untitled-1 - electron-screenshot-example - Visual Studio Code": {
+      "time": 40.161
+    },
+    "main.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 124.50999999999999
+    },
+    "common.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 102.455
+    },
+    "● main.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 30.149
+    }
+  },
+  "Google Chrome": {
+    "Email - Mandeep Singh - Outlook - Google Chrome": {
+      "time": 52.246
+    },
+    "My DeskTime - August 17, 2023 | DeskTime - Google Chrome": {
+      "time": 172.734
+    },
+    "New Tab - Google Chrome": {
+      "time": 10.037
+    },
+    "Building a Full Stack Airbnb Clone with Next.js, Tailwind CSS, Amplication, and More | HackerNoon - Google Chrome": {
+      "time": 44.168
+    },
+    "Dashboard - Google Chrome": {
+      "time": 393.63
+    },
+    "HR Portal (ERP Software) Tasks | Nifty - Google Chrome": {
+      "time": 4.026
+    },
+    "HR Portal (ERP Software) Roadmap | Nifty - Google Chrome": {
+      "time": 66.352
+    },
+    "YouTube - Google Chrome": {
+      "time": 6.113
+    },
+    "(1094) YouTube - Google Chrome": {
+      "time": 26.108
+    },
+    "(1094) Python Crash Course in Hindi | 5 Python Projects | Complete Python Tutorial - YouTube - Google Chrome": {
+      "time": 2.003
+    },
+    "(1094) Saak 47 | Garry Sandhu ( Official Video Song ) | Smayra | Fresh Media Records - YouTube - Google Chrome": {
+      "time": 6.046
+    },
+    "How to add a subdomain for Nodejs application on DigitalOcean – Nikola Brežnjak blog - Google Chrome": {
+      "time": 2.003
+    },
+    "Bountied questions - Stack Overflow - Google Chrome": {
+      "time": 16.086
+    },
+    "(1094) Vaddi Galbaat (Official Video) Gur Sidhu | Gurlej Akhtar | Punjabi Song - YouTube - Google Chrome": {
+      "time": 6.014
+    },
+    "Detect infinite HTTP redirect loop on server side - Stack Overflow - Google Chrome": {
+      "time": 116.36999999999999
+    },
+    "(1094) Garry Sandhu | Like U (TERE JAISI)| Manpreet Toor | Official Video Song| Rahul | Fresh Media Records - YouTube - Google Chrome": {
+      "time": 16.065
+    }
+  }
+}

@@ -399,15 +399,15 @@ function readUserData() {
       // const delay =  5000; // 5 seconds
       const intervalId = setInterval(() =>{
         console.log('callscreenshort started  delay....', delay);
-        ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
+        // ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
       }, delay);
 
       // const delay =  2000; // 2 seconds
       const timeLineInterval = setInterval(async () => {
         const new_chartData = await activityTracker.getChartData();
         var data = JSON.stringify(new_chartData);
-        const timelineApiurl = 'http://erp.test/api/timieline_store';
-        // const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
+        // const timelineApiurl = 'http://erp.test/api/timieline_store';
+        const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
         console.log('============================');
         
@@ -415,10 +415,10 @@ function readUserData() {
         
         const timer = await timerFunc.checkAndClearFiles()
         uploadTimeline(data, timelineApiurl, timer)
-      //  console.log(JSON.stringify(new_chartData, null, 2));
-      // win.webContents.send('idleTime', 'Inactive')
-      win.webContents.send('timer', timer)
-       console.log('============================', timer);
+        //  console.log(JSON.stringify(new_chartData, null, 2));
+        // win.webContents.send('idleTime', 'Inactive')
+        win.webContents.send('timer', timer)
+        console.log('============================', timer);
 
         chartData = new_chartData;
         screenshotIntervals.push(timeLineInterval)
@@ -433,7 +433,7 @@ function readUserData() {
         uploadTimeline(data, timelineApiurl, timer);
 
 
-        win.webContents.send('timer', timer)
+        win.webContents.send('timer', respnose)
 
       }, 60000);
 
@@ -1029,7 +1029,7 @@ async function getIdleTime(){
   .then((idleDuration) => {
 
     let minutes = (idleDuration / 60).toFixed(2);
-    // console.log('Idle Duration (seconds):', idleDuration);
+    console.log('Idle Duration (seconds):', idleDuration);
     win.webContents.send('idleTime', idleDuration)
     if(minutes > 5){
       // win.webContents.send('idleTime', 'Inactive')
