@@ -1,7 +1,10 @@
 {
   "Electron": {
     "RVS (ERP)": {
-      "time": 233.923
+      "time": 301.528
+    },
+    "rvsdesktime": {
+      "time": 0.514
     }
   },
   "Microsoft Teams": {
@@ -30,6 +33,21 @@
     },
     "● main.js - electron-screenshot-example - Visual Studio Code": {
       "time": 30.149
+    },
+    "loop-timer - Visual Studio Code": {
+      "time": 2.012
+    },
+    "main.js - loop-timer - Visual Studio Code": {
+      "time": 80.351
+    },
+    "index.html - loop-timer - Visual Studio Code": {
+      "time": 315.241
+    },
+    "Save As": {
+      "time": 2.002
+    },
+    "● index.html - loop-timer - Visual Studio Code": {
+      "time": 30.124
     }
   },
   "Google Chrome": {
@@ -40,7 +58,7 @@
       "time": 172.734
     },
     "New Tab - Google Chrome": {
-      "time": 10.037
+      "time": 18.059
     },
     "Building a Full Stack Airbnb Clone with Next.js, Tailwind CSS, Amplication, and More | HackerNoon - Google Chrome": {
       "time": 44.168
@@ -80,6 +98,42 @@
     },
     "(1094) Garry Sandhu | Like U (TERE JAISI)| Manpreet Toor | Official Video Song| Rahul | Fresh Media Records - YouTube - Google Chrome": {
       "time": 16.065
+    },
+    "About Me - Google Chrome": {
+      "time": 144.61700000000002
+    },
+    "harry mander fitness - Google Search - Google Chrome": {
+      "time": 6.014
+    },
+    "H A R R Y M A N D E R​ – BCRPA Certified Fitness Trainer - Google Chrome": {
+      "time": 34.151
+    },
+    "": {
+      "time": 2.004
+    },
+    "Login – H A R R Y M A N D E R​ - Google Chrome": {
+      "time": 8.03
+    },
+    "Harry Mander Fitness - Apps on Google Play - Google Chrome": {
+      "time": 78.284
+    },
+    "(1506) ਇਹ 5 ਗੱਲਾਂ ਨੇ ਮੇਰੀ ਪਿੱਠ ਨਹੀਂ ਲੱਗਣ ਦਿੱਤੀ | Harry Mander @PinkaJarg - YouTube - Google Chrome": {
+      "time": 2.01
+    },
+    "Login - Google Chrome": {
+      "time": 2.012
+    },
+    "Gmail - Google Chrome": {
+      "time": 4.02
+    },
+    "Inbox (8,084) - 1mandeep2021@gmail.com - Gmail - Google Chrome": {
+      "time": 6.021
+    },
+    "Spam (37) - 1mandeep2021@gmail.com - Gmail - Google Chrome": {
+      "time": 6.029
+    },
+    "Elevate Your Year-End Goals with 50% Off Habitify! - 1mandeep2021@gmail.com - Gmail - Google Chrome": {
+      "time": 6.034
     }
   }
 }
