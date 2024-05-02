@@ -40,9 +40,6 @@ let activityTimer;
 let chartData;
 let timer;
 
-var apiurl = 'https://app.idevelopment.site';
-// var apiurl = 'http://erp.test';
-
 const filePath = path.join(__dirname,'dist', 'rvsdesktime Setup 1.2.4.exe');
 const exePath = path.join(__dirname, 'update.json');
 
@@ -86,7 +83,7 @@ const createWindow = () => {
   })
   
     // open dev tools
-    // win.webContents.openDevTools();
+    // win.webContents.openDevTools()
 
 
     // Check if userData is not null, and decide which page to load.
@@ -111,10 +108,8 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
-  
 
 console.log('isWindows = ', isWindows )
-console.log('mode = ', process.mode );
   // window start
 
   if (isWindows) {
@@ -204,8 +199,7 @@ console.log('mode = ', process.mode );
   tray.on('click', () =>{
     win.isVisible()?win.hide():win.show()
     win.focus()
-    // shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
-    shell.openExternal(`${apiurl}/token/${userData.apiResponse.secret}`);
+    shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
     // createWindow()
     // console.log('hererer  fff')
   })
@@ -415,21 +409,18 @@ function readUserData() {
         const new_chartData = await activityTracker.getChartData();
         var data = JSON.stringify(new_chartData);
         // const timelineApiurl = 'http://erp.test/api/timieline_store';
-        // const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
-        const timelineApiurl = `${apiurl}/api/timieline_store`;
+        const timelineApiurl = 'https://app.idevelopment.site/api/timieline_store';
 
         console.log('============================');
         
         //  console.log('data', data)
         
-        // timer = await timerFunc.checkAndClearFiles()
-        // uploadTimeline(data, timelineApiurl, timer)
-
-        
+        const timer = await timerFunc.checkAndClearFiles()
+        uploadTimeline(data, timelineApiurl, timer)
         //  console.log(JSON.stringify(new_chartData, null, 2));
         // win.webContents.send('idleTime', 'Inactive')
-        // win.webContents.send('timer', timer)
-        // console.log('============================', timer);
+        win.webContents.send('timer', timer)
+        console.log('============================', timer);
 
         chartData = new_chartData;
         screenshotIntervals.push(timeLineInterval)
@@ -440,10 +431,6 @@ function readUserData() {
 
         // read time from timer.json file
         timer =  await common.loadTimeFromFile()
-
-        writeLogFile(`timelineApiurl: ${timelineApiurl}`);
-        writeLogFile(`timer: ${timer}`);
-        writeLogFile(`data: ${data}`);
 
         uploadTimeline(data, timelineApiurl, timer);
 
@@ -595,7 +582,7 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 
   // console.log('loginData', loginData);
 
-  var apiLoginUrl = `${apiurl}/api/login`;
+  var apiLoginUrl = 'https://app.idevelopment.site/api/login';
   // var apiLoginUrl = 'http://erp.test/api/login';
 
 
@@ -696,7 +683,7 @@ ipcMain.on('login-attempt', async (event, loginData) => {
           // event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
         } else {
           console.log('Screenshot saved:', filePath);
-          const uploadUrl = `${apiurl}/api/save_screenshort`;
+          const uploadUrl = 'https://app.idevelopment.site/api/save_screenshort';
           // const uploadUrl = 'http://erp.test/api/save_screenshort';
           uploadImage(filePath, uploadUrl);
 
@@ -805,17 +792,18 @@ async function uploadTimeline(data, uploadUrl, time) {
     formData.append('time', time);
     formData.append('id', userData.apiResponse.user.id);
     // formData.append('time', time);
-    
+    console.log('update timeline time :', time);
+
     const headers = {
       'Content-Type': 'multipart/form-data',
     };
-    
+
     const response = await axios.post(uploadUrl, formData, {
       headers: headers,
     });
-    
-    console.log('update timeline successfully:', response.data);
-    console.log('update timeline time on uploadTimeline :', time);
+
+    console.log('update timeline successfully:', response.data.message);
+    console.log('update timeline successfully: response.data.message', response.data);
 
   } catch (error) {
     console.error('Error while updating timeline:', error.message);
@@ -1049,7 +1037,7 @@ async function getIdleTime(){
     win.webContents.send('idleTime', idleDuration)
     if(minutes > 5){
       // win.webContents.send('idleTime', 'Inactive')
-      let notificationUrl = `${apiurl}/api/notification_inactive`;
+      let notificationUrl = 'https://app.idevelopment.site/api/notification_inactive';
       // let notificationUrl = 'http://erp.test/api/notification_inactive';
       updateNotification(minutes, notificationUrl)
       LoginNotification('Inactive', 'Since 5 mint ago!', true)
@@ -1062,20 +1050,3 @@ async function getIdleTime(){
 }
 
 
-// Function to write log file
-function writeLogFile(data) {
-  const downloadPath = app.getPath('downloads');
-  const logFilePath = path.join(downloadPath, 'log.txt');
-
-  // Append data to the log file
-  fs.appendFile(logFilePath, data + '\n', (err) => {
-    if (err) {
-      console.error('Error writing to log file:', err);
-    } else {
-      console.log('Data appended to log file:', data);
-    }
-  });
-}
-
-
-writeLogFile('This is a log message.');

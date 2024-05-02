@@ -72,7 +72,7 @@ async function saveTimeToFile(time) {
   const idleTime =  await getIdleTime();
   console.log('Idle time: ' + idleTime)
 
-  const filePath = path.join('data', 'time.json');
+  const filePath = path.join(__dirname, '..' ,'data', 'time.json');
   const data = JSON.stringify({ time : time, date : formattedTime,  idle: 40, productive: 77 });
 
   try {
@@ -85,7 +85,7 @@ async function saveTimeToFile(time) {
 
 // Load time data from JSON file
 async function loadTimeFromFile() {
-  const filePath = path.join('data', 'time.json');
+  const filePath = path.join(__dirname, '..' , 'data', 'time.json');
   
   try {
     const data = fs.readFileSync(filePath, 'utf-8');
@@ -110,8 +110,8 @@ async function checkAndClearFiles() {
   const currentTime = new Date();
   const formattedCurrentDate = currentTime.toLocaleDateString();
 
-  const filePathTime = path.join('data', 'time.json');
-  const filePathTrack = path.join('data', 'tracking.json');
+  const filePathTime = path.join(__dirname, '..'  ,'data', 'time.json');
+  const filePathTrack = path.join(__dirname,'..' , 'data', 'tracking.json');
 
   try {
     const timeData = await fs.promises.readFile(filePathTime, 'utf-8');

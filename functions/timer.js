@@ -38,8 +38,9 @@ async function saveTimeToFile(time) {
   // Increment timer value in JSON file
   async function incrementTimer() {
     const currentTime = await loadTimeFromFile() || 0;
+    console.log(`currentTime: ${currentTimes}`);
     saveTimeToFile(currentTime + 1);
-    return currentTime + 1;
+    return currentTime;
   }
   
   // check if current date not match with json file date
@@ -107,7 +108,23 @@ async function saveTimeToFile(time) {
   }
 
 
+  function screenshort_time(){
+      // Generate a random delay between 5 to 15 minutes (in milliseconds)
+      const minDelay = 9 * 60 * 1000; // 5 minutes in milliseconds
+      const maxDelay = 15 * 60 * 1000; // 15 minutes in milliseconds
+      
+      const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+      // const randomDelayMinutes = Math.round(randomDelay / (60 * 1000));
+      const randomDelayMinutes = Math.round(randomDelay);
+      
+      console.log(`Random delay selected: ${randomDelayMinutes} milliseconds`);
+
+      return randomDelayMinutes;
+  }
+
+
   module.exports = {
     incrementTimer,
-    checkAndClearFiles
+    checkAndClearFiles,
+    screenshort_time
 }
