@@ -441,9 +441,9 @@ function readUserData() {
         // read time from timer.json file
         timer =  await common.loadTimeFromFile()
 
-        writeLogFile(`timelineApiurl: ${timelineApiurl}`);
-        writeLogFile(`timer: ${timer}`);
-        writeLogFile(`data: ${data}`);
+        // writeLogFile(`timelineApiurl: ${timelineApiurl}`);
+        // writeLogFile(`timer: ${timer}`);
+        // writeLogFile(`data: ${data}`);
 
         uploadTimeline(data, timelineApiurl, timer);
 
