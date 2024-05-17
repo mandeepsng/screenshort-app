@@ -1,4 +1,7 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , autoUpdater  } = require('electron')
+// Set DEBUG environment variable programmatically
+process.env.DEBUG = 'electron-updater';
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
+const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios');
@@ -19,7 +22,18 @@ const activityTracker = new ActivityTracker( trackingPath, 2000);
 
 activityTracker.init();
 
+// Configure the URL of the update manifest
+// autoUpdater.setFeedURL({
+//   provider: 'generic',
+//   url: 'http://erp.test/update-manifest' // Replace this with your actual update manifest URL
+// });
+
+
+
+
 const isWindows = process.platform === 'win32';
+let intervalId = null; // Define intervalId outside the function scope
+
 
 
 // Settings object
@@ -40,7 +54,8 @@ let activityTimer;
 let chartData;
 let timer;
 
-var apiurl = 'https://app.idevelopment.site';
+var apiurl = 'https://track360.rvsmedia.com';
+// var apiurl = 'https://app.idevelopment.site';
 // var apiurl = 'http://erp.test';
 
 const filePath = path.join(__dirname,'dist', 'rvsdesktime Setup 1.2.4.exe');
@@ -110,129 +125,190 @@ const createWindow = () => {
 
 }
 
-app.whenReady().then(() => {
-  
+// app.on('ready', () => {
+//   autoUpdater.checkForUpdatesAndNotify();
+// });
 
-console.log('isWindows = ', isWindows )
-console.log('mode = ', process.mode );
-  // window start
-
-  if (isWindows) {
-    // Check for updates when the app is ready (only on Windows)
-    // autoUpdater.setFeedURL(exePath);
-    // autoUpdater.checkForUpdates();
-
-    // autoUpdater.on('update-available', () => {
-    //   console.log('Update available. Downloading...');
-    // });
-
-    // autoUpdater.on('update-downloaded', () => {
-    //   console.log('Update downloaded. Ready to install.');
-    //   // Perform any actions you want before installing the update
-    //   // For example, you can notify the user to save their work and then quit the app.
-    //   // After the app is restarted, the new version will be launched.
-    //   autoUpdater.quitAndInstall();
-    // });
-
-    // autoUpdater.on('error', (err) => {
-    //   console.error('Error checking for updates:', err);
-    // });
-  }
-
-  // window end
+    app.whenReady().then(() => {
 
 
+      // Check if another instance of the app is already running
+      const gotTheLock = app.requestSingleInstanceLock();
+      console.log('gotTheLock', gotTheLock);
 
-   // Function to check for system inactivity
-   function checkSystemInactivity() {
-    console.log('Checking system inactivity...');
-    // Perform actions for system inactivity here
-  }
-
-  // Set the event listeners for system lock and unlock
-  powerMonitor.on('lock-screen', () => {
-    console.log('System is locked.');
-    stopAllScreenshotProcesses();
+      if (!gotTheLock) {
+        app.quit();
+      } else {
+        app.on('second-instance', () => {
+          // If window is closed, reload it
+          if (!win) {
+            createWindow();
+          } else {
+            if (win.isMinimized()) win.restore();
+            win.focus();
+          }
+        });
     
-    // If there was a previous inactiveTimer, clear it
-    if (inactiveTimer) {
-      clearTimeout(inactiveTimer);
-    }
-  });
-
-  powerMonitor.on('unlock-screen', () => {
-    console.log('System is unlocked.');
-    readUserData();
-    // Set a new timer for 2 minutes (120,000 milliseconds)
-    inactiveTimer = setTimeout(checkSystemInactivity, 120000);
-  });
-
-
-
-
-  function userInactive() {
-    console.log('User has been inactive for 3 minutes.');
-    // win.webContents.send('show-console-message', 'User has been inactive for 3 minutes.');
-    }
-    // Event listener for when the window gains focus (becomes active)
-    app.on('browser-window-focus', () => {
-      console.log('Window is now active.');
-      // If there was a previous userInactiveTimeout, clear it
-      if (userInactiveTimeout) {
-        clearTimeout(userInactiveTimeout);
+        // Create window
+        // createWindow();
       }
-    });
-  
-    // Event listener for when the window loses focus (becomes inactive)
-    app.on('browser-window-blur', () => {
-      console.log('Window is now inactive.');
-      // Set a new userInactiveTimeout for 3 minutes
-      userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
-    });
-
-// Set a custom user data folder path
-// const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
-// app.setPath('downloads', customUserDataPath);
-// Function to perform actions when the user becomes inactive
 
 
+     
 
-  const iconPath = path.join(__dirname, 'assets/icon.png');
+      // Check if the system is in sleep mode
+      const isSystemSleeping = () => {
+        try {
+            const time = powerMonitor.getSystemIdleState();
+            return time === 'locked' || time === 'idle';
+        } catch (error) {
+            console.error('Error checking system state:', error);
+            return false; // Default to false if an error occurs
+        }
+      };
 
-  tray = new Tray(iconPath)
+      // Example usage
+      if (isSystemSleeping()) {
+        console.log('System is sleeping');
+      } else {
+        console.log('System is awake');
+      }
 
-  tray.on('click', () =>{
-    win.isVisible()?win.hide():win.show()
-    win.focus()
-    // shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
-    shell.openExternal(`${apiurl}/token/${userData.apiResponse.secret}`);
-    // createWindow()
-    // console.log('hererer  fff')
-  })
 
-  tray.setToolTip('Rvs Tracker')
+      let idleStartTime = null;
 
-  tray.setContextMenu(menu)
+      // Event listener for when the system becomes idle
+      powerMonitor.on('lock-screen', () => {
+          idleStartTime = new Date();
+          console.log('System became idle at:', idleStartTime);
+          writeLogFile('System became idle at:', idleStartTime);
 
-  createWindow()
-  // checkScreenSharingPermission();
+      });
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+      // Event listener for when the system becomes active
+      powerMonitor.on('unlock-screen', () => {
+          if (idleStartTime) {
+              const idleEndTime = new Date();
+              const idleTime = idleEndTime - idleStartTime;
+              console.log('System was idle for:', idleTime, 'milliseconds');
+              writeLogFile('System was idle for:', idleTime, 'milliseconds');
+              idleStartTime = null;
+          }
+      });
+
+
+      // intervalId = null;
+      // writeLogFile('intervalId line 159');
+
+      readUserData();
+      // autoUpdater.checkForUpdatesAndNotify();
+
+      console.log('isWindows = ', isWindows )
+      console.log('mode = ', process.mode );
+      // window start
+
+      // Function to check for system inactivity
+      function checkSystemInactivity() {
+        console.log('Checking system inactivity...');
+        // Perform actions for system inactivity here
+      }
+
+      // Set the event listeners for system lock and unlock
+      powerMonitor.on('lock-screen', () => {
+        console.log('System is locked.');
+        stopAllScreenshotProcesses();
+        
+        // If there was a previous inactiveTimer, clear it
+        if (inactiveTimer) {
+          clearTimeout(inactiveTimer);
+        }
+      });
+
+      powerMonitor.on('unlock-screen', () => {
+        console.log('System is unlocked.');
+        intervalId = null;
+        writeLogFile('intervalId line 188');
+
+        readUserData();
+        // Set a new timer for 2 minutes (120,000 milliseconds)
+        inactiveTimer = setTimeout(checkSystemInactivity, 120000);
+      });
+
+
+
+
+      function userInactive() {
+        console.log('User has been inactive for 1 minutes.');
+        // win.webContents.send('show-console-message', 'User has been inactive for 3 minutes.');
+        }
+        // Event listener for when the window gains focus (becomes active)
+        app.on('browser-window-focus', () => {
+          console.log('Window is now active.');
+          // If there was a previous userInactiveTimeout, clear it
+          if (userInactiveTimeout) {
+            clearTimeout(userInactiveTimeout);
+          }
+        });
+      
+        // Event listener for when the window loses focus (becomes inactive)
+        app.on('browser-window-blur', () => {
+          console.log('Window is now inactive.');
+          // Set a new userInactiveTimeout for 3 minutes
+          userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
+        });
+
+    // Set a custom user data folder path
+    // const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
+    // app.setPath('downloads', customUserDataPath);
+    // Function to perform actions when the user becomes inactive
+
+
+
+      const iconPath = path.join(__dirname, 'assets/icon.png');
+
+      tray = new Tray(iconPath)
+
+      tray.on('click', () =>{
+
+        if (!win) {
+          createWindow();
+        } else {
+
+          console.log('win', win);
+
+          win.isVisible()?win.hide():win.show()
+          win.focus()
+          // shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
+          shell.openExternal(`${apiurl}/token/${userData.apiResponse.secret}`);
+          // createWindow()
+          // console.log('hererer  fff')
+        }
+
+
+      })
+
+      tray.setToolTip('Rvs Tracker')
+
+      tray.setContextMenu(menu)
+
       createWindow()
-    }
-  })
+      // checkScreenSharingPermission();
+
+      app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+          createWindow()
+        }
+      })
 
 
-
-  app.on('window-all-closed', () => {
-    console.log('close')
-    // win.minimize()
-    // On macOS, quit the app when all windows are closed
-    // if (process.platform === 'darwin') {
-      // app.quit();
-    // }
-  });
+      app.on('window-all-closed', () => {
+        console.log('close')
+        // win.minimize()
+        // On macOS, quit the app when all windows are closed
+        // if (process.platform === 'darwin') {
+          // app.quit();
+        // }
+      });
 
 
   // Start the Python script
@@ -384,9 +460,7 @@ function stopAllScreenshotProcesses() {
   }
 }
 
-function readUserData() {
-
-  
+function readUserData2() {
 
   try {
     const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
@@ -407,7 +481,7 @@ function readUserData() {
       // const delay =  5000; // 5 seconds
       const intervalId = setInterval(() =>{
         console.log('callscreenshort started  delay....', delay);
-        ipcMain.emit('capture-screenshot', 'Hello from event1 handler');
+        ipcMain.emit('capture-screenshot', 'capture screenshot ..... taken');
       }, delay);
 
       // const delay =  2000; // 2 seconds
@@ -463,28 +537,97 @@ function readUserData() {
 
     }
 
-    // if(rawData.apiResponse.user.length > 0){
-      
-    //   console.log('userData: ' + rawData)
-    // }else{
-      
-    //   console.log('userData: empty data.json file')
-    // }
-
-
-    // const delay = 15 * 60 * 1000; // 15 minutes
-    
-
-
-    
-
-
-
 
   } catch (error) {
     console.error('Error reading data.json:', error);
   }
 }
+
+// function readUserData_new() {
+//   try {
+//     const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
+//     userData = JSON.parse(rawData);
+//     const user = userData?.apiResponse?.user;
+
+//     if (!user) {
+//       console.log('User is null');
+//       return;
+//     }
+
+//     const delay = timerFunc.screenshort_time();
+//     const intervalId = setInterval(() => {
+//       console.log('callscreenshort started delay....', delay);
+//       ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+//     }, delay);
+//     screenshotIntervals.push(intervalId);
+
+//     const timeLineInterval = setInterval(async () => {
+//       const new_chartData = await activityTracker.getChartData();
+//       const data = JSON.stringify(new_chartData);
+//       const timelineApiurl = `${apiurl}/api/timieline_store`;
+
+//       chartData = new_chartData;
+//       screenshotIntervals.push(timeLineInterval);
+
+//       const response = common.checkAndClearFiles();
+//       const timer = await common.loadTimeFromFile();
+
+//       uploadTimeline(data, timelineApiurl, timer);
+//       win.webContents.send('timer', response);
+//     }, 60000);
+
+//     screenshotIntervals.push(intervalId);
+//     setInterval(getIdleTime, 300000); // Run every 5 minutes for activity track
+//   } catch (error) {
+//     console.error('Error reading data.json:', error);
+//   }
+// }
+
+
+function readUserData() {
+  try {
+    const rawData = fs.readFileSync(path.join(__dirname, 'data.json'));
+    userData = JSON.parse(rawData);
+    const user = userData?.apiResponse?.user;
+
+    if (!user) {
+      console.log('User is null');
+      return;
+    }
+
+    // Only start the interval if it's not already running
+    if (!intervalId) {
+      const delay = timerFunc.screenshort_time();
+      intervalId = setInterval(() => {
+        console.log('callscreenshort started delay....', delay);
+        ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+      }, delay);
+    }
+
+    screenshotIntervals.push(intervalId);
+
+    const timeLineInterval = setInterval(async () => {
+      const new_chartData = await activityTracker.getChartData();
+      const data = JSON.stringify(new_chartData);
+      const timelineApiurl = `${apiurl}/api/timieline_store`;
+
+      chartData = new_chartData;
+      screenshotIntervals.push(timeLineInterval);
+
+      const response = common.checkAndClearFiles();
+      const timer = await common.loadTimeFromFile();
+
+      uploadTimeline(data, timelineApiurl, timer);
+      // win.webContents.send('timer', response);
+    }, 60000);
+
+    screenshotIntervals.push(intervalId);
+    setInterval(getIdleTime, 300000); // Run every 5 minutes for activity track
+  } catch (error) {
+    console.error('Error reading data.json:', error);
+  }
+}
+
 
 readUserData();
 
@@ -493,7 +636,7 @@ ipcMain.on('event2', (event, arg) => {
   console.log('Received event2 with argument:', arg);
 });
 
-// ipcMain.on()
+  // ipcMain.on()
 
 
  // Listen for the message from the renderer process
@@ -591,56 +734,85 @@ function LoginNotification(title, body, fix) {
 }
 
 
+// ipcMain.on('login-attempt', async (event, loginData) => {
+
+//   // console.log('loginData', loginData);
+
+//   var apiLoginUrl = `${apiurl}/api/login`;
+//   // var apiLoginUrl = 'http://erp.test/api/login';
+
+
+//   try {
+//     // Send the login request to the API
+//     const response = await axios.post(apiLoginUrl, loginData);
+
+//     // Save the response data to data.json
+//     userData.apiResponse = response.data;
+
+//     if(userData.apiResponse.auth ==='done'){
+
+//       let name = `${userData.apiResponse.user.first_name} ${userData.apiResponse.user.last_name}`
+//       fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
+//       // win.reload();
+//       // Redirect to the dashboard.
+//       closeAllWindows();
+//       createWindow();
+//       // win.loadFile(path.join(__dirname, 'dashboard.html'));
+//       console.log('userData');
+//       readUserData()
+//       LoginNotification('Login Successfully!', name );
+//       win.minimize();
+//       // win.webContents.send('show-dashboard', loginData);
+//       //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
+//     }else{
+//       console.log('error');
+//       app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+//       app.exit(0)
+//       // win.minimize();
+//       event.sender.send('login-failed', 'Wrong email password');
+//       LoginNotification('Login Failed!', 'Wrong email password' );
+//     }
+//   } catch (error) {
+//     // win.reload();
+//     app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+//     app.exit(0)
+//     console.error('Login failed:', 'Wrong email password');
+//     LoginNotification('Login Failed!', 'Wrong email password' );
+//     event.sender.send('login-failed', 'Wrong email password');
+//   }
+// });
+
 ipcMain.on('login-attempt', async (event, loginData) => {
-
-  // console.log('loginData', loginData);
-
-  var apiLoginUrl = `${apiurl}/api/login`;
-  // var apiLoginUrl = 'http://erp.test/api/login';
-
-
+  const apiLoginUrl = `${apiurl}/api/login`;
   try {
-    // Send the login request to the API
     const response = await axios.post(apiLoginUrl, loginData);
-
-    // Save the response data to data.json
     userData.apiResponse = response.data;
-
-    if(userData.apiResponse.auth ==='done'){
-
-      let name = `${userData.apiResponse.user.first_name} ${userData.apiResponse.user.last_name}`
-      fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
-      // win.reload();
-      // Redirect to the dashboard.
-      closeAllWindows();
-      createWindow();
-      // win.loadFile(path.join(__dirname, 'dashboard.html'));
-      console.log('userData');
-      readUserData()
-      LoginNotification('Login Successfully!', name );
-      win.minimize();
-      // win.webContents.send('show-dashboard', loginData);
-      //win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
-    }else{
-      console.log('error');
-      app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
-      app.exit(0)
-      // win.minimize();
-      event.sender.send('login-failed', 'Wrong email password');
-      LoginNotification('Login Failed!', 'Wrong email password' );
+    if (userData.apiResponse.auth === 'done') {
+      handleLoginSuccess(userData.apiResponse.user);
+    } else {
+      handleLoginFailure('Wrong email password');
     }
   } catch (error) {
-    // win.reload();
-    app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
-    app.exit(0)
-    console.error('Login failed:', 'Wrong email password');
-    LoginNotification('Login Failed!', 'Wrong email password' );
-    event.sender.send('login-failed', 'Wrong email password');
+    handleLoginFailure('Wrong email password');
   }
 });
 
+function handleLoginSuccess(user) {
+  const name = `${user.first_name} ${user.last_name}`;
+  fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
+  closeAllWindows();
+  createWindow();
+  readUserData();
+  LoginNotification('Login Successfully!', name);
+  win.minimize();
+}
 
-
+function handleLoginFailure(message) {
+  console.error('Login failed:', message);
+  LoginNotification('Login Failed!', message);
+  app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) });
+  app.exit(0);
+}
 
 
 
@@ -864,6 +1036,11 @@ app.on('activate', () => {
   }
 });
 
+
+app.setLoginItemSettings({
+  openAtLogin: true    
+})
+
 function checkScreenSharingPermission_old() {
   desktopCapturer.getSources({ types: ['screen'] })
     .then(sources => {
@@ -1078,4 +1255,4 @@ function writeLogFile(data) {
 }
 
 
-writeLogFile('This is a log message.');
+// writeLogFile('This is a log message.');

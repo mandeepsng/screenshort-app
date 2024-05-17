@@ -1,47 +1,32 @@
-const { Configuration, OpenAIApi } = require("openai");
+const axios = require('axios');
 
-const configuration = new Configuration({
-  organization: "org-2mIHFM2OxbdSnRNaI8CKeBMz",
-  apiKey: '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',
-});
-const openai = new OpenAIApi(configuration);
+// Function to update external API
+const updateExternalAPI = async () => {
+  try {
+    // Make a request to the external API
+    const response = await axios.post('http://erp.test/api/timieline_store', {
+      // Add any data to be sent in the request body
+    });
 
-// const response = await openai.createChatCompletion({
-//   model: "gpt-3.5-turbo",
-//   messages: [],
-//   temperature: 0.5,
-//   max_tokens: 1024,
-// });
+    // Handle the response from the external API
+    console.log('API Updated:', response.data);
+  } catch (error) {
+    // Handle errors if the request fails
+    console.error('Error updating API:', error.message);
+  }
+};
 
-const inputText = 'write 5 types of niche'
+// Set up a timer to update the external API every minute
+const interval = 60000; // 1 minute in milliseconds
 
+// Function to update the API at regular intervals
+const updateAPIInterval = () => {
+  // Call the updateExternalAPI function immediately
+  updateExternalAPI();
 
-openai
-  .createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: "Hello" }],
-    prompt: inputText
-  })
-  .then((res) => {
-    console.log(res.data.choices[0].message.content);
-  })
-  .catch((e) => {
-    console.log(e);
-  });
+  // Set up an interval to call the updateExternalAPI function every minute
+  setInterval(updateExternalAPI, interval);
+};
 
-
-
-// const generateText = async () => {
-//     try {
-//       const response = await openai.createCompletion({
-//         engine: 'text-davinci-002', // Adjust the engine based on your needs
-//         prompt: inputText,
-//         maxTokens: 150,
-//       });
-//       setOutputText(response.data.choices[0].text);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   generateText();
+// Start the update process
+updateAPIInterval();

@@ -110,8 +110,8 @@ async function saveTimeToFile(time) {
 
   function screenshort_time(){
       // Generate a random delay between 5 to 15 minutes (in milliseconds)
-      const minDelay = 9 * 60 * 1000; // 5 minutes in milliseconds
-      const maxDelay = 15 * 60 * 1000; // 15 minutes in milliseconds
+      const minDelay = 5 * 60 * 1000; // 5 minutes in milliseconds
+      const maxDelay = 10 * 60 * 1000; // 15 minutes in milliseconds
       
       const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
       // const randomDelayMinutes = Math.round(randomDelay / (60 * 1000));
