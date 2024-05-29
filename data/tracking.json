@@ -1,1 +1,392 @@
-{}
+{
+  "Electron": {
+    "RVS (ERP)": {
+      "time": 218.98899999999998
+    }
+  },
+  "Visual Studio Code": {
+    "data.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 30.113
+    },
+    "main.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 1352.8460000000002
+    },
+    "Untitled-1 - erp - Visual Studio Code": {
+      "time": 22.075
+    },
+    "api.php - erp - Visual Studio Code": {
+      "time": 126.559
+    },
+    "ScreenshortController.php - erp - Visual Studio Code": {
+      "time": 24.108
+    },
+    "● data.json - electron-screenshot-example - Visual Studio Code": {
+      "time": 2.009
+    },
+    "● main.js - electron-screenshot-example - Visual Studio Code": {
+      "time": 98.438
+    },
+    "ContactController.php - unify-360 - Visual Studio Code": {
+      "time": 4.021
+    },
+    "laravel.log - erp - Visual Studio Code": {
+      "time": 323.52599999999995
+    },
+    "sanctum.php - erp - Visual Studio Code": {
+      "time": 4.026
+    },
+    "WindowTimelineController.php - erp - Visual Studio Code": {
+      "time": 418.199
+    },
+    "NotificationController.php - erp - Visual Studio Code": {
+      "time": 4.018
+    },
+    "● WindowTimelineController.php - erp - Visual Studio Code": {
+      "time": 14.053999999999998
+    },
+    "web.php - ticketing-System - Visual Studio Code": {
+      "time": 14.068
+    },
+    "test.blade.php - ticketing-System - Visual Studio Code": {
+      "time": 6.014
+    },
+    "api.php - ticketing-System - Visual Studio Code": {
+      "time": 58.25
+    },
+    "UserController.php - erp - Visual Studio Code": {
+      "time": 218.85000000000002
+    },
+    "EmailVerify.jsx - Ticketing-System-React - Visual Studio Code": {
+      "time": 16.066
+    },
+    "api.js - Ticketing-System-React - Visual Studio Code": {
+      "time": 2.014
+    },
+    "● api.php - erp - Visual Studio Code": {
+      "time": 56.223000000000006
+    },
+    "● try { • Untitled-2 - electron-screenshot-example - Visual Studio Code": {
+      "time": 40.179
+    },
+    "web.php - erp - Visual Studio Code": {
+      "time": 8.035
+    },
+    "● UserController.php - erp - Visual Studio Code": {
+      "time": 156.69999999999996
+    },
+    "template.html - datatable - Visual Studio Code": {
+      "time": 20.091
+    },
+    "PersonalAccessToken.php - erp - Visual Studio Code": {
+      "time": 26.12
+    },
+    "Visual Studio Code": {
+      "time": 2.011
+    },
+    "contact.blade.php - unify-360 - Visual Studio Code": {
+      "time": 2007.028
+    },
+    "● contact.blade.php - unify-360 - Visual Studio Code": {
+      "time": 1173.2939999999996
+    },
+    "product-list.blade.php - hatton - Visual Studio Code": {
+      "time": 174.812
+    },
+    "● columns.forEach(function (col) { • Untitled-1 - unify-360 - Visual Studio Code": {
+      "time": 8.05
+    }
+  },
+  "Google Chrome": {
+    "Dashboard - Google Chrome": {
+      "time": 238.802
+    },
+    "FastAPI - Swagger UI - Google Chrome": {
+      "time": 76.29299999999999
+    },
+    "Product List Page - Hatton - Google Chrome": {
+      "time": 2.015
+    },
+    "New Tab - Google Chrome": {
+      "time": 275.165
+    },
+    "electron js - Google Search - Google Chrome": {
+      "time": 2.003
+    },
+    "Build cross-platform desktop apps with JavaScript, HTML, and CSS | Electron - Google Chrome": {
+      "time": 28.125
+    },
+    "phpMyAdmin - Google Chrome": {
+      "time": 8.029
+    },
+    "phpmyadmin.test / localhost | phpMyAdmin 5.1.3 - Google Chrome": {
+      "time": 12.043
+    },
+    "phpmyadmin.test / localhost / erp / personal_access_tokens | phpMyAdmin 5.1.3 - Google Chrome": {
+      "time": 241.11200000000002
+    },
+    "Separate Payslip Generation Module - Google Chrome": {
+      "time": 1144.764
+    },
+    "HR Portal (ERP Software) Tasks | Nifty - Google Chrome": {
+      "time": 26.108000000000004
+    },
+    "erp.test/user-view/5%7Cf5d5F3WY5A7k9JUWcSIP2nwH3jzXPfQZ17TJi3y6aa794579 - Google Chrome": {
+      "time": 108.505
+    },
+    "encode ur - Google Search - Google Chrome": {
+      "time": 96.408
+    },
+    "PHP: urlencode - Manual - Google Chrome": {
+      "time": 154.669
+    },
+    "login user with personal_access_tokens in laravel - Google Search - Google Chrome": {
+      "time": 6.025
+    },
+    "Get user by token - sanctum - Google Chrome": {
+      "time": 82.283
+    },
+    "Laravel Sanctum - Laravel 11.x - The PHP Framework For Web Artisans - Google Chrome": {
+      "time": 180.791
+    },
+    "login user with sanctum token with route in laravel - Google Search - Google Chrome": {
+      "time": 90.30799999999999
+    },
+    "php - Laravel Sanctum login - Stack Overflow - Google Chrome": {
+      "time": 18.084
+    },
+    "Laravel API Authentication Using LARAVEL SANCTUM - DEV Community - Google Chrome": {
+      "time": 24.099
+    },
+    "login user with sanctum token query in laravel - Google Search - Google Chrome": {
+      "time": 14.062000000000001
+    },
+    "Untitled - Google Chrome": {
+      "time": 78.31400000000001
+    },
+    "sanctum/src/PersonalAccessToken.php at 2.x · laravel/sanctum - Google Chrome": {
+      "time": 10.023
+    },
+    "Attempt to read property \"tokenable\" on null - Google Chrome": {
+      "time": 10.033
+    },
+    "erp.test/user-view/6%7CPtkNKJ4TgB9bBGxwbzvpn5xlRWanmFMbtAMLztDr630d89c2 - Google Chrome": {
+      "time": 116.448
+    },
+    "Nifty - Google Chrome": {
+      "time": 22.053
+    },
+    "app | Electron - Google Chrome": {
+      "time": 184.823
+    },
+    "OpenAI Platform - Google Chrome": {
+      "time": 2.005
+    },
+    "Models - OpenAI API - Google Chrome": {
+      "time": 299.266
+    },
+    "Unify CRM 360 Tasks | Nifty - Google Chrome": {
+      "time": 18.108
+    },
+    "Unify 360 -Dashboard - Google Chrome": {
+      "time": 6709.518000000003
+    },
+    "show / hide columns dynamically datatable - Google Search - Google Chrome": {
+      "time": 4.019
+    },
+    "DataTables example - Show / hide columns dynamically - Google Chrome": {
+      "time": 120.562
+    },
+    "Contacts | Jampack - Admin CRM Dashboard Template - Google Chrome": {
+      "time": 6.013
+    },
+    "Nubra UI - A Bootstrap based library of modern, reusable and flexible components designed specially for SaaS web applications. - Google Chrome": {
+      "time": 584.3979999999998
+    },
+    "drawer_push - Google Search - Google Chrome": {
+      "time": 6.017
+    },
+    "drawer_push js codepen - Google Search - Google Chrome": {
+      "time": 271.16700000000003
+    },
+    "Sliding Push Drawer - Google Chrome": {
+      "time": 140.61800000000002
+    },
+    "": {
+      "time": 46.167
+    },
+    "close #drawer_push_right not working - Google Search - Google Chrome": {
+      "time": 6.015
+    },
+    "Drawer not closing automatically on navigate v6? · Issue #10495 · react-navigation/react-navigation - Google Chrome": {
+      "time": 20.076999999999998
+    },
+    "drawer - Google Search - Google Chrome": {
+      "time": 4.008
+    },
+    "drawer js plugin - Google Search - Google Chrome": {
+      "time": 4.016
+    },
+    "jQuery drawer Plugins | jQuery Script - Google Chrome": {
+      "time": 6.033
+    },
+    "Drawer - Flexible drawer menu using jQuery, iScroll and CSS. - Google Chrome": {
+      "time": 32.123999999999995
+    },
+    "view-source:unify-360.test/contacts# - Google Chrome": {
+      "time": 20.083
+    },
+    "view-source:https://nubra-ui.hencework.com/empty-states.html# - Google Chrome": {
+      "time": 24.124
+    },
+    "get a list of column with their visible values in datatables jquery - Google Search - Google Chrome": {
+      "time": 16.070999999999998
+    },
+    "javascript - Get names and visibility of all columns - Stack Overflow - Google Chrome": {
+      "time": 38.191
+    },
+    "Empower your organization for an AI future with Stack Overflow for Teams - Stack Overflow - Google Chrome": {
+      "time": 16.095
+    },
+    "DataTables example - Select columns - Google Chrome": {
+      "time": 142.638
+    },
+    "datatable column select in popup modal - Google Search - Google Chrome": {
+      "time": 74.32300000000001
+    },
+    "javascript - DataTables-show column data in modal - Stack Overflow - Google Chrome": {
+      "time": 28.117
+    },
+    "DataTables example - Modal details display - Google Chrome": {
+      "time": 18.089
+    },
+    "Misaligned columns in fixed header table inside modal popup — DataTables forums - Google Chrome": {
+      "time": 6.039
+    },
+    "javascript - Copy array items into another array - Stack Overflow - Google Chrome": {
+      "time": 20.079
+    },
+    "JavaScript Array push() Method - Google Chrome": {
+      "time": 26.084
+    },
+    "js push array into array - Google Search - Google Chrome": {
+      "time": 58.241
+    },
+    "update array value in javascript - Google Search - Google Chrome": {
+      "time": 34.135999999999996
+    },
+    "jquery - How to update array value javascript? - Stack Overflow - Google Chrome": {
+      "time": 24.108
+    },
+    "javascript - Most efficient way to update an object property within an array of objects - Stack Overflow - Google Chrome": {
+      "time": 34.168
+    },
+    "get datatable column data number using jquery - Google Search - Google Chrome": {
+      "time": 20.055999999999997
+    },
+    "jquery - DataTables - How do I return the value of a specific column for each row - Stack Overflow - Google Chrome": {
+      "time": 32.156
+    },
+    "| KUKUFM - Google Chrome": {
+      "time": 2.013
+    },
+    "How to get the column value from the data table into variable — DataTables forums - Google Chrome": {
+      "time": 257.093
+    },
+    "columns.data - Google Chrome": {
+      "time": 42.212
+    },
+    "columns().every() - Google Chrome": {
+      "time": 803.4870000000001
+    },
+    "cells().every() - Google Chrome": {
+      "time": 8.017
+    },
+    "targetDt.columns().every - Google Search - Google Chrome": {
+      "time": 24.087999999999997
+    },
+    "javascript - How to use columns().every() to retrieve columns with filtered elements only - Stack Overflow - Google Chrome": {
+      "time": 42.188
+    },
+    "datatables get all column headers - Google Search - Google Chrome": {
+      "time": 8.032
+    },
+    "columns().header() - Google Chrome": {
+      "time": 8.024
+    },
+    "API - Google Chrome": {
+      "time": 234.93600000000004
+    },
+    "column() - Google Chrome": {
+      "time": 6.017
+    },
+    "column().data() - Google Chrome": {
+      "time": 8.039
+    },
+    "column().header() - Google Chrome": {
+      "time": 38.144
+    },
+    "update value in json object js - Google Search - Google Chrome": {
+      "time": 2.005
+    },
+    "JSON Modify an Array Value of a JSON Object - GeeksforGeeks - Google Chrome": {
+      "time": 12.051
+    },
+    "Hencework - Interface Assets for SaaS Products - Google Chrome": {
+      "time": 2.002
+    },
+    "Time Reporting 2023 - Mandeep Singh .xlsx - Google Chrome": {
+      "time": 90.38900000000001
+    }
+  },
+  "Windows Explorer": {
+    "": {
+      "time": 74.32799999999999
+    }
+  },
+  "Microsoft Teams": {
+    "Chat | HR PORTAL/ERP DISCUSSIONS | Microsoft Teams": {
+      "time": 110.50200000000001
+    },
+    "Chat | Mandeep Singh (You) | Microsoft Teams": {
+      "time": 18.103
+    },
+    "Chat | Jaskirat Singh | Microsoft Teams": {
+      "time": 18.086
+    },
+    "Chat | HR Kavita | Microsoft Teams": {
+      "time": 18.086
+    },
+    "Teams and Channels | Discover | Microsoft Teams": {
+      "time": 2.007
+    },
+    "Teams and Channels | General | Microsoft Teams": {
+      "time": 68.301
+    },
+    "Teams and Channels | Daily Status Report (DSR) | Microsoft Teams": {
+      "time": 50.212
+    }
+  },
+  "Search application": {
+    "Search": {
+      "time": 2.001
+    }
+  },
+  "Postman": {
+    "Postman": {
+      "time": 6.027
+    },
+    "post api fastapi - My Workspace": {
+      "time": 8.045
+    }
+  },
+  "LockApp.exe": {
+    "Windows Default Lock Screen": {
+      "time": 2257.751
+    }
+  },
+  "Windows Shell Experience Host": {
+    "New notification": {
+      "time": 8.044
+    }
+  }
+}

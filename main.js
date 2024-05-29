@@ -1,5 +1,3 @@
-// Set DEBUG environment variable programmatically
-process.env.DEBUG = 'electron-updater';
 const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
@@ -14,6 +12,80 @@ const common = require('./functions/common')
 
 const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
+
+const { version } = require(path.join(__dirname, 'package.json'));
+console.log(`App version: ${version}`);
+
+// app update functionality start
+
+autoUpdater.autoDownload = false;
+
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for update...');
+});
+
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available:', info);
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Download', 'Later'],
+    title: 'Update Available',
+    message: 'A new version is available. Do you want to download it now?'
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) {
+      autoUpdater.downloadUpdate();
+    }
+  });
+});
+
+autoUpdater.on('update-not-available', (info) => {
+  console.log('Update not available:', info);
+});
+
+autoUpdater.on('error', (error) => {
+  console.error('Error in auto-updater:', error);
+});
+
+// working in cmd console
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+  log_message += ` - Downloaded ${progressObj.percent}%`;
+  log_message += ` (${progressObj.transferred}/${progressObj.total})`;
+  console.log(log_message);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred}/${progressObj.total})`;
+  console.log(log_message);
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Download Progress',
+    message: log_message
+  });
+});
+
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded:', info);
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: 'A new version has been downloaded. Restart the application to apply the updates.'
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+autoUpdater.on('error', (error) => {
+  console.error('Error in auto-updater:', error);
+  dialog.showErrorBox('Error', error == null ? 'unknown' : (error.stack || error).toString());
+});
+// app update functionality end
 
 const timerFunc = require(functionPath)
 const ActivityTracker = require("./ActivityTracker");
@@ -54,9 +126,9 @@ let activityTimer;
 let chartData;
 let timer;
 
-var apiurl = 'https://track360.rvsmedia.com';
+// var apiurl = 'https://track360.rvsmedia.com';
 // var apiurl = 'https://app.idevelopment.site';
-// var apiurl = 'http://erp.test';
+var apiurl = 'http://erp.test';
 
 const filePath = path.join(__dirname,'dist', 'rvsdesktime Setup 1.2.4.exe');
 const exePath = path.join(__dirname, 'update.json');
@@ -130,6 +202,8 @@ const createWindow = () => {
 // });
 
     app.whenReady().then(() => {
+
+      autoUpdater.checkForUpdatesAndNotify();
 
 
       // Check if another instance of the app is already running
@@ -279,7 +353,7 @@ const createWindow = () => {
           win.isVisible()?win.hide():win.show()
           win.focus()
           // shell.openExternal(`https://app.idevelopment.site/token/${userData.apiResponse.secret}`);
-          shell.openExternal(`${apiurl}/token/${userData.apiResponse.secret}`);
+          shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
           // createWindow()
           // console.log('hererer  fff')
         }
@@ -907,9 +981,11 @@ async function uploadImage(imagePath, uploadUrl, user) {
     const formData = new FormData();
     formData.append('image', imageBlob, imagePath);
     formData.append('id', userData.apiResponse.user.id);
+    formData.append('token', userData.apiResponse.token);
 
     const headers = {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${userData.apiResponse.token}`,
     };
 
     const response = await axios.post(uploadUrl, formData, {
@@ -923,6 +999,11 @@ async function uploadImage(imagePath, uploadUrl, user) {
 
   } catch (error) {
     console.error('Error while uploading image:', error.message);
+    console.log(error.response.status);
+
+    if(error.response.status === 401){
+      ipcMain.emit('logout', 'logout ...');
+    }
   }
 }
 
@@ -976,10 +1057,12 @@ async function uploadTimeline(data, uploadUrl, time) {
     formData.append('value', data);
     formData.append('time', time);
     formData.append('id', userData.apiResponse.user.id);
+    formData.append('token', userData.apiResponse.token);
     // formData.append('time', time);
     
     const headers = {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${userData.apiResponse.token}`,
     };
     
     const response = await axios.post(uploadUrl, formData, {
@@ -991,6 +1074,11 @@ async function uploadTimeline(data, uploadUrl, time) {
 
   } catch (error) {
     console.error('Error while updating timeline:', error.message);
+    console.log(error.response.status);
+
+    if(error.response.status === 401){
+      ipcMain.emit('logout', 'logout ...');
+    }
   }
 }
 
@@ -1002,9 +1090,11 @@ async function updateNotification(minutes, uploadUrl) {
     const formData = new FormData();
     formData.append('idleTime', minutes);
     formData.append('id', userData.apiResponse.user.id);
+    formData.append('token', userData.apiResponse.token);
 
     const headers = {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.apiResponse.token}`,
     };
 
     const response = await axios.post(uploadUrl, formData, {
@@ -1015,6 +1105,11 @@ async function updateNotification(minutes, uploadUrl) {
 
   } catch (error) {
     console.error('Error while sending inactive notification:', error.message);
+    console.log(error.response.status);
+
+    if(error.response.status === 401){
+      ipcMain.emit('logout', 'logout ...');
+    }
   }
 }
 

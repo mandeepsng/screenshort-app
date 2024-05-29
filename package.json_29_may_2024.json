@@ -44,33 +44,22 @@
         "dmg"
       ],
       "icon": "assets/icon.png",
+      "category": "your.app.category",
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist"
     },
     "win": {
       "target": [
         {
-          "target": [
-            "nsis",
-            "portable"
-          ],
-          "artifactName": "${productName}_Setup_${version}.${ext}",
+          "target": "nsis",
           "arch": [
             "x64",
             "ia32"
           ]
         }
       ],
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true
-      },
-      "icon": "assets/icon.png",
-      "publish": [
-        {
-          "provider": "github",
-          "owner": "mandeepsng",
-          "repo": "test-app-electron"
-        }
-      ]
+      "icon": "assets/icon.png"
     }
   }
 }
