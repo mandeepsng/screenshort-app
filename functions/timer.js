@@ -1,6 +1,12 @@
+const { app } = require('electron')
 const path = require('path')
 const axios = require('axios');
 const fs = require('fs')
+
+const tempDir = app.getPath('temp');
+const appTempDir = path.join(tempDir, 'track-360');
+var timePath = path.join(appTempDir, 'time.json');
+var trackingPath = path.join(appTempDir, 'tracking.json');
 
 // Save time data to JSON file
 async function saveTimeToFile(time) {
@@ -9,7 +15,8 @@ async function saveTimeToFile(time) {
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleDateString();
   
-    const filePath = path.join(__dirname,  '..'  ,'data', 'time.json');
+    // const filePath = path.join(__dirname,  '..'  ,'data', 'time.json');
+    const filePath = timePath;
     const data = JSON.stringify({ time : time, date : formattedTime });
   
     try {
@@ -22,7 +29,8 @@ async function saveTimeToFile(time) {
   
   // Load time data from JSON file
   async function loadTimeFromFile() {
-    const filePath = path.join( __dirname,  '..' , 'data', 'time.json');
+    // const filePath = path.join( __dirname,  '..' , 'data', 'time.json');
+    const filePath = timePath;
   
     try {
       const data = fs.readFileSync(filePath, 'utf-8');
@@ -48,8 +56,10 @@ async function saveTimeToFile(time) {
     const currentTime = new Date();
     const formattedCurrentDate = currentTime.toLocaleDateString();
   
-    const filePathTime = path.join(__dirname, '..' ,'data', 'time.json');
-    const filePathTrack = path.join(__dirname, '..' ,'data', 'tracking.json');
+    // const filePathTime = path.join(__dirname, '..' ,'data', 'time.json');
+    const filePathTime = timePath;
+    // const filePathTrack = path.join(__dirname, '..' ,'data', 'tracking.json');
+    const filePathTrack = trackingPath;
   
     try {
       const timeData = await fs.promises.readFile(filePathTime, 'utf-8');

@@ -185,6 +185,7 @@ console.log('User is ' + first_name);
 
 
 // Create the application menu
+function createMenu() {
   const menuTemplate = [
     {
       role: 'quit',
@@ -201,7 +202,6 @@ console.log('User is ' + first_name);
         label: 'Logout',
         click: () => {
           // Handle logout logic here
-          ipcMain.emit('logout', 'logout ...');
           console.log('User logged out');
         },
       }
@@ -210,46 +210,99 @@ console.log('User is ' + first_name);
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
+}
 
 
 
+// const menuTemplate = [];
+
+// // Add default menu items
+// menuTemplate.push(
+//   {
+//     role: 'quit'
+//   }
+// );
+
+// // Conditionally add user-related menu items
+// if (first_name && first_name) {
+//   menuTemplate.unshift(
+//     {
+//       label: `User: ${first_name}`,
+//       enabled: false
+//     },
+//     {
+//       label: 'Logout',
+//       click: () => {
+//         // Handle logout logic here
+//         console.log('User logged out');
+//       }
+//     }
+//   );
+// }
+
+const menuTemplate = [  
+  // {
+  //   label: 'Home',
+  //   click: () => {
+  //     // mainWindow.loadURL('http://localhost:3007');
+  //     win.loadFile(path.join(__dirname, 'index.html'));
+  //   }
+  // },
+  
+  // {
+  //   label: 'About',
+  //   click: () => {
+  //     // Create a new window when "About" is clicked
+  //     // createAboutWindow()
+  //     mainWindow.webContents.loadFile('about.html');
+  //   }
+  // },
+  {
+       role: 'quit' 
+  }
+]
 
 
-    const createWindow = () => {
-      win = new BrowserWindow({
-        width: 600,
-        height: 450,
-        resizable: false,
-        skipTaskbar: true,
-        webPreferences: {
-          nodeIntegration: true,
-          preload: path.join(__dirname, 'preload.js')
-        }
-      })
-      
-        // open dev tools
-        // win.webContents.openDevTools();
-
-        // Check if userData is not null, and decide which page to load.
-        if (userData.apiResponse) {
-          win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
-          win.loadFile(path.join(__dirname, 'dashboard.html'))
-          .then(() => { win.webContents.send('sendSettings', userData.apiResponse); })
-            .then(() => { win.show(); });
-
-          return win;
-          console.log('show-dashboard = ', userData);
-          // win.webContents.send('show-dashboard', loginData);
-        } else {
-          win.loadFile(path.join(__dirname, 'index.html'));
-        }
+const menu = Menu.buildFromTemplate(menuTemplate)
+Menu.setApplicationMenu(menu)
 
 
-      // win.loadFile('index.html')
-
-
-
+const createWindow = () => {
+  win = new BrowserWindow({
+    width: 600,
+    height: 450,
+    resizable: false,
+    skipTaskbar: true,
+    webPreferences: {
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js')
     }
+  })
+  
+    // open dev tools
+    // win.webContents.openDevTools();
+
+
+    // Check if userData is not null, and decide which page to load.
+    if (userData.apiResponse) {
+      win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
+      win.loadFile(path.join(__dirname, 'dashboard.html'))
+      .then(() => { win.webContents.send('sendSettings', userData.apiResponse); })
+        .then(() => { win.show(); });
+
+      return win;
+      console.log('show-dashboard = ', userData);
+      // win.webContents.send('show-dashboard', loginData);
+    } else {
+      win.loadFile(path.join(__dirname, 'index.html'));
+    }
+
+
+  // win.loadFile('index.html')
+
+
+
+}
 
 
     process.on('uncaughtException', (error) => {
@@ -390,10 +443,10 @@ console.log('User is ' + first_name);
           userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
         });
 
-      // Set a custom user data folder path
-      // const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
-      // app.setPath('downloads', customUserDataPath);
-      // Function to perform actions when the user becomes inactive
+    // Set a custom user data folder path
+    // const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
+    // app.setPath('downloads', customUserDataPath);
+    // Function to perform actions when the user becomes inactive
 
       // console.log('userData', userData);
 
@@ -452,33 +505,33 @@ console.log('User is ' + first_name);
 
 
 
-      // ipcMain.on('open-window', () => {
-      //   win.restore();
-      // });
+  // ipcMain.on('open-window', () => {
+  //   win.restore();
+  // });
 
 
-      // Listen for the message from the renderer process
-      ipcMain.on('logout', async() => {
-        // Call the function in the main process
-        const filePath = path.join(__dirname, 'data.json');
-        await clearDataFile(dataFilePath);
-        // createWindow();
-        app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
-        app.exit(0)
-      });
+  // Listen for the message from the renderer process
+  ipcMain.on('logout', async() => {
+    // Call the function in the main process
+    const filePath = path.join(__dirname, 'data.json');
+    await clearDataFile(dataFilePath);
+    // createWindow();
+    app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
+    app.exit(0)
+  });
 
 
-      // Register multiple global hotkeys using a loop
-      // for (const acc of accelerators) {
-      //   globalShortcut.register(acc, () => {
-      //     console.log(`Keyboard activity detected for accelerator: ${acc}`);
-      //   });
-      // }
-    
-      // Start capturing screen data for mouse and keyboard tracking
-      // startActivityTracking();
+  // Register multiple global hotkeys using a loop
+  // for (const acc of accelerators) {
+  //   globalShortcut.register(acc, () => {
+  //     console.log(`Keyboard activity detected for accelerator: ${acc}`);
+  //   });
+  // }
+ 
+// Start capturing screen data for mouse and keyboard tracking
+// startActivityTracking();
 
-  })
+})
 
 // end ready 
 
@@ -653,19 +706,10 @@ function handleLoginSuccess(user) {
   fs.writeFileSync(dataFilePath, JSON.stringify(userData, null, 2));
   // fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
   closeAllWindows();
-  // createWindow();
+  createWindow();
   readUserData();
   LoginNotification('Login Successfully!', name);
-  // win.minimize();
-
-  // Set the app to open at login
-  app.setLoginItemSettings({
-    openAtLogin: true
-  });
-
-    // Restart the app
-    app.relaunch();
-    app.exit(0);
+  win.minimize();
 }
 
 function handleLoginFailure(message) {
@@ -679,10 +723,10 @@ function handleLoginFailure(message) {
 
 
 
-ipcMain.on('capture-screenshot', async (event) => {
+  ipcMain.on('capture-screenshot', async (event) => {
     // console.log('login herer capture-screenshot');
-    const displays = screen.getAllDisplays();
-    const screenshots = await Promise.all(
+  const displays = screen.getAllDisplays();
+  const screenshots = await Promise.all(
     displays.map(async (display) => {
       const screenshot = await captureScreen(display.id);
       console.log('display = ', display);

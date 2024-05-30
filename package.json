@@ -1,11 +1,11 @@
 {
   "name": "rvsdesktime",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "description": "time tracking software",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "electron-builder",
+    "postinstall": "electron-builder install-app-deps",
     "dev": "electron .",
     "start": "electron-forge start",
     "build": "electron-builder",
@@ -43,34 +43,33 @@
       "target": [
         "dmg"
       ],
-      "icon": "assets/icon.png",
+      "icon": "assets/icon.png"
     },
     "win": {
       "target": [
-        {
-          "target": [
-            "nsis",
-            "portable"
-          ],
-          "artifactName": "${productName}_Setup_${version}.${ext}",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
+        "nsis",
+        "portable"
       ],
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true
-      },
+      "artifactName": "${productName}_Setup_${version}.${ext}",
       "icon": "assets/icon.png",
       "publish": [
         {
           "provider": "github",
           "owner": "mandeepsng",
-          "repo": "test-app-electron"
+          "repo": "screenshort-app"
         }
       ]
-    }
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mandeepsng",
+        "repo": "screenshort-app"
+      }
+    ]
   }
 }
