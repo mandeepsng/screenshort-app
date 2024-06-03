@@ -1,6 +1,6 @@
 {
   "name": "rvsdesktime",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "time tracking software",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "dev": "electron .",
     "start": "electron-forge start",
     "build": "electron-builder",
-    "build:win": "electron-builder build --win"
+    "build:win": "electron-builder build --win",
+    "build:linux": "electron-builder build --linux"
   },
   "author": "Mandeep Singh",
   "license": "ISC",
@@ -59,6 +60,12 @@
           "repo": "screenshort-app"
         }
       ]
+    },
+    "linux": { 
+      "target": [
+        "Track-360"
+      ],
+      "icon": "assets/icon.png"
     },
     "nsis": {
       "oneClick": true,

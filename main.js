@@ -9,7 +9,8 @@ const { log } = require('console');
 const { spawn } = require('child_process');
 const { loadPyodide } = require('pyodide')
 const common = require('./functions/common')
-
+const { initializeTimer } = require('./timer');
+const state = require('./state');
 // const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
 
@@ -24,7 +25,8 @@ console.log('tempDir', tempDir);
 
 // Create a subdirectory for your app data
 const appTempDir = path.join(tempDir, 'track-360');
-var timePath = path.join(appTempDir, 'time.json');
+// var timePath = path.join(appTempDir, 'time.json');
+// console.log('timePath', timePath);
 var dataFilePath = path.join(appTempDir, 'data.json');
 var trackingPath = path.join(appTempDir, 'tracking.json');
 
@@ -35,9 +37,9 @@ function ensureAppTempDir() {
   }
 
   // Create files if they do not exist
-  if (!fs.existsSync(timePath)) {
-    fs.writeFileSync(timePath, JSON.stringify({}));
-  }
+  // if (!fs.existsSync(timePath)) {
+  //   fs.writeFileSync(timePath, JSON.stringify({}));
+  // }
   if (!fs.existsSync(dataFilePath)) {
     fs.writeFileSync(dataFilePath, JSON.stringify({}));
   }
@@ -228,7 +230,7 @@ console.log('User is ' + first_name);
       })
       
         // open dev tools
-        // win.webContents.openDevTools();
+        win.webContents.openDevTools();
 
         // Check if userData is not null, and decide which page to load.
         if (userData.apiResponse) {
@@ -260,8 +262,23 @@ console.log('User is ' + first_name);
 
     app.whenReady().then(() => {
       // createMenu();
+      initializeTimer();
+
+      // setInterval(() => {
+      //   const elapsedTime = state.getElapsedTime();
+      //   console.log(`Elapsed time from main.js: ${elapsedTime} seconds`);
+      //   // You can use the elapsedTime value elsewhere in your main.js as needed
+      // }, 1000);
+      
 
       autoUpdater.checkForUpdatesAndNotify();
+
+
+      app.on('session-created', (session) => {
+        console.log('session-created', session);
+      })
+
+      
 
       // Check if another instance of the app is already running
       const gotTheLock = app.requestSingleInstanceLock();
@@ -390,12 +407,6 @@ console.log('User is ' + first_name);
           userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
         });
 
-      // Set a custom user data folder path
-      // const customUserDataPath = path.join(app.getPath('downloads'), 'erp');
-      // app.setPath('downloads', customUserDataPath);
-      // Function to perform actions when the user becomes inactive
-
-      // console.log('userData', userData);
 
       if(userData && userData.apiResponse !== undefined){
 
@@ -407,19 +418,6 @@ console.log('User is ' + first_name);
         tray.on('click', () =>{
 
           shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
-
-
-          // if (!win) {
-          //   createWindow();
-          // } else {
-
-          //   console.log('win', win);
-
-          //   win.isVisible()?win.hide():win.show()
-          //   win.focus()
-          //   shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
-          //   // createWindow()
-          // }
 
         })
 
@@ -448,13 +446,6 @@ console.log('User is ' + first_name);
         // }
       });
 
-
-
-
-
-      // ipcMain.on('open-window', () => {
-      //   win.restore();
-      // });
 
 
       // Listen for the message from the renderer process
@@ -590,10 +581,10 @@ function readUserData() {
       chartData = new_chartData;
       screenshotIntervals.push(timeLineInterval);
 
-      const response = common.checkAndClearFiles();
-      const timer = await common.loadTimeFromFile();
+      // const response = common.checkAndClearFiles();
+      // const timer = await common.loadTimeFromFile();
 
-      uploadTimeline(data, timelineApiurl, timer);
+      // uploadTimeline(data, timelineApiurl, timer);
       // win.webContents.send('timer', response);
     }, 60000);
 
@@ -611,6 +602,8 @@ readUserData();
 ipcMain.on('event2', (event, arg) => {
   console.log('Received event2 with argument:', arg);
 });
+
+
 
 
 function LoginNotification(title, body, fix) {
@@ -662,6 +655,7 @@ function handleLoginSuccess(user) {
   app.setLoginItemSettings({
     openAtLogin: true
   });
+
 
     // Restart the app
     app.relaunch();

@@ -108,14 +108,86 @@ async function loadTimeFromFile() {
 
 
 
-// Increment timer value in JSON file
-async function incrementTimer() {
-  const currentTime = await loadTimeFromFile() || 0;
-  saveTimeToFile(currentTime + 1);
+// // Increment timer value in JSON file
+// async function incrementTimer() {
+//   const currentTime = await loadTimeFromFile() || 0;
+//   saveTimeToFile(currentTime + 1);
+// }
+
+async function checkAndClearFiles() {
+  const currentTime = new Date();
+  const formattedCurrentDate = currentTime.toLocaleDateString();
+
+  try {
+    const timeData = await fs.promises.readFile(timePath, 'utf-8');
+    const parsedTimeData = JSON.parse(timeData);
+
+    if (Object.keys(parsedTimeData).length === 0) {
+      console.log('File exists but is empty. Skipping write operation.');
+      // await incrementTimer();
+    } else {
+      if (parsedTimeData.date !== formattedCurrentDate) {
+        await clearDataFile(timePath);
+        await clearDataFile(trackingPath);
+      } else {
+        console.log('Dates match, no action needed.');
+        // await incrementTimer();
+      }
+    }
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // File does not exist
+      console.log('File does not exist. Initializing new data.');
+      const initialData = {
+        time: 0,
+        date: formattedCurrentDate,
+        idle: 0,
+        productive: 0
+      };
+      await fs.promises.writeFile(timePath, JSON.stringify(initialData, null, 2));
+    } else {
+      console.error('Error checking and clearing files:', error);
+    }
+  }
 }
 
+async function incrementTimer() {
+  try {
+    const timeData = await fs.promises.readFile(timePath, 'utf-8');
+    const parsedTimeData = JSON.parse(timeData);
+
+    // Increment the time by 1 minute
+    parsedTimeData.time += 1;
+
+    await fs.promises.writeFile(timePath, JSON.stringify(parsedTimeData, null, 2));
+    console.log('Time incremented by 1 minute');
+  } catch (error) {
+    console.error('Error incrementing timer:', error);
+  }
+}
+
+async function clearDataFile(filePath) {
+  try {
+    const currentTime = new Date();
+    const formattedCurrentDate = currentTime.toLocaleDateString();
+    
+    const initialData = {
+      time: 0,
+      date: formattedCurrentDate,
+      idle: 0,
+      productive: 0
+    };
+
+    await fs.promises.writeFile(filePath, JSON.stringify(initialData, null, 2));
+    console.log(`Cleared data file: ${filePath}`);
+  } catch (error) {
+    console.error('Error clearing data file:', error);
+  }
+}
+
+
 // check if current date not match with json file date
-async function checkAndClearFiles() {
+async function checkAndClearFiles2() {
   const currentTime = new Date();
   const formattedCurrentDate = currentTime.toLocaleDateString();
 
@@ -162,22 +234,22 @@ function clearFile(filePath) {
 
 
 // Function to clear the data.json file
-async function clearDataFile(filePath) {
-  // Create an empty JSON object
-  const emptyData = {};
+// async function clearDataFile(filePath) {
+//   // Create an empty JSON object
+//   const emptyData = {};
 
-  // Convert the empty object to JSON format
-  const emptyJsonData = JSON.stringify(emptyData);
+//   // Convert the empty object to JSON format
+//   const emptyJsonData = JSON.stringify(emptyData);
 
-  // Write the empty JSON data to the file
-  fs.writeFile(filePath, emptyJsonData, (err) => {
-    if (err) {
-      console.error('Error clearing JSON file:', err);
-    } else {
-      console.log('Data.json file cleared successfully.');
-    }
-  });
-}
+//   // Write the empty JSON data to the file
+//   fs.writeFile(filePath, emptyJsonData, (err) => {
+//     if (err) {
+//       console.error('Error clearing JSON file:', err);
+//     } else {
+//       console.log('Data.json file cleared successfully.');
+//     }
+//   });
+// }
 
 
 const mainexe = path.join(__dirname, '..' ,'main.exe');
