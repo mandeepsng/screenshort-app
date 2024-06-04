@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
@@ -13,6 +14,7 @@ const { initializeTimer } = require('./timer');
 const state = require('./state');
 // const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
+const config = require('./config');
 
 const { version } = require(path.join(__dirname, 'package.json'));
 console.log(`App version: ${version}`);
@@ -128,6 +130,11 @@ autoUpdater.on('error', (error) => {
   console.error('Error in auto-updater:', error);
   dialog.showErrorBox('Error', error == null ? 'unknown' : (error.stack || error).toString());
 });
+
+// Function to trigger update check
+function checkForUpdates() {
+  autoUpdater.checkForUpdates();
+}
 // app update functionality end
 
 const timerFunc = require(functionPath)
@@ -200,6 +207,17 @@ console.log('User is ' + first_name);
         enabled: false,
       },
       {
+        label: `App version: ${version}`,
+        enabled: false,
+      },
+      {
+        label: `check update`,
+        click: () => {
+          // Handle logout logic here
+          checkForUpdates();
+        },
+      },
+      {
         label: 'Logout',
         click: () => {
           // Handle logout logic here
@@ -223,6 +241,8 @@ console.log('User is ' + first_name);
         height: 450,
         resizable: false,
         skipTaskbar: true,
+        closable: false,
+        minimize: true,
         webPreferences: {
           nodeIntegration: true,
           preload: path.join(__dirname, 'preload.js')
@@ -230,7 +250,7 @@ console.log('User is ' + first_name);
       })
       
         // open dev tools
-        win.webContents.openDevTools();
+        // win.webContents.openDevTools();
 
         // Check if userData is not null, and decide which page to load.
         if (userData.apiResponse) {
@@ -417,7 +437,8 @@ console.log('User is ' + first_name);
 
         tray.on('click', () =>{
 
-          shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
+          // shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
+          shell.openExternal(`${config.API_URL}/user-view/${userData.apiResponse.token}`);
 
         })
 
@@ -576,7 +597,7 @@ function readUserData() {
     const timeLineInterval = setInterval(async () => {
       const new_chartData = await activityTracker.getChartData();
       const data = JSON.stringify(new_chartData);
-      const timelineApiurl = `${apiurl}/api/timieline_store`;
+      // const timelineApiurl = `${apiurl}/api/timieline_store`;
 
       chartData = new_chartData;
       screenshotIntervals.push(timeLineInterval);
@@ -627,7 +648,7 @@ function LoginNotification(title, body, fix) {
 
 
 ipcMain.on('login-attempt', async (event, loginData) => {
-  const apiLoginUrl = `${apiurl}/api/login`;
+  const apiLoginUrl = `${config.API_URL}/api/login`;
   try {
     const response = await axios.post(apiLoginUrl, loginData);
     userData.apiResponse = response.data;
@@ -723,7 +744,7 @@ ipcMain.on('capture-screenshot', async (event) => {
           // event.sender.send('screenshot-captured', { success: false, error: 'Failed to save screenshot' });
         } else {
           console.log('Screenshot saved:', filePath);
-          const uploadUrl = `${apiurl}/api/save_screenshort`;
+          const uploadUrl = `${config.API_URL}/api/save_screenshort`;
           // const uploadUrl = 'http://erp.test/api/save_screenshort';
           uploadImage(filePath, uploadUrl);
 
@@ -1087,7 +1108,7 @@ async function getIdleTime(){
     win.webContents.send('idleTime', idleDuration)
     if(minutes > 5){
       // win.webContents.send('idleTime', 'Inactive')
-      let notificationUrl = `${apiurl}/api/notification_inactive`;
+      let notificationUrl = `${config.API_URL}/api/notification_inactive`;
       // let notificationUrl = 'http://erp.test/api/notification_inactive';
       updateNotification(minutes, notificationUrl)
       LoginNotification('Inactive', 'Since 5 mint ago!', true)

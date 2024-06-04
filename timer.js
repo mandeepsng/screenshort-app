@@ -1,8 +1,10 @@
+require('dotenv').config();
 const { app, powerMonitor, session  } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const state = require('./state');
 const { getUserData, getToken, userExists, uploadTimeline } = require('./functions/auth');
+const config = require('./config');
 
 let startTime;
 let timerInterval;
@@ -12,15 +14,18 @@ let elapsedMinutes = 0;
 let isIdle = false;
 let timelineData = [];
 // var apiurl = 'https://track360.rvsmedia.com';
-var apiurl = 'http://erp.test';
+// var apiurl = 'http://erp.test';
 let logFilePath = path.join(app.getPath('userData'), 'elapsedTime.log');
 
 const tempDir = app.getPath('temp');
 const appTempDir = path.join(tempDir, 'track-360');
 var timePath = path.join(appTempDir, 'time.json');
+var trackingPath = path.join(appTempDir, 'tracking.json');
+const ActivityTracker = require("./ActivityTracker");
 
+const activityTracker = new ActivityTracker( trackingPath, 2000);
 
-
+activityTracker.init();
 
 
 function startTimer() {
@@ -85,6 +90,9 @@ function startTimer() {
       // Write the updated array to the log file
       fs.writeFileSync(logFilePath, JSON.stringify(timelineData, null, 2));
 
+      //activity
+      const new_chartData = await activityTracker.getChartData();
+      const data = JSON.stringify(new_chartData);
 
 
       // Log the time data to a file
@@ -94,10 +102,10 @@ function startTimer() {
       // fs.writeFileSync(logFilePath, JSON.stringify(formattedTime, null, 2));
 
       // Post the time data to an API
-      var timelineApiurl = `${apiurl}/api/timieline_store`;
+      var timelineApiurl = `${config.API_URL}/api/timieline_store`;
       try {
         // const response = await axios.post('YOUR_API_ENDPOINT', formattedTime);
-        uploadTimeline('activity_varible', timelineApiurl, elapsedMinutes);
+        uploadTimeline(data, timelineApiurl, elapsedMinutes);
         // console.log('API Response:', response.data);
       } catch (error) {
         console.error('Error posting to API:', error.message);
@@ -226,7 +234,7 @@ function resumeTimer() {
       var timelineApiurl = `${apiurl}/api/timieline_store`;
       try {
         // const response = await axios.post('YOUR_API_ENDPOINT', formattedTime);
-        uploadTimeline('activity_varible', timelineApiurl, elapsedMinutes);
+        uploadTimeline([{}], timelineApiurl, elapsedMinutes);
 
         // console.log('API Response:', response.data);
       } catch (error) {
