@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
@@ -138,11 +137,11 @@ function checkForUpdates() {
 // app update functionality end
 
 const timerFunc = require(functionPath)
-const ActivityTracker = require("./ActivityTracker");
+// const ActivityTracker = require("./ActivityTracker");
 
-const activityTracker = new ActivityTracker( trackingPath, 2000);
+// const activityTracker = new ActivityTracker( trackingPath, 2000);
 
-activityTracker.init();
+// activityTracker.init();
 
 const isWindows = process.platform === 'win32';
 let intervalId = null; // Define intervalId outside the function scope
@@ -595,11 +594,11 @@ function readUserData() {
     screenshotIntervals.push(intervalId);
 
     const timeLineInterval = setInterval(async () => {
-      const new_chartData = await activityTracker.getChartData();
-      const data = JSON.stringify(new_chartData);
+      // const new_chartData = await activityTracker.getChartData();
+      // const data = JSON.stringify(new_chartData);
       // const timelineApiurl = `${apiurl}/api/timieline_store`;
 
-      chartData = new_chartData;
+      // chartData = new_chartData;
       screenshotIntervals.push(timeLineInterval);
 
       // const response = common.checkAndClearFiles();

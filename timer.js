@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { app, powerMonitor, session  } = require('electron');
 const fs = require('fs');
 const path = require('path');
@@ -21,11 +20,11 @@ const tempDir = app.getPath('temp');
 const appTempDir = path.join(tempDir, 'track-360');
 var timePath = path.join(appTempDir, 'time.json');
 var trackingPath = path.join(appTempDir, 'tracking.json');
-const ActivityTracker = require("./ActivityTracker");
+// const ActivityTracker = require("./ActivityTracker");
 
-const activityTracker = new ActivityTracker( trackingPath, 2000);
+// const activityTracker = new ActivityTracker( trackingPath, 2000);
 
-activityTracker.init();
+// activityTracker.init();
 
 
 function startTimer() {
@@ -40,6 +39,7 @@ function startTimer() {
     state.setElapsedTime(elapsedMinutes);
 
     // console.log(`Elapsed time: ${elapsedTime} `);
+
 
 
     if (elapsedTime % 60 === 0) { // Check if a minute has passed
@@ -91,21 +91,23 @@ function startTimer() {
       fs.writeFileSync(logFilePath, JSON.stringify(timelineData, null, 2));
 
       //activity
-      const new_chartData = await activityTracker.getChartData();
-      const data = JSON.stringify(new_chartData);
+      // const new_chartData = await activityTracker.getChartData();
+      // const data = JSON.stringify(new_chartData);
 
 
       // Log the time data to a file
-      // const logFilePath = path.join(app.getPath('userData'), 'elapsedTime.log');
-      // console.log('logFilePath', logFilePath);
-      // fs.writeFileSync(logFilePath, JSON.stringify(formattedTime) + '\n', { flag: 'a' });
+      // const newloglogFilePath = path.join(app.getPath('userData'), 'newlog.log');
+      // console.log('newloglogFilePath', newloglogFilePath);
+      // fs.writeFileSync(newloglogFilePath, JSON.stringify(formattedTime) + '\n', { flag: 'a' });
       // fs.writeFileSync(logFilePath, JSON.stringify(formattedTime, null, 2));
 
       // Post the time data to an API
-      var timelineApiurl = `${config.API_URL}/api/timieline_store`;
+    writeLogFile(`elapsedMinutes outside try : ${elapsedMinutes} minutes`);
+    var timelineApiurl = `${config.API_URL}/api/timieline_store`;
       try {
         // const response = await axios.post('YOUR_API_ENDPOINT', formattedTime);
-        uploadTimeline(data, timelineApiurl, elapsedMinutes);
+        writeLogFile(`elapsedMinutes inside try : ${elapsedMinutes} minutes`);
+        uploadTimeline(null, timelineApiurl, elapsedMinutes);
         // console.log('API Response:', response.data);
       } catch (error) {
         console.error('Error posting to API:', error.message);
@@ -172,6 +174,20 @@ function resetSession() {
   elapsedMinutes = 0;
   session.defaultSession.lastReset = Date.now();
   console.log('Session reset for the new day.');
+}
+
+function writeLogFile(data) {
+  const downloadPath = app.getPath('downloads');
+  const logFilePath = path.join(downloadPath, 'log.txt');
+
+  // Append data to the log file
+  fs.appendFile(logFilePath, data + '\n', (err) => {
+    if (err) {
+      console.error('Error writing to log file:', err);
+    } else {
+      console.log('Data appended to log file:', data);
+    }
+  });
 }
 
 function resumeTimer() {
