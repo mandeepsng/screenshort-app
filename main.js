@@ -236,12 +236,13 @@ console.log('User is ' + first_name);
 
     const createWindow = () => {
       win = new BrowserWindow({
-        width: 600,
-        height: 450,
+        width: 480,
+        height: 630,
         resizable: false,
-        skipTaskbar: true,
+        skipTaskbar: false,
         closable: false,
-        minimize: true,
+        minimize: false,
+        icon: path.join(__dirname, 'assets', 'icon.png'), 
         webPreferences: {
           nodeIntegration: true,
           preload: path.join(__dirname, 'preload.js')
@@ -461,9 +462,9 @@ console.log('User is ' + first_name);
         console.log('close')
         // win.minimize()
         // On macOS, quit the app when all windows are closed
-        // if (process.platform === 'darwin') {
-          // app.quit();
-        // }
+        if (process.platform === 'darwin') {
+          app.quit();
+        }
       });
 
 

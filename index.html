@@ -1,134 +1,144 @@
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>RVS (ERP)</title>
+  <head>
+    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title>Login</title>
+	                                                                                                                                                                                        <!-- Favicon -->
+        <link rel="shortcut icon" href="http://erp.test/assets_admin/img/R_fav.ico">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="http://erp.test/assets_admin/libs/bootstrap/css/bootstrap.min.css">
+        <!-- Feathericon CSS -->
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="http://erp.test/assets_admin/libs/fontawesome/css/all.min.css">
+        <!-- Daterangepicker CSS -->
+        <link rel="stylesheet" href="http://erp.test/assets_admin/css/app.css">	
 
-  <link rel="stylesheet" type="text/css" href="bootstrap.css" />
-<style>
-   .progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: #f3f3f3;
-  border-radius: 10px;
-  overflow: hidden;
-}
+     
 
-.progress-bar.completed {
-  background-color: #28a745;
-}
 
-.progress-bar::before {
-  content: '';
-  display: block;
-  width: 0;
-  height: 100%;
-  background-color: #007bff;
-  transition: width 0.3s ease-in-out;
-}
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.card {
-  width: 300px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-h2 {
-  color: #007BFF;
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  text-align: left;
-  margin-bottom: 5px;
-}
-
-input {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-button {
-  padding: 10px;
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.switch {
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-.switch a {
-  color: #007BFF;
-  text-decoration: none;
-}
-
-  </style>  
-  <!--Font Awesome Icons-->
 </head>
-
-<body class="bg-teal-700">
-
-    <div class="container">
-        <div class="card">
-            <h2>Login </h2>
-
-            <form id="login-form">
-              <label for="email">Email</label>
-              <input type="text" id="email" placeholder="Enter your email" name="email" required>
-
-              <label for="password">Password</label>
-              <input type="password" id="password" placeholder="Enter your password" name="password" required>
-
-              <button type="submit" id="submit">Login</button>
-            </form>
-          <p id="login-result"></p>
-          <!-- <button id="testing">check</button> -->
-        </div>
+      <body>
+    <div class="myLoader">
+      <span class="spinner-border spinner-border-sm mr-2" role="status"></span>
     </div>
-  <!--Popper 1.12.9 Script-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
+        	
+<!-- Main Wrapper -->
+        <div class="main-wrapper">
+            
+            <div class="header d-none">
+                <!-- Header Menu -->
+                <ul class="nav nav-tabs user-menu">
+                    <!-- Flag -->
+                    <li class="nav-item">
+                        <a href="#" id="dark-mode-toggle" class="dark-mode-toggle">
+                            <i class="feather-sun light-mode"></i><i class="feather-moon dark-mode"></i>
+                        </a>
+                    </li>
+                    <!-- /Flag -->
+                </ul>
+                <!-- Header Menu -->
+            </div>	
 
-  <!--Bootstrap 4.0.0 JavaScript-->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
-  <script src="./renderer.js"></script>
+			
+			<div class="row">
+			
+				<!-- Login Banner -->
+				
+				<!-- /Login Banner -->
+				<div class="col-md-12 login-wrap-bg">		
+				
+					<!-- Login -->
+					<div class="login-wrapper">
+						<div class="loginbox">
+							<div class="img-logo">
+								<img src="http://erp.test/assets_admin/img/logo.png" class="img-fluid" alt="Logo">
+							</div>
+							<h3>Login</h3>
+							<p class="account-subtitle">login to your account to continue</p>
 
-  <script>
-    // Access navigator from the exposed 'myAPI' object
-    const navigator = window.myAPI.navigator;
+																	
+							<form id="login-form">
+								<input type="hidden" name="_token" value="PbW6jfGvgVO8XOHzk75HpwUbDYZsrZVLB7h1f1jE" autocomplete="off">								<div class="form-group form-focus">
+									<input type="text" class="form-control floating" name="email" id="email" required>
+                  <!-- <input type="text" id="email" placeholder="Enter your email" name="email" required> -->
+                  <label class="focus-label">Enter Email</label>
+									<div class="text-danger pt-2">
+															                						            	</div>
+								</div>
+								<div class="form-group form-focus">
+									<input type="password" class="form-control floating pass-input" name="password" id="password" required>
+                  <!-- <input type="password" id="password" placeholder="Enter your password" name="password" required> -->
+									<label class="focus-label">Enter Password</label><span class="fa fa-eye-slash toggle-password pt-4"></span>
+									<div class="text-danger pt-2">
+													                        				                    	</div>
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="col-6">
+											<label class="custom_check mr-2 mb-0 d-inline-flex"> Remember me  
+												<input type="checkbox" name="radio">
+												<span class="checkmark"></span>
+											</label>
+										</div>
+										<div class="col-6 text-end">
+											<a class="forgot-link" href="https://track360.rvsmedia.com/forget-password">Forgot Password ?</a>
+										</div>
+									</div>
+								</div>
+								<div class="d-grid">
+									<button class="btn btn-primary" id="submit" type="submit">Login</button>
+                  <!-- <button type="submit" id="submit">Login</button> -->
+								</div>
+								
+								<div class="login-or">
+									<span class="or-line"></span>
+									
+								</div>
+								<!-- Social Login -->
+								
+								<!-- /Social Login -->
+							</form>
+						</div>
+					</div>
+					<!-- /Login -->
+					
+				</div>
+				
+			</div>
+        </div>
+		<!-- /Main Wrapper -->
 
-    // Your logic to track mouse and keyboard activity here
-    // Note that you may need to use other libraries or techniques
-  </script>
+    <!-- jQuery -->
+		<script src="http://erp.test/assets_admin/libs/jquery/jquery.min.js"></script>
+			
+		<!-- Bootstrap Core JS -->
+		
+		<!-- Slimscroll JS -->
+        <!-- Feather Icon JS -->
+    	<script src="http://erp.test/assets_admin/libs/feather/feather.min.js"></script>
+    	<!-- Daterangepicker js -->
+	     <!-- Select2 JS-->
+		<!-- Custom JS -->
+		<script src="http://erp.test/assets_admin/js/app.js"></script>
 
+    <script src="./renderer.js"></script>
+
+    <script>
+      // Access navigator from the exposed 'myAPI' object
+      const navigator = window.myAPI.navigator;
+  
+      // Your logic to track mouse and keyboard activity here
+      // Note that you may need to use other libraries or techniques
+    </script>
+
+
+  <script type="text/javascript">
+    $(window).on('load', function() {
+			$(".myLoader").fadeOut("slow");
+		});
+
+</script>
 </body>
 </html>
