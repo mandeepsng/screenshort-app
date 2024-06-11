@@ -241,7 +241,7 @@ console.log('User is ' + first_name);
         resizable: false,
         skipTaskbar: false,
         closable: false,
-        minimize: false,
+        minimize: true,
         icon: path.join(__dirname, 'assets', 'icon.png'), 
         webPreferences: {
           nodeIntegration: true,

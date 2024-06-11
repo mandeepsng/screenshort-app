@@ -77,6 +77,12 @@
         "owner": "mandeepsng",
         "repo": "screenshort-app"
       }
+    ],
+    "files": [
+      "assets/**/*",
+      "main.js",
+      "index.html",
+      "package.json"
     ]
   }
 }

@@ -57,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if(loginForm){
     document.getElementById('login-form').addEventListener('submit', (event) => {
       event.preventDefault();
+
+      var submitButton = document.getElementById("submit");
+      var originalHtml = submitButton.innerHTML;
+      var originalType = submitButton.getAttribute("type");
+
+      // Change to loading state
+      submitButton.setAttribute("type", "button");
+      submitButton.setAttribute("disabled", true);
+      submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>';
+
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
