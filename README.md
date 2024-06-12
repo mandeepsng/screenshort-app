@@ -9,6 +9,9 @@ again run command
 
 ### for linux run this command in terminal
 
+### also install linux package
+`sudo apt-get install scrot`
+
 ```
 #!/bin/bash
 
