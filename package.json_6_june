@@ -1,0 +1,82 @@
+{
+  "name": "rvsdesktime",
+  "version": "1.6.0",
+  "description": "time tracking software",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "electron-builder install-app-deps",
+    "dev": "electron .",
+    "start": "electron-forge start",
+    "build": "electron-builder",
+    "build:win": "electron-builder build --win",
+    "build:linux": "electron-builder build --linux"
+  },
+  "author": "Mandeep Singh",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^24.1.2",
+    "electron-builder": "^23.6.0",
+    "electron-packager": "^17.1.1",
+    "node-addon-api": "^7.0.0"
+  },
+  "dependencies": {
+    "accelerator": "^0.2.0",
+    "active-win": "^8.1.0",
+    "axios": "^1.4.0",
+    "buffer": "^6.0.3",
+    "electron-updater": "^6.1.8",
+    "fs-extra": "^11.1.1",
+    "lodash": "^4.17.21",
+    "openai": "^3.3.0",
+    "pyodide": "^0.23.4",
+    "stream": "^0.0.2"
+  },
+  "build": {
+    "appId": "track360.rvsmedia.app",
+    "productName": "Track-360",
+    "copyright": "Copyright © 2024 by RVS Media",
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "icon": "assets/icon.png",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "mandeepsng",
+          "repo": "screenshort-app"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        { "target": "deb", "arch": [ "x64" ] }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mandeepsng",
+        "repo": "screenshort-app"
+      }
+    ]
+  }
+}

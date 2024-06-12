@@ -1,14 +1,16 @@
 const { app, ipcMain } = require('electron');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const axios = require('axios');
 // Path to the data.json file
 
-const tempDir = app.getPath('temp');
-console.log('in timer.json file', tempDir);
+// const tempDir = app.getPath('temp');
+const appTempDir = path.join(os.homedir(), '.track360');
+console.log('in timer.json file', appTempDir);
 
 // Create a subdirectory for your app data
-const appTempDir = path.join(tempDir, 'track-360');
+// const appTempDir = path.join(tempDir, 'track-360');
 var dataFilePath = path.join(appTempDir, 'data.json');
 
 // Read and parse the JSON file
