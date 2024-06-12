@@ -88,6 +88,25 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
+
+
+
+  // Get the "Forgot Password?" link element
+  const forgotPasswordLink = document.querySelector('.forgot-link');
+
+  // Add a click event listener to the link
+  forgotPasswordLink.addEventListener('click', (event) => {
+      // Prevent the default behavior of the link
+      event.preventDefault();
+
+      // Get the URL from the link's href attribute
+      const url = "https://track360.rvsmedia.com/forget-password";
+
+      // Send the URL to the main process
+      openLink(url);
+  });
+
+
 });
 
 
@@ -138,3 +157,8 @@ ipcRenderer.on('login-failed', (event, errorMessage) => {
 ipcRenderer.on('show-console-message', (event, message) => {
   console.log(message);
 });
+
+// Define the function to send the URL to the main process
+function openLink(url) {
+  ipcRenderer.send('open-link', url);
+}

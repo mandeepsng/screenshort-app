@@ -17,9 +17,7 @@
 
 </head>
       <body>
-    <div class="myLoader">
-      <span class="spinner-border spinner-border-sm mr-2" role="status"></span>
-    </div>
+   
         	
 <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -80,7 +78,9 @@
 											</label>
 										</div>
 										<div class="col-6 text-end">
-											<a class="forgot-link" href="https://track360.rvsmedia.com/forget-password">Forgot Password ?</a>
+											<!-- <a class="forgot-link" href="https://track360.rvsmedia.com/forget-password">Forgot Password ?</a> -->
+											<a class="forgot-link" href="#">Forgot Password ?</a>
+
 										</div>
 									</div>
 								</div>
@@ -132,9 +132,7 @@
 
 
   <script type="text/javascript">
-    $(window).on('load', function() {
-			$(".myLoader").fadeOut("slow");
-		});
+    
 
 </script>
 </body>

@@ -53,6 +53,11 @@ async function handleLogin(event) {
   // }
 }
 
+
+contextBridge.exposeInMainWorld('electron', {
+  openLink: (url) => ipcRenderer.send('open-link', url)
+});
+
 ipcRenderer.on('login-success', (event, data) => {
   const loginResultElement = document.getElementById('login-result');
   loginResultElement.textContent = data.message;
