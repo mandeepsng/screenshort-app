@@ -49,6 +49,7 @@ console.log('appTempDir', appTempDir);
 setFullPermissions(appTempDir);
 // Create a subdirectory for your app data
 // const appTempDir = path.join(tempDir, 'track-360');
+
 // var timePath = path.join(appTempDir, 'time.json');
 const timePath = path.join(appTempDir, 'elapsedTime.json');
 // console.log('timePath', timePath);
@@ -61,6 +62,10 @@ function ensureAppTempDir() {
     fs.mkdirSync(appTempDir, { recursive: true });
   }
 
+
+  if (!fs.existsSync(appTempDir)) {
+    fs.mkdirSync(appTempDir,{ recursive: true });
+  }
   // Create files if they do not exist
   if (!fs.existsSync(timePath)) {
     fs.writeFileSync(timePath, JSON.stringify({}));
@@ -279,12 +284,13 @@ console.log('User is ' + first_name);
 
     const createWindow = () => {
       win = new BrowserWindow({
-        width: 600,
-        height: 450,
+        width: 480,
+        height: 630,
         resizable: false,
-        skipTaskbar: true,
+        skipTaskbar: false,
         closable: false,
         minimize: true,
+        icon: path.join(__dirname, 'assets', 'icon.png'), 
         webPreferences: {
           nodeIntegration: true,
           preload: path.join(__dirname, 'preload.js')
@@ -325,6 +331,9 @@ console.log('User is ' + first_name);
     app.whenReady().then(() => {
       // createMenu();
       initializeTimer();
+
+      // openshell();
+
 
       // setInterval(() => {
       //   const elapsedTime = state.getElapsedTime();
@@ -505,9 +514,9 @@ console.log('User is ' + first_name);
         console.log('close')
         // win.minimize()
         // On macOS, quit the app when all windows are closed
-        // if (process.platform === 'darwin') {
-          // app.quit();
-        // }
+        if (process.platform === 'darwin') {
+          app.quit();
+        }
       });
 
 
@@ -695,6 +704,7 @@ function readUserData() {
 readUserData();
 
 
+
 ipcMain.on('event2', (event, arg) => {
   console.log('Received event2 with argument:', arg);
 });
@@ -837,6 +847,11 @@ ipcMain.on('capture-screenshot', async (event) => {
   );
 
 });
+
+// open dynamic link 
+ipcMain.on('open-link', (event, url) => {
+  shell.openExternal(url);
+} )
 
 
 // Function to capture screenshot
@@ -1307,6 +1322,17 @@ function writeLogFile(data) {
     }
   });
 }
+
+
+function openshell() {
+  // Get the URL
+  // const url = "https://track360.rvsmedia.com/forget-password";
+  const url = "https://google.com";
+
+  // Open the URL in the default browser
+  shell.openExternal(url);
+}
+
 
 
 // writeLogFile('This is a log message.');

@@ -6,20 +6,18 @@
         <title>Login</title>
 	      
         <!-- Favicon -->
-        <link rel="shortcut icon" href="https://track360.rvsmedia.com/assets_admin/img/R_fav.ico">
+        <link rel="shortcut icon" href="./assets/R_fav.ico">
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://track360.rvsmedia.com/assets_admin/libs/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./assets/bootstrap.min.css">
         <!-- Feathericon CSS -->
         <!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="https://track360.rvsmedia.com/assets_admin/libs/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="./assets/all.min.css">
         <!-- Daterangepicker CSS -->
-        <link rel="stylesheet" href="https://track360.rvsmedia.com/assets_admin/css/app.css">	
+        <link rel="stylesheet" href="./assets/app.css">	
 
 </head>
       <body>
-    <div class="myLoader">
-      <span class="spinner-border spinner-border-sm mr-2" role="status"></span>
-    </div>
+   
         	
 <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -50,7 +48,7 @@
 					<div class="login-wrapper">
 						<div class="loginbox">
 							<div class="img-logo">
-								<img src="https://track360.rvsmedia.com/assets_admin/img/logo.png" class="img-fluid" alt="Logo">
+								<img src="./assets/logo.png" class="img-fluid" alt="Logo">
 							</div>
 							<h3>Login</h3>
 							<p class="account-subtitle">login to your account to continue</p>
@@ -80,7 +78,9 @@
 											</label>
 										</div>
 										<div class="col-6 text-end">
+											<!-- <a class="forgot-link" href="https://track360.rvsmedia.com/forget-password">Forgot Password ?</a> -->
 											<a class="forgot-link" href="#">Forgot Password ?</a>
+
 										</div>
 									</div>
 								</div>
@@ -108,17 +108,17 @@
 		<!-- /Main Wrapper -->
 
     <!-- jQuery -->
-		<script src="https://track360.rvsmedia.com/assets_admin/libs/jquery/jquery.min.js"></script>
+		<script src="./assets/jquery.min.js"></script>
 			
 		<!-- Bootstrap Core JS -->
 		
 		<!-- Slimscroll JS -->
         <!-- Feather Icon JS -->
-    	<script src="https://track360.rvsmedia.com/assets_admin/libs/feather/feather.min.js"></script>
+    	<script src="./assets/feather.min.js"></script>
     	<!-- Daterangepicker js -->
 	     <!-- Select2 JS-->
 		<!-- Custom JS -->
-		<script src="https://track360.rvsmedia.com/assets_admin/js/app.js"></script>
+		<script src="./assets/app.js"></script>
 
     <script src="./renderer.js"></script>
 
@@ -132,9 +132,7 @@
 
 
   <script type="text/javascript">
-    $(window).on('load', function() {
-			$(".myLoader").fadeOut("slow");
-		});
+    
 
 </script>
 </body>

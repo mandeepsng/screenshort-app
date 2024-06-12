@@ -57,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if(loginForm){
     document.getElementById('login-form').addEventListener('submit', (event) => {
       event.preventDefault();
+
+      var submitButton = document.getElementById("submit");
+      var originalHtml = submitButton.innerHTML;
+      var originalType = submitButton.getAttribute("type");
+
+      // Change to loading state
+      submitButton.setAttribute("type", "button");
+      submitButton.setAttribute("disabled", true);
+      submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>';
+
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -77,6 +87,25 @@ document.addEventListener('DOMContentLoaded', () => {
       
     })
   }
+
+
+
+
+  // Get the "Forgot Password?" link element
+  const forgotPasswordLink = document.querySelector('.forgot-link');
+
+  // Add a click event listener to the link
+  forgotPasswordLink.addEventListener('click', (event) => {
+      // Prevent the default behavior of the link
+      event.preventDefault();
+
+      // Get the URL from the link's href attribute
+      const url = "https://track360.rvsmedia.com/forget-password";
+
+      // Send the URL to the main process
+      openLink(url);
+  });
+
 
 });
 
@@ -128,3 +157,8 @@ ipcRenderer.on('login-failed', (event, errorMessage) => {
 ipcRenderer.on('show-console-message', (event, message) => {
   console.log(message);
 });
+
+// Define the function to send the URL to the main process
+function openLink(url) {
+  ipcRenderer.send('open-link', url);
+}
