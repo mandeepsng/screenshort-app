@@ -7,6 +7,11 @@ again run command
 `./Track.x.x.1.APPIMAGE`
 
 
+for .deb file
+
+open terminal and run command `sudo dpkg -i packagename.deb`
+
+
 ### for linux run this command in terminal
 
 ### also install linux package
