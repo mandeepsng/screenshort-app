@@ -7,7 +7,8 @@ const axios = require('axios');
 
 // const tempDir = app.getPath('temp');
 const appTempDir = path.join(os.homedir(), '.track360');
-// console.log('in timer.json file', tempDir);
+
+console.log('in timer.json file', appTempDir);
 
 // Create a subdirectory for your app data
 // const appTempDir = path.join(tempDir, 'track-360');

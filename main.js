@@ -4,6 +4,7 @@ const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
 const os = require('os');
 const path = require('path')
+const { promisify } = require('util');
 const axios = require('axios');
 const { Readable } = require('stream');
 const { Blob } = require('buffer');
@@ -15,6 +16,7 @@ const timerPath = path.join(__dirname, 'timer');
 const { initializeTimer } = require(timerPath);
 // const { initializeTimer } = require('./timer');
 const state = require('./state');
+const { exec } = require('child_process');
 // const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
 const config = require('./config');
@@ -26,15 +28,34 @@ console.log(`App version: ${version}`);
 // create files in temp folder start
 // Get the path to the temporary directory
 
-const tempDir = app.getPath('temp');
-console.log('tempDir', tempDir);
+// Promisify the chmod function
+const chmodAsync = promisify(fs.chmod);
 
-// Create a subdirectory for your app data
-// const appTempDir = path.join(tempDir, 'track-360');
+// Function to set full permissions recursively
+async function setFullPermissions(directoryPath) {
+  try {
+    // Set full permissions recursively (read, write, and execute for owner, group, and others)
+    await chmodAsync(directoryPath, 0o777);
+    console.log('Permissions set successfully.');
+    writeLogFile('Permissions set successfully');
+  } catch (error) {
+    
+    writeLogFile(`'Error setting permissions:', ${error}`);
+    console.error('Error setting permissions:', error);
+  }
+}
+
+
+// const tempDir = app.getPath('temp');
 const appTempDir = path.join(os.homedir(), '.track360');
 console.log('appTempDir', appTempDir);
 
+setFullPermissions(appTempDir);
+// Create a subdirectory for your app data
+// const appTempDir = path.join(tempDir, 'track-360');
+
 // var timePath = path.join(appTempDir, 'time.json');
+const timePath = path.join(appTempDir, 'elapsedTime.json');
 // console.log('timePath', timePath);
 var dataFilePath = path.join(appTempDir, 'data.json');
 var trackingPath = path.join(appTempDir, 'tracking.json');
@@ -51,9 +72,9 @@ function ensureAppTempDir() {
     fs.mkdirSync(appTempDir,{ recursive: true });
   }
   // Create files if they do not exist
-  // if (!fs.existsSync(timePath)) {
-  //   fs.writeFileSync(timePath, JSON.stringify({}));
-  // }
+  if (!fs.existsSync(timePath)) {
+    fs.writeFileSync(timePath, JSON.stringify({}));
+  }
   if (!fs.existsSync(dataFilePath)) {
     fs.writeFileSync(dataFilePath, JSON.stringify({}));
   }
@@ -87,7 +108,7 @@ autoUpdater.on('update-available', (info) => {
     type: 'info',
     buttons: ['Download', 'Later'],
     title: 'Update Available',
-    message: 'A new version is available. Do you want to download it now?'
+    message: `A new version (${info.version}) of the app is available.. Do you want to download it now?`
   };
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
@@ -152,6 +173,17 @@ autoUpdater.on('error', (error) => {
 // Function to trigger update check
 function checkForUpdates() {
   autoUpdater.checkForUpdates();
+  // ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+  // captureScreenshot();
+
+  // const dialogOpts = {
+  //   type: 'info',
+  //   buttons: ['ok'],
+  //   title: 'Update Available',
+  //   message: `A new version of the app is available.. Do you want to download it now?`
+  // };
+
+  // dialog.showMessageBox(dialogOpts);
 }
 // app update functionality end
 
@@ -163,6 +195,8 @@ const timerFunc = require(functionPath)
 // activityTracker.init();
 
 const isWindows = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
+
 let intervalId = null; // Define intervalId outside the function scope
 
 // Settings object
@@ -304,6 +338,12 @@ console.log('User is ' + first_name);
       {
         label: `App version: ${version}`,
         enabled: false,
+      },
+      {
+        label: 'Activity',
+        click: () => {
+          shell.openExternal(`${config.API_URL}/user-view/${userData.apiResponse.token}`);
+        }
       },
       {
         label: `check update`,
@@ -539,7 +579,7 @@ console.log('User is ' + first_name);
 
 
       app.on('session-created', (session) => {
-        console.log('session-created', session);
+        // console.log('session-created', session);
       })
 
       
@@ -629,6 +669,7 @@ console.log('User is ' + first_name);
       // autoUpdater.checkForUpdatesAndNotify();
 
       console.log('isWindows = ', isWindows )
+      console.log('isLinux = ', isLinux )
       console.log('mode = ', process.mode );
       // window start
 
@@ -817,6 +858,8 @@ function myMainProcessFunction() {
 async function captureScreen(screenId) {
   
   const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: screen.getPrimaryDisplay().workAreaSize });
+
+  console.log('sources == , ', sources);
   
   for (const source of sources) {
     // if (source.display_id === 2779098405) {
@@ -892,9 +935,39 @@ function readUserData() {
       const delay = timerFunc.screenshort_time();
       intervalId = setInterval(() => {
         console.log('callscreenshort started delay....', delay);
-        ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+        if(isWindows){
+          ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+        }
+        if(isLinux){
+          captureScreenshot();
+        }
       }, delay);
     }
+
+    // new code
+    // if (!intervalId) {
+    //   // Function to execute inside the interval
+    //   const intervalFunction = () => {
+    //     const delay = timerFunc.screenshort_time();
+    //     console.log('callscreenshort started delay....', delay);
+    //     if (isWindows) {
+    //       ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+    //     }
+    //     if (isLinux) {
+    //       captureScreenshot();
+    //     }
+    //   };
+    
+    //   // Start the interval
+    //   intervalId = setInterval(intervalFunction, timerFunc.screenshort_time());
+    // }
+
+    // // Clear the interval
+    // if (intervalId) {
+    //   clearInterval(intervalId);
+    //   intervalId = null; // Reset intervalId to indicate it's cleared
+    // }
+    // new code
 
     screenshotIntervals.push(intervalId);
 
@@ -914,7 +987,7 @@ function readUserData() {
     }, 60000);
 
     screenshotIntervals.push(intervalId);
-    setInterval(getIdleTime, 300000); // Run every 5 minutes for activity track
+    // setInterval(getIdleTime, 300000); // Run every 5 minutes for activity track
   } catch (error) {
     console.error('Error reading data.json:', error);
   }
@@ -1024,6 +1097,7 @@ ipcMain.on('capture-screenshot', async (event) => {
 
       // Get the sources
       const sources = await desktopCapturer.getSources(options);
+      console.log('sources = ', sources);
       
       // Find the primary display's source
       const primarySource = sources.find(({display_id}) => display_id == primaryDisplay.id)
@@ -1074,6 +1148,102 @@ ipcMain.on('capture-screenshot', async (event) => {
 ipcMain.on('open-link', (event, url) => {
   shell.openExternal(url);
 } )
+
+
+// Function to capture screenshot
+async function captureScreenshotold() {
+  // Generate a unique filename for the image
+  const filename = `screenshot_${Date.now()}.png`;
+
+  // Create the "images" folder if it doesn't exist
+  const imagesFolderPath = path.join(__dirname, 'images');
+  if (!fs.existsSync(imagesFolderPath)) {
+    fs.mkdirSync(imagesFolderPath);
+  }
+
+  // Specify the full file path for the screenshot
+  const filePath = path.join(imagesFolderPath, filename);
+
+  // Execute the scrot command to capture the screenshot and save it to the specified file path
+  exec(`scrot "${filePath}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error capturing screenshot: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`Screenshot captured: ${filePath}`);
+
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['ok'],
+      title: 'Update Available',
+      message: filePath
+    };
+  
+    dialog.showMessageBox(dialogOpts);
+
+    const uploadUrl = `${config.API_URL}/api/save_screenshort`;
+    // const uploadUrl = 'http://erp.test/api/save_screenshort';
+    uploadImage(filePath, uploadUrl);
+
+  });
+}
+
+
+async function captureScreenshot() {
+  // Generate a unique filename for the image
+  const filename = `screenshot_${Date.now()}.png`;
+
+  // Create the "images" folder if it doesn't exist
+  const tempDir = app.getPath('temp');
+  const logfile = path.join(appTempDir, 'log.txt');
+
+
+  console.log(`logfiile = ${logfile}`);
+  const imagesFolderPath = path.join(tempDir, 'images');
+  if (!fs.existsSync(imagesFolderPath)) {
+    fs.mkdirSync(imagesFolderPath);
+  }
+
+  // Specify the full file path for the screenshot
+  const filePath = path.join(imagesFolderPath, filename);
+
+  // Log file path
+  fs.appendFileSync(logfile, `Capturing screenshot to ${filePath}\n`);
+  // fs.writeFileSync(logFilePath, JSON.stringify(timelineData, null, 2));
+
+  // Execute the scrot command to capture the screenshot and save it to the specified file path
+  exec(`scrot "${filePath}"`, (error, stdout, stderr) => {
+    if (error) {
+      fs.appendFileSync(logfile, `Error capturing screenshot: ${error.message}\n`);
+      console.error(`Error capturing screenshot: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      fs.appendFileSync(logfile, `stderr: ${stderr}\n`);
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+    fs.appendFileSync(logfile, `Screenshot captured: ${filePath}\n`);
+    const uploadUrl = `${config.API_URL}/api/save_screenshort`;
+    // const uploadUrl = 'http://erp.test/api/save_screenshort';
+    uploadImage(filePath, uploadUrl);
+    // console.log(`Screenshot captured: ${filePath}`);
+    // const dialogOpts = {
+    //   type: 'info',
+    //   buttons: ['ok'],
+    //   title: 'image saved',
+    //   message: filePath
+    // };
+  
+    // dialog.showMessageBox(dialogOpts);
+  });
+}
+
+
 
 
 // Function to convert a Buffer to a Blob

@@ -1,32 +1,38 @@
-const axios = require('axios');
+const fs = require('fs').promises;
+const { exec } = require('child_process');
 
-// Function to update external API
-const updateExternalAPI = async () => {
-  try {
-    // Make a request to the external API
-    const response = await axios.post('http://erp.test/api/timieline_store', {
-      // Add any data to be sent in the request body
-    });
+// Content of the .desktop file
+const desktopFileContent = `
+[Desktop Entry]
+Type=Application
+Name=Track-360
+Exec=/usr/bin/rvsdesktime
+Terminal=false
+`;
 
-    // Handle the response from the external API
-    console.log('API Updated:', response.data);
-  } catch (error) {
-    // Handle errors if the request fails
-    console.error('Error updating API:', error.message);
-  }
-};
+// Path to save the file
+const filePath = '/etc/xdg/autostart/track-360.desktop';
 
-// Set up a timer to update the external API every minute
-const interval = 60000; // 1 minute in milliseconds
+// Write the content to a temporary file
+const tempFilePath = '/tmp/track-360.desktop';
 
-// Function to update the API at regular intervals
-const updateAPIInterval = () => {
-  // Call the updateExternalAPI function immediately
-  updateExternalAPI();
+async function createDesktopFile() {
+    try {
+        await fs.writeFile(tempFilePath, desktopFileContent);
+        exec(`sudo mv ${tempFilePath} ${filePath}`, (err, stdout, stderr) => {
+            if (err) {
+                console.error('Error moving the file:', err);
+                return;
+            }
+            if (stderr) {
+                console.error('stderr:', stderr);
+                return;
+            }
+            console.log(`File ${filePath} has been created successfully.`);
+        });
+    } catch (err) {
+        console.error('Error creating the temporary file:', err);
+    }
+}
 
-  // Set up an interval to call the updateExternalAPI function every minute
-  setInterval(updateExternalAPI, interval);
-};
-
-// Start the update process
-updateAPIInterval();
+createDesktopFile();

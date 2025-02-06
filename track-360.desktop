@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Track-360
+Exec=/usr/bin/rvsdesktime
+Terminal=false
