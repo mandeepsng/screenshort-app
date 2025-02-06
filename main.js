@@ -1,4 +1,5 @@
 const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
+const electronPath = require('electron'); // Path to Electron
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
 const os = require('os');
@@ -10,13 +11,16 @@ const { log } = require('console');
 const { spawn } = require('child_process');
 const { loadPyodide } = require('pyodide')
 const common = require('./functions/common')
-const { initializeTimer } = require('./timer');
+const timerPath = path.join(__dirname, 'timer');
+const { initializeTimer } = require(timerPath);
+// const { initializeTimer } = require('./timer');
 const state = require('./state');
 // const trackingPath = path.join(__dirname, 'data', 'tracking.json');
 const functionPath = path.join(__dirname, 'functions', 'timer');
 const config = require('./config');
 
 const { version } = require(path.join(__dirname, 'package.json'));
+const { getToken } = require(path.join(__dirname, 'functions', 'auth'));
 console.log(`App version: ${version}`);
 
 // create files in temp folder start
@@ -34,6 +38,7 @@ console.log('appTempDir', appTempDir);
 // console.log('timePath', timePath);
 var dataFilePath = path.join(appTempDir, 'data.json');
 var trackingPath = path.join(appTempDir, 'tracking.json');
+var wishLoopPath = path.join(appTempDir, 'wish.json');
 
 // Function to ensure the directory and files exist
 function ensureAppTempDir() {
@@ -55,12 +60,18 @@ function ensureAppTempDir() {
   if (!fs.existsSync(trackingPath)) {
     fs.writeFileSync(trackingPath, JSON.stringify({}));
   }
+  if (!fs.existsSync(wishLoopPath)) {
+    fs.writeFileSync(wishLoopPath, JSON.stringify({}));
+  }
 }
 
 app.on('ready', ensureAppTempDir);
 // create files in temp folder end
 
 
+ipcMain.handle('get-system-details', () => {
+  return getSystemDetails(); // Send system details to the renderer process
+});
 
 // app update functionality start
 
@@ -187,6 +198,14 @@ function readUserArray(key){
       console.log('User is null');
       return;
     }
+
+    if(key === 'dob'){
+      return data.userdetail.dob;
+    }
+    
+    if(key === 'doj'){
+      return data.userdetail.doj;
+    }
     
     return data[key];
   } catch (error) {
@@ -195,7 +214,76 @@ function readUserArray(key){
 
 }
 
+
+function killElectronProcessWindow() {
+  const scriptPath = path.join(__dirname, 'kill-electron.bat');
+
+  shell.openPath(scriptPath).then((result) => {
+    if (result) {
+      console.error(`Error executing script: ${result}`);
+    } else {
+      console.log('Script executed successfully');
+    }
+  });
+}
+
+
+async function syncUserData()
+{
+
+  let user = {};
+
+  try {
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${userData.apiResponse.token}`,
+    };
+
+    const response = await axios.get(`${config.API_URL}/api/user`, {
+      headers: headers,
+    });
+
+    console.log('GetUser response:', response.data);
+
+    // ipcMain.emit('logout', 'logout ...');
+
+    user.apiResponse = response.data;
+
+    fs.writeFileSync(dataFilePath, JSON.stringify(user, null, 2));
+    LoginNotification('Data Sync', {});
+
+    closeAllWindows();
+    readUserData();
+
+    // Set the app to open at login
+    app.setLoginItemSettings({
+      openAtLogin: true
+    });
+
+    // Restart the app
+    app.relaunch();
+    app.exit(0);
+
+    killElectronProcessWindow();
+
+
+  } catch (error) {
+    console.error('Error while GetUser response:', error.message);
+    console.log(error.response.status);
+
+    if(error.response.status === 401){
+      ipcMain.emit('logout', 'logout ...');
+    }
+  }
+
+}
+
+
+
 const first_name = readUserArray('first_name');
+var dob = readUserArray('dob');
+var doj = readUserArray('doj');
+var token = readUserArray('token');
 
 console.log('User is ' + first_name);
 
@@ -225,6 +313,13 @@ console.log('User is ' + first_name);
         },
       },
       {
+        label: `Sync Data`,
+        click: () => {
+          // Handle logout logic here
+          syncUserData();
+        },
+      },
+      {
         label: 'Logout',
         click: () => {
           // Handle logout logic here
@@ -238,11 +333,7 @@ console.log('User is ' + first_name);
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 
-
-
-
-
-    const createWindow = () => {
+    const createWindow_old = () => {
       win = new BrowserWindow({
         width: 480,
         height: 630,
@@ -262,6 +353,12 @@ console.log('User is ' + first_name);
 
         // Check if userData is not null, and decide which page to load.
         if (userData.apiResponse) {
+          
+          // Minimize the window if it's already visible
+          if (win.isVisible()) {
+            win.minimize();
+          }
+
           win.webContents.send('show-dashboard', userData); // Pass userData to dashboard.html
           win.loadFile(path.join(__dirname, 'dashboard.html'))
           .then(() => { win.webContents.send('sendSettings', userData.apiResponse); })
@@ -282,6 +379,98 @@ console.log('User is ' + first_name);
     }
 
 
+    const createWindow = () => {
+      let win = new BrowserWindow({
+        width: 480,
+        height: 630,
+        resizable: false,
+        skipTaskbar: false,
+        closable: false,
+        minimize: true,
+        icon: path.join(__dirname, 'assets', 'icon.png'),
+        webPreferences: {
+          nodeIntegration: true,
+          preload: path.join(__dirname, 'preload.js')
+        }
+      });
+    
+      // Check if userData is null or undefined
+      if (!userData.apiResponse) {
+        win.loadFile(path.join(__dirname, 'index.html'))
+          .then(() => {
+            win.show();
+          });
+      }
+    
+      return win;
+    };
+
+
+    function birthdayWindow() {
+      mainWindow = new BrowserWindow({
+        width: 1920,
+        height: 1080,
+        transparent: true,
+        frame: false,
+        alwaysOnTop: true,
+        webPreferences: {
+          preload: path.join(__dirname, 'notification-preload.js'),
+          contextIsolation: false,
+          nodeIntegration: true,
+        },
+      });
+  
+  
+      // Uncomment the following to load your content
+      mainWindow.loadFile('notification.html');
+      mainWindow.setIgnoreMouseEvents(true); // Optional: Make the window click-through
+
+      // Close the window after 10 seconds
+      setTimeout(() => {
+        if (mainWindow) {
+          mainWindow.close();
+          killElectronProcessWindow();
+        }
+      }, 30000); // 10000ms = 10 seconds
+      
+    }
+    function anniversaryWindow() {
+      mainWindow = new BrowserWindow({
+        width: 1920,
+        height: 1080,
+        transparent: true,
+        frame: false,
+        alwaysOnTop: true,
+        webPreferences: {
+          preload: path.join(__dirname, 'notification-preload.js'),
+          contextIsolation: false,
+          nodeIntegration: true,
+        },
+      });
+  
+  
+      // Uncomment the following to load your content
+      // mainWindow.loadFile('anniversary.html');
+      mainWindow.loadFile('anniversary.html', {
+        query: { message: 'Happy Testing message !' },
+      });
+
+      mainWindow.setIgnoreMouseEvents(true); // Optional: Make the window click-through
+
+      // Close the window after 10 seconds
+      setTimeout(() => {
+        if (mainWindow) {
+          mainWindow.close();
+          killElectronProcessWindow();
+        }
+      }, 30000); // 10000ms = 10 seconds
+      
+    }
+    
+
+    
+
+
     process.on('uncaughtException', (error) => {
       console.error('Uncaught Exception:', error);
       // Perform any necessary cleanup or error handling here
@@ -292,15 +481,59 @@ console.log('User is ' + first_name);
       // createMenu();
       initializeTimer();
 
-      // openshell();
+      // check user exist or not
+      if(getToken() !== null){
 
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        
+        console.log('dob', dob)
+        console.log('doj', doj)
+        
+        if (dob !== null && dob !== undefined && dob !== '') {
 
-      // setInterval(() => {
-      //   const elapsedTime = state.getElapsedTime();
-      //   console.log(`Elapsed time from main.js: ${elapsedTime} seconds`);
-      //   // You can use the elapsedTime value elsewhere in your main.js as needed
-      // }, 1000);
-      
+          // Extract day and month from the DOB
+          const dobDay = dob.split('-')[2]; // Extract day eg. (18)
+          const dobMonth = dob.split('-')[1]; // Extract month eg. (08)
+          
+          // Extract day and month from today's date
+          const todayDay = formattedDate.split('-')[2]; // Extract day
+          const todayMonth = formattedDate.split('-')[1]; // Extract month
+          
+          // Compare day and month
+          if (dobDay === todayDay && dobMonth === todayMonth) {
+            console.log('Today is your Birthday');
+            birthdayWindow();
+            setInterval(birthdayWindow, 3600000);
+          } else {
+            console.log('Today is not your Birthday');
+          }
+
+        }
+        
+        // logic for checking doj
+
+        if (doj !== null && doj !== undefined && doj !== '') {
+          
+          // Extract day and month from the DOJ
+          const dojDay = doj.split('-')[2]; // Extract day eg. (18)
+          const dojMonth = doj.split('-')[1]; // Extract month eg. (08)
+          
+          // Extract day and month from today's date
+          const todayDay = formattedDate.split('-')[2]; // Extract day
+          const todayMonth = formattedDate.split('-')[1]; // Extract month
+          
+          // Compare day and month
+          if (dojDay === todayDay && dojMonth === todayMonth) {
+            console.log('It is the anniversary of the date of joining!');
+            anniversaryWindow();
+            setInterval(anniversaryWindow, 3600000);
+          } else {
+            console.log('Today is not the anniversary of the date of joining.');
+          }
+        }
+
+      }
 
       autoUpdater.checkForUpdatesAndNotify();
 
@@ -315,23 +548,34 @@ console.log('User is ' + first_name);
       const gotTheLock = app.requestSingleInstanceLock();
       console.log('gotTheLock', gotTheLock);
 
+      // if (!gotTheLock) {
+      //   app.quit();
+      // } else {
+      //   app.on('second-instance', () => {
+      //     // If window is closed, reload it
+      //     if (!win) {
+      //       createWindow();
+      //     } else {
+      //       if (win.isMinimized()) win.restore();
+      //       win.focus();
+      //     }
+      //   });
+    
+      // }
+
+
       if (!gotTheLock) {
         app.quit();
       } else {
         app.on('second-instance', () => {
-          // If window is closed, reload it
-          if (!win) {
-            createWindow();
-          } else {
+          // Focus the existing window if it exists
+          if (win) {
             if (win.isMinimized()) win.restore();
             win.focus();
           }
         });
-    
-        // Create window
-        // createWindow();
-      }
 
+      }
 
 
 
@@ -438,23 +682,29 @@ console.log('User is ' + first_name);
           userInactiveTimeout = setTimeout(userInactive, 1 * 60 * 1000); // 3 minutes in milliseconds
         });
 
+        console.log(`tray => ${tray}`);
 
       if(userData && userData.apiResponse !== undefined){
 
+        // if(!tray){
 
-        const iconPath = path.join(__dirname, 'assets/icon.png');
-
-        tray = new Tray(iconPath)
-
-        tray.on('click', () =>{
-
-          // shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
-          shell.openExternal(`${config.API_URL}/user-view/${userData.apiResponse.token}`);
-
-        })
-
-        tray.setToolTip('Rvs Tracker')
-        tray.setContextMenu(menu)
+          const iconPath = path.join(__dirname, 'assets/icon.png');
+          
+          tray = new Tray(iconPath)
+          
+          tray.on('click', () =>{
+            
+            // shell.openExternal(`${apiurl}/user-view/${userData.apiResponse.token}`);
+            shell.openExternal(`${config.API_URL}/user-view/${userData.apiResponse.token}`);
+            
+          })
+          
+          tray.setToolTip('Rvs Tracker')
+          tray.setContextMenu(menu)
+          
+          // app.relaunch();
+          // app.exit(0);
+        // }
       }else{
         createWindow();
       }
@@ -463,9 +713,15 @@ console.log('User is ' + first_name);
       // checkScreenSharingPermission();
 
       app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-          createWindow()
+        
+        // if (BrowserWindow.getAllWindows().length === 0) {
+        //   createWindow()
+        // }
+
+        if (win === null && (!userData || userData.apiResponse === undefined)) {
+          createWindow();
         }
+
       })
 
 
@@ -504,6 +760,43 @@ console.log('User is ' + first_name);
   })
 
 // end ready 
+
+// function runDemoScript() {
+//   const demoPath = path.join(__dirname, 'notification.js'); // Path to your notification.js file
+//   const electronPath = path.join(__dirname, 'node_modules', '.bin', 'electron.cmd'); // Adjust for Windows
+
+//   const arrayData = readUserArray('dob');
+  
+//   console.log('arrayData = ', arrayData)
+//   // const serializedArray = JSON.stringify(arrayData); // Convert array to JSON string
+  
+//   // Spawn a new Electron process running the notification.js script
+//   const demoProcess = spawn(electronPath, [demoPath, arrayData]);
+
+//   demoProcess.stdout.on('data', (data) => {
+//     console.log(`stdout: ${data}`);
+//   });
+
+//   demoProcess.stderr.on('data', (data) => {
+//     console.error(`stderr: ${data}`);
+//   });
+
+//   demoProcess.on('close', (code) => {
+//     console.log(`child process exited with code ${code}`);
+//   });
+
+//   // Automatically close the process after 10 seconds
+//   setTimeout(() => {
+//     demoProcess.kill(); // Kill the process
+//     console.log('Child process terminated.');
+//   }, 10000); // 10 seconds (10000 milliseconds)
+// }
+
+
+
+// runDemoScript();
+
+
 
 function processScreenData(stream) {
   // You can use the stream data to analyze mouse and keyboard activity
@@ -675,6 +968,9 @@ ipcMain.on('login-attempt', async (event, loginData) => {
 });
 
 function handleLoginSuccess(user) {
+
+  console.log('user handleLoginSuccess', user)
+
   const name = `${user.first_name} ${user.last_name}`;
   fs.writeFileSync(dataFilePath, JSON.stringify(userData, null, 2));
   // fs.writeFileSync(path.join(__dirname, 'data.json'), JSON.stringify(userData, null, 2));
@@ -954,6 +1250,18 @@ app.on('activate', () => {
 app.setLoginItemSettings({
   openAtLogin: true    
 })
+
+
+// Check if the app was started at login
+// const loginItemSettings = app.getLoginItemSettings();
+// console.log(`loginItemSettings: ${loginItemSettings.wasOpenedAtLogin}`);
+// if (loginItemSettings.wasOpenedAtLogin) {
+//   // Relaunch the app
+//   app.relaunch();
+//   app.quit();
+// } else {
+//   // createWindow();
+// }
 
 function checkScreenSharingPermission_old() {
   desktopCapturer.getSources({ types: ['screen'] })
