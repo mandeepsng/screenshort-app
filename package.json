@@ -1,6 +1,6 @@
 {
   "name": "rvsdesktime",
-  "version": "1.6.8",
+  "version": "1.7.8",
   "description": "time tracking software",
   "main": "main.js",
   "scripts": {
