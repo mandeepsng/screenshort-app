@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-  <key>com.apple.security.network.client</key>
-  <true/>
-  <key>com.apple.security.network.server</key>
-  <true/>
-  <key>com.apple.security.network.client-server</key>
-  <true/>
-  <key>com.apple.security.screen-sharing</key>
-  <true/>
-  <key>com.apple.security.files.user-selected.read-write</key>
-  <true/>
-  <key>com.apple.security.print</key>
-  <true/>
-  <!-- Add more entitlements if required -->
-</dict>
+  <dict>
+    <!-- Enable hardened runtime (recommended for security) -->
+    <key>com.apple.security.hardened-runtime</key>
+    <true/>
+
+    <!-- Correct permission for screen recording (screenshot access) -->
+    <key>com.apple.security.device.screen-recording</key>
+    <true/>
+  </dict>
 </plist>

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog   } = require('electron')
+const { app, BrowserWindow, desktopCapturer, screen, ipcMain, Menu, Tray , powerMonitor , Notification, globalShortcut, shell , dialog , systemPreferences  } = require('electron')
 const electronPath = require('electron'); // Path to Electron
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs')
@@ -196,6 +196,7 @@ const timerFunc = require(functionPath)
 
 const isWindows = process.platform === 'win32';
 const isLinux = process.platform === 'linux';
+const isMac = process.platform === 'darwin';
 
 let intervalId = null; // Define intervalId outside the function scope
 
@@ -670,6 +671,7 @@ console.log('User is ' + first_name);
 
       console.log('isWindows = ', isWindows )
       console.log('isLinux = ', isLinux )
+      console.log('isMac = ', isMac )
       console.log('mode = ', process.mode );
       // window start
 
@@ -729,7 +731,14 @@ console.log('User is ' + first_name);
 
         // if(!tray){
 
-          const iconPath = path.join(__dirname, 'assets/icon.png');
+        if(isMac){
+
+          var iconPath = path.join(__dirname, 'assets/icon-mac.png');
+        }else{
+          
+          var iconPath = path.join(__dirname, 'assets/icon.png');
+        }
+
           
           tray = new Tray(iconPath)
           
@@ -739,9 +748,9 @@ console.log('User is ' + first_name);
             shell.openExternal(`${config.API_URL}/user-view/${userData.apiResponse.token}`);
             
           })
-          
-          tray.setToolTip('Rvs Tracker')
-          tray.setContextMenu(menu)
+
+            tray.setToolTip('Rvs Tracker')
+            tray.setContextMenu(menu)
           
           // app.relaunch();
           // app.exit(0);
@@ -797,11 +806,222 @@ console.log('User is ' + first_name);
     
       // Start capturing screen data for mouse and keyboard tracking
       // startActivityTracking();
+      // isMultipleDisplays();
 
-  })
+      // const numberOfDisplays = screen.getAllDisplays();  // Get all connected displays
+      // console.log('numberOfDisplays', numberOfDisplays.length);
 
-// end ready 
 
+
+      
+      // captureScreen_new();
+      
+    })
+    
+    // end ready 
+    
+    function checkPermissions() {
+      // Check if screen recording permission is granted
+      if (!systemPreferences.isScreenCaptureAllowed) {
+        showPermissionDialog();  // Show a dialog if screen capture is not allowed
+      }
+    }
+
+    function isMultipleDisplays() {
+      // Check if the app is ready before accessing the screen module
+      if (app.isReady()) {
+        const displays = screen.getAllDisplays();  // Get all connected displays
+        return displays.length > 1;  // If more than 1 display is connected, return true
+      } else {
+        // If app isn't ready, defer the check
+        app.once('ready', () => {
+          const displays = screen.getAllDisplays();
+          console.log('Displays:', displays.length);
+        });
+      }
+    }
+
+
+    async function captureScreen_Mac() {
+      try {
+        const sources = await desktopCapturer.getSources({
+          types: ['screen'],
+          thumbnailSize: { width: 1920, height: 1080 }
+        });
+    
+        if (!sources || sources.length === 0) {
+          throw new Error('No screen sources found');
+        }
+
+
+
+        // new
+        const filename = `screenshot_${Date.now()}.png`;
+
+        // Create the "images" folder if it doesn't exist
+        const tempDir = app.getPath('temp');
+        const logfile = path.join(appTempDir, 'log.txt');
+
+
+        console.log(`logfiile = ${logfile}`);
+        const imagesFolderPath = path.join(tempDir, 'images');
+        if (!fs.existsSync(imagesFolderPath)) {
+          fs.mkdirSync(imagesFolderPath);
+        }
+
+        // Specify the full file path for the screenshot
+        const filePath = path.join(imagesFolderPath, filename);
+
+        // new
+
+
+
+     
+        // Get desktop path and create filename with timestamp
+        // const desktopPath = app.getPath('desktop');
+        // const screenshotPath = path.join(
+        //   desktopPath,
+        //   `screenshot_${Date.now()}.png`
+        // );
+    
+        // console.log('screenshotPath source to:', screenshotPath);
+
+        // Save the image
+        fs.writeFileSync(filePath, sources[0].thumbnail.toPNG());
+        
+        // Show saved path in console
+        console.log('Screenshot saved to:', path.resolve(filePath));
+        const uploadUrl = `${config.API_URL}/api/save_screenshort`;
+
+        uploadImage(filePath, uploadUrl);
+        return filePath;
+    
+      } catch (error) {
+        console.error('Capture failed:', error.message);
+        throw error;
+      }
+    }
+
+
+
+    async function captureScreen_Mac2() {
+      try {
+        const sources = await desktopCapturer.getSources({
+          types: ['screen'],
+          thumbnailSize: { width: 1920, height: 1080 }
+        });
+    
+        if (!sources || sources.length === 0) {
+          throw new Error('No screen sources found');
+        }
+    
+        // Get desktop path
+        const desktopPath = app.getPath('desktop');
+    
+        // Loop through all screens and capture each one
+        const screenshotPaths = [];
+        for (let i = 0; i < sources.length; i++) {
+          var source = sources[i];
+
+          
+          // Create a filename for each screen
+          var screenshotPath = path.join(
+            desktopPath,
+            `screenshot_${Date.now()}.png`
+          );
+          
+          console.log(' source to:', source);
+          
+          console.log('screenshotPath source to:', screenshotPath);
+          // Save the image of the current screen
+          fs.writeFileSync(screenshotPath, source.thumbnail.toPNG());
+          
+          // Log the saved path in console
+          console.log('Screenshot saved to:', path.resolve(screenshotPath));
+          
+          // Upload the image
+          var uploadUrl = `${config.API_URL}/api/save_screenshot`;
+          uploadImage(screenshotPath, uploadUrl);
+          // uploadImage('/Users/rvsmedia/Desktop/screenshot_1739360333921.png', uploadUrl);
+    
+          // Add the screenshot path to the array
+          screenshotPaths.push(screenshotPath);
+        }
+    
+        return screenshotPaths; // Return an array of saved screenshot paths
+    
+      } catch (error) {
+        console.error('Capture failed:', error.message);
+        throw error;
+      }
+    }
+
+
+async function captureScreen_Mac_3() {
+  try {
+    const sources = await desktopCapturer.getSources({
+      types: ['screen'],
+      thumbnailSize: { width: 1920, height: 1080 }
+    });
+
+    if (!sources || sources.length === 0) {
+      throw new Error('No screen sources found');
+    }
+
+    // Get desktop path
+    const desktopPath = app.getPath('desktop');
+    
+    // Loop through all screens and capture each one
+    const screenshotPaths = [];
+    for (let i = 0; i < sources.length; i++) {
+      const source = sources[i];
+
+      // Create a filename for each screen, including the source name or index to avoid collision
+      const screenshotPath = path.join(
+        desktopPath,
+        `screenshot_${Date.now()}.png`
+      );
+
+      // Log the source and screenshot path for debugging
+      console.log('Source:', source);
+      console.log('Screenshot path:', screenshotPath);
+
+      if (source.thumbnail) {
+        // Save the image of the current screen asynchronously
+        await fs.promises.writeFile(screenshotPath, source.thumbnail.toPNG());
+
+        // Log the saved path
+        console.log('Screenshot saved to:', path.resolve(screenshotPath));
+
+
+        if (fs.existsSync(screenshotPath)) {
+          const uploadUrl = `${config.API_URL}/api/save_screenshot`;
+          uploadImage(screenshotPath, uploadUrl);
+        } else {
+          console.error('File not found:', screenshotPath);
+        }
+
+        // Upload the image and wait for it to complete
+        // const uploadUrl = `${config.API_URL}/api/save_screenshot`;
+
+        // await uploadImage(screenshotPath, uploadUrl); // Ensure async upload completes
+
+        // Add the screenshot path to the array
+        screenshotPaths.push(screenshotPath);
+      } else {
+        console.warn(`No thumbnail found for source: ${source.name}`);
+      }
+    }
+
+    return screenshotPaths; // Return an array of saved screenshot paths
+
+  } catch (error) {
+    console.error('Capture failed:', error.message);
+    throw error;
+  }
+}
+    
+    
 // function runDemoScript() {
 //   const demoPath = path.join(__dirname, 'notification.js'); // Path to your notification.js file
 //   const electronPath = path.join(__dirname, 'node_modules', '.bin', 'electron.cmd'); // Adjust for Windows
@@ -933,6 +1153,7 @@ function readUserData() {
     // Only start the interval if it's not already running
     if (!intervalId) {
       const delay = timerFunc.screenshort_time();
+      // const delay = 10000;
       intervalId = setInterval(() => {
         console.log('callscreenshort started delay....', delay);
         if(isWindows){
@@ -940,6 +1161,18 @@ function readUserData() {
         }
         if(isLinux){
           captureScreenshot();
+        }
+        if(isMac){
+          // takeScreenshotMac();
+          
+          // ipcMain.emit('capture-screenshot', 'Capture screenshot taken');
+          
+          writeLogFile('capture-screenshot:', 'Capture screenshot taken');
+
+          captureScreen_Mac()
+        .then(path => console.log('Successfully saved to:', path))
+        .catch(err => console.error('Error capturing screen:', err));
+        
         }
       }, delay);
     }
@@ -995,7 +1228,7 @@ function readUserData() {
 
 
 readUserData();
-
+// takeScreenshotMac();
 
 
 ipcMain.on('event2', (event, arg) => {
@@ -1022,6 +1255,19 @@ function LoginNotification(title, body, fix) {
   );
 
   notification.show();
+}
+
+
+function showPermissionDialog() {
+  dialog.showMessageBox({
+    type: 'warning',
+    buttons: ['OK'],
+    title: 'Permission Required',
+    message: 'This app needs screen recording and accessibility permissions to function properly. Please enable them in System Preferences > Security & Privacy > Privacy.',
+  }).then(() => {
+    // Open System Preferences at the Privacy settings
+    shell.openPath('x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenRecording');
+  });
 }
 
 
@@ -1246,6 +1492,116 @@ async function captureScreenshot() {
 
 
 
+
+
+
+function takeScreenshotMac22() {
+
+  // Generate a unique filename for the image
+  const filename = `screenshot_${Date.now()}.png`;
+
+  // Create the "images" folder if it doesn't exist
+  const tempDir = app.getPath('temp');
+  const logfile = path.join(appTempDir, 'log.txt');
+
+
+  console.log(`logfiile = ${logfile}`);
+  const imagesFolderPath = path.join(tempDir, 'images');
+  if (!fs.existsSync(imagesFolderPath)) {
+    fs.mkdirSync(imagesFolderPath);
+  }
+
+  // Specify the full file path for the screenshot
+  const savePath = path.join(imagesFolderPath, filename);
+
+  // Get the path of the current directory (project root directory)
+  // const savePath = path.join(__dirname, 'screenshot.png');  // Saves the screenshot in the project directory
+
+  console.log(`Attempting to capture screenshot and save to: ${savePath}`);
+
+  // Check if we have multiple displays or just one.
+  // If you have multiple displays, use -D. If not, capture the main screen.
+  // const isMultipleDisplays = false; // Change this depending on your setup
+
+  const multipleDisplays = isMultipleDisplays(); // Check if there are multiple displays
+
+
+  console.log('isMultipleDisplays', isMultipleDisplays);
+  
+  const command = multipleDisplays
+    ? `screencapture -D -x -t png "${savePath}"`  // Multiple displays (use -D)
+    : `screencapture -x -t png "${savePath}"`;    // Single display (no -D)
+
+  // Run the command
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing command: ${error}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+
+    // Log the path where the screenshot is saved
+    console.log(`Screenshot successfully saved to: ${savePath}`);
+
+    const uploadUrl = `${config.API_URL}/api/save_screenshort`;
+    // const uploadUrl = 'http://erp.test/api/save_screenshort';
+    uploadImage(savePath, uploadUrl);
+
+  });
+}
+
+
+
+function takeScreenshotMac() {
+  // Generate a unique filename for the image
+  const filename = `screenshot_${Date.now()}.png`;
+
+  // Create the "images" folder if it doesn't exist
+  const tempDir = app.getPath('temp');
+  const logfile = path.join(tempDir, 'log.txt');
+
+  const imagesFolderPath = path.join(tempDir, 'images');
+  if (!fs.existsSync(imagesFolderPath)) {
+    fs.mkdirSync(imagesFolderPath);
+  }
+
+  // Specify the full file path for the screenshot
+  const savePath = path.join(imagesFolderPath, filename);
+
+  console.log(`Attempting to capture screenshot and save to: ${savePath}`);
+
+  // Check if we have multiple displays or just one.
+  const multipleDisplays = isMultipleDisplays(); // Ensure this function is defined
+
+  console.log('multipleDisplays:', multipleDisplays);
+  
+  const command = multipleDisplays
+    ? `screencapture -D -x -t png "${savePath}"`  // Multiple displays (use -D)
+    : `screencapture -x -t png "${savePath}"`;    // Single display (no -D)
+
+  // Run the command
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing command: ${error}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+
+    // Log the path where the screenshot is saved
+    console.log(`Screenshot successfully saved to: ${savePath}`);
+
+    const uploadUrl = `${config.API_URL}/api/save_screenshot`;
+    uploadImage(savePath, uploadUrl);
+  });
+
+}
+
 // Function to convert a Buffer to a Blob
 function bufferToBlob(buffer) {
   const readable = new Readable();
@@ -1292,6 +1648,61 @@ async function uploadImage(imagePath, uploadUrl, user) {
   }
 }
 
+
+async function uploadImage222(imagePath, uploadUrl, user) {
+  try {
+    // Read the file as a stream
+    const imageStream = fs.createReadStream(imagePath);
+    const stats = fs.statSync(imagePath);
+    const fileSize = stats.size;
+
+    // Create proper form-data headers
+    const formData = new FormData();
+    formData.append('image', imageStream, {
+      filename: path.basename(imagePath),
+      knownLength: fileSize,
+      contentType: mime.getType(imagePath) || 'image/png'
+    });
+    formData.append('id', userData.apiResponse.user.id);
+    formData.append('token', userData.apiResponse.token);
+
+    // Get headers with proper boundary
+    const headers = {
+      ...formData.getHeaders(),
+      'Authorization': `Bearer ${userData.apiResponse.token}`,
+      'Content-Length': formData.getLengthSync()
+    };
+
+    const response = await axios.post(uploadUrl, formData, { headers });
+
+    // Only delete after successful upload
+    fs.unlinkSync(imagePath);
+    console.log('Image uploaded successfully:', response.data);
+    
+    return response.data;
+
+  } catch (error) {
+    console.error('Upload error:', error.message);
+    
+    // Enhanced error logging
+    if (error.response) {
+      console.error('Server responded with:', {
+        status: error.response.status,
+        data: error.response.data,
+        headers: error.response.headers
+      });
+    }
+    
+    // Keep the file for debugging if upload fails
+    // fs.unlinkSync(imagePath); // Remove this line
+    
+    if (error.response?.status === 401) {
+      ipcMain.emit('logout', 'logout ...');
+    }
+    
+    throw error;
+  }
+}
 
 function deleteImage(filePath)
 {
@@ -1450,7 +1861,7 @@ function checkScreenSharingPermission_old() {
     });
 }
 
-function showPermissionDialog() {
+function showPermissionDialog_old() {
   dialog.showMessageBox(mainWindow, {
     type: 'question',
     title: 'Screen Sharing Permission',

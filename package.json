@@ -10,19 +10,22 @@
     "start": "electron-forge start",
     "build": "electron-builder",
     "build:win": "electron-builder build --win",
-    "build:linux": "electron-builder build --linux"
+    "build:linux": "electron-builder build --linux",
+    "package": "npm run build && electron-builder build --publish never",
+    "postbuild": "node notarize.js"
   },
   "author": "Mandeep Singh <mandeep@rvsmedia.com>",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.4.7",
     "electron": "^24.1.2",
     "electron-builder": "^23.6.0",
+    "electron-notarize": "^1.2.2",
     "electron-packager": "^17.1.1",
     "node-addon-api": "^7.0.0"
   },
   "dependencies": {
     "accelerator": "^0.2.0",
-    "active-win": "^8.1.0",
     "axios": "^1.4.0",
     "buffer": "^6.0.3",
     "canvas-confetti": "^1.9.3",
@@ -31,61 +34,86 @@
     "lodash": "^4.17.21",
     "openai": "^3.3.0",
     "pyodide": "^0.23.4",
+    "sharp": "^0.33.5",
     "stream": "^0.0.2"
   },
   "build": {
-      "appId": "track360.rvsmedia.app",
-      "productName": "Track-360",
-      "copyright": "Copyright © 2024 by RVS Media",
-      "asar": false,
-      "directories": {
-          "output": "dist"
-      },
-      "mac": {
-          "target": [
-              "dmg"
-          ],
-          "icon": "assets/icon.png"
-      },
-      "win": {
-          "target": [
-              "nsis",
-              "portable"
-          ],
-          "artifactName": "${productName}_Setup_${version}.${ext}",
-          "icon": "assets/icon.png",
-          "publish": [
-              {
-                  "provider": "github",
-                  "owner": "mandeepsng",
-                  "repo": "screenshort-app"
-              }
+    "appId": "track360.rvsmedia.app",
+    "productName": "Track-360",
+    "copyright": "Copyright © 2024 by RVS Media",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "identity": "2J85YK8GXQ",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
           ]
-      },
-      "linux": {
-          "target": [
-            "AppImage",
-            "deb"
-          ],
-          "category": "Utilities",
-          "icon": "assets/icon.png",
-          "extraFiles": [
-              {
-                  "from": ".env",
-                  "to": ".env"
-              }
-          ]
-      },
-      "nsis": {
-          "oneClick": true,
-          "allowToChangeInstallationDirectory": false
-      },
-      "publish": [
-          {
-              "provider": "github",
-              "owner": "mandeepsng",
-              "repo": "screenshort-app"
-          }
+        }
+      ],
+      "icon": "assets/icon.png",
+      "artifactName": "${productName}.${ext}",
+      "type": "distribution",
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "icon": "assets/icon.png",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "mandeepsng",
+          "repo": "screenshort-app"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utilities",
+      "icon": "assets/icon.png",
+      "extraFiles": [
+        {
+          "from": ".env",
+          "to": ".env"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mandeepsng",
+        "repo": "screenshort-app"
+      }
+    ]
   }
 }
